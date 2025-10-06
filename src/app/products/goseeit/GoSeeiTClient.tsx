@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import type { LucideIcon } from 'lucide-react';
 import {
   Search as SearchIcon,
   Users,
@@ -23,8 +24,21 @@ import {
   Lightbulb,
 } from 'lucide-react';
 
+type FeatureItem = {
+  title: string;
+  desc: string;
+  Icon: LucideIcon;
+  pillClass?: string; // optional accent gradient for the pill
+};
+
+type HeroBullet = {
+  text: string;
+  Icon?: LucideIcon;
+  pillClass?: string; // optional accent pill for special bullets
+};
+
 export default function GoSeeiTClient() {
-  const features = [
+  const features: FeatureItem[] = [
     {
       title: 'Templates & versioning',
       desc: 'Publish signed-off templates as “latest”; previous versions auto-archive on sign-off.',
@@ -55,7 +69,7 @@ export default function GoSeeiTClient() {
       desc: 'Emails to approvers and assignees with deep links and de-duplication.',
       Icon: Mail,
     },
-    // 🎨 спец-цвета для связки с другими тулзами
+    // linked tools accents
     {
       title: 'Raise Problem',
       desc: 'Escalate a finding into a Problem Case with its own reference and follow-up tracking.',
@@ -68,9 +82,9 @@ export default function GoSeeiTClient() {
       Icon: Lightbulb,
       pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500',
     },
-  ] as const;
+  ];
 
-  // 🆕 плавный скролл к блоку "features"
+  // smooth scroll to "features"
   const onSeeFeaturesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const el = document.getElementById('features');
@@ -80,8 +94,8 @@ export default function GoSeeiTClient() {
     if (history.pushState) history.pushState(null, '', '#features');
   };
 
-  // 🆕 bullets с цветными иконками для Problem/Idea
-  const heroBullets = [
+  // hero bullets (two special ones have colored pills)
+  const heroBullets: HeroBullet[] = [
     { text: 'Templates with versioning & sign-off' },
     { text: 'Standard & Tiered scheduling with preview' },
     { text: 'Evidence: photos, documents & videos' },
@@ -95,7 +109,7 @@ export default function GoSeeiTClient() {
       Icon: Lightbulb,
       pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500',
     },
-  ] as const;
+  ];
 
   return (
     <main>
@@ -146,7 +160,6 @@ export default function GoSeeiTClient() {
                         )}
                         aria-hidden="true"
                       >
-                        {/* маленькая иконка внутри цветной пилюли */}
                         {b.Icon ? <b.Icon className="size-3.5" strokeWidth={2.5} /> : null}
                       </span>
                     ) : (
@@ -198,7 +211,6 @@ export default function GoSeeiTClient() {
                   <span
                     className={cn(
                       'grid place-items-center size-12 rounded-xl shrink-0 text-white shadow-md',
-                      // 🟩 дефолт, 🟪 Problem, 🟧 Idea
                       f.pillClass ?? 'bg-gradient-to-br from-emerald-600 to-teal-500'
                     )}
                     aria-hidden="true"
