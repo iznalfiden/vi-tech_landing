@@ -11,7 +11,6 @@ export default function HomePage() {
     <div className="min-h-screen bg-white text-foreground">
       <Header />
       <LandingAnimated />
-
       <footer className="border-t py-10 text-center text-sm text-muted-foreground">© {new Date().getFullYear()} Brand. All rights reserved.</footer>
     </div>
   );
