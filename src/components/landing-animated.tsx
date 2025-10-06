@@ -33,17 +33,14 @@ export default function LandingAnimated() {
 
   // Плавный скролл к секции Products с дополнительным смещением вниз,
   // чтобы нижний элемент списка был виден.
-  const scrollToProducts: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+  const scrollToProducts = (e: React.MouseEvent) => {
     e.preventDefault();
     const target = document.getElementById('products');
     if (!target) return;
-
     const header = document.querySelector('header') as HTMLElement | null;
-    const headerH = header ? header.offsetHeight : 80; // fallback
-    const tuck = 1;                                     // на пиксель «поджать», чтобы не было светлой полосы
-    const top =
-      target.getBoundingClientRect().top + window.scrollY - (headerH - tuck);
-
+    const headerH = header ? header.offsetHeight : 80;
+    const tuck = 1;
+    const top = target.getBoundingClientRect().top + window.scrollY - (headerH - tuck);
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
