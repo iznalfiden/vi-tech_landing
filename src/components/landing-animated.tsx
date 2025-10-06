@@ -13,12 +13,13 @@ import {
   Gauge,
   ChevronRight,
   ListChecks,
+  ChartCandlestick,
 } from 'lucide-react';
 
 export default function LandingAnimated() {
   const products = [
-    { name: 'GoSeeiT', desc: 'Promotes ’Go Look & See’ Approach', href: '/products/goseeit', gradient: 'from-emerald-500 to-teal-500', Icon: Search },
-    { name: 'StandardiziT', desc: 'Work Standards & SWC', href: '/products/standardizit', gradient: 'from-sky-500 to-blue-500', Icon: ListChecks },
+    { name: 'GoSeeiT', desc: 'Promotes ’Go Look & See’ Approach', href: '/products/goseeit', gradient: 'bg-emerald-500', Icon: Search },
+    { name: 'StandardiziT', desc: 'Work Standards & SWC', href: '/products/standardizit', gradient: 'bg-fuchsia-600', Icon: ChartCandlestick },
     { name: 'ImproviT', desc: 'Structured Idea Generation & Implementation', href: '/products/improvit', gradient: 'from-amber-500 to-orange-500', Icon: Lightbulb },
     { name: 'ResolvIT', desc: 'Drives & Simplifies Standardised Problem Solving', href: '/products/resolvit', gradient: 'from-violet-600 to-purple-600', Icon: Settings },
     { name: 'MeasuriT', desc: 'Real Time Metrics and Insights', href: '/products/measurit', gradient: 'from-rose-500 to-orange-500', Icon: Gauge },

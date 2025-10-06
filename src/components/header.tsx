@@ -27,6 +27,7 @@ import {
     Settings,
     Gauge,
     ListChecks,
+    ChartCandlestick,
 } from 'lucide-react';
 
 type ProductItem = {
@@ -77,8 +78,8 @@ export default function Header() {
                 name: 'StandardiziT',
                 href: '/products/standardizit',
                 desc: 'Work Standards & SWC',
-                Icon: ListChecks,
-                gradient: 'from-sky-500 to-blue-500',
+                Icon: ChartCandlestick,
+                gradient: 'bg-fuchsia-600',
             },
             {
                 name: 'ResolvIT',
