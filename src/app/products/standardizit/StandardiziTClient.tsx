@@ -336,7 +336,7 @@ export default function StandardiziTClient() {
                 whileHover={{ y: shouldReduce ? 0 : -3 }}
                 className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
               >
-                <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
+                <span className="grid place-items-center size-12 rounded-xl bg-fuchsia-600 text-white">
                   <m.Icon className="size-6" />
                 </span>
                 <div>
