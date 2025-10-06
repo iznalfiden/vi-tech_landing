@@ -17,55 +17,40 @@ import {
 
 export default function LandingAnimated() {
   const products = [
-    {
-      name: 'GoSeeiT',
-      desc: 'Promotes ’Go Look & See’ Approach',
-      href: '/products/goseeit',
-      gradient: 'from-emerald-500 to-teal-500',
-      Icon: Search,
-    },
-    {
-      name: 'StandardiziT',
-      desc: 'Work Standards & SWC',
-      href: '/products/standardizit',
-      gradient: 'from-sky-500 to-blue-500',
-      Icon: ListChecks,
-    },
-    {
-      name: 'ImproviT',
-      desc: 'Structured Idea Generation & Implementation',
-      href: '/products/improvit',
-      gradient: 'from-amber-500 to-orange-500',
-      Icon: Lightbulb,
-    },
-    {
-      name: 'ResolvIT',
-      desc: 'Drives & Simplifies Standardised Problem Solving',
-      href: '/products/resolvit',
-      gradient: 'from-violet-600 to-purple-600',
-      Icon: Settings,
-    },
-    {
-      name: 'MeasuriT',
-      desc: 'Real Time Metrics and Insights',
-      href: '/products/measurit',
-      gradient: 'from-rose-500 to-orange-500',
-      Icon: Gauge,
-    },
+    { name: 'GoSeeiT', desc: 'Promotes ’Go Look & See’ Approach', href: '/products/goseeit', gradient: 'from-emerald-500 to-teal-500', Icon: Search },
+    { name: 'StandardiziT', desc: 'Work Standards & SWC', href: '/products/standardizit', gradient: 'from-sky-500 to-blue-500', Icon: ListChecks },
+    { name: 'ImproviT', desc: 'Structured Idea Generation & Implementation', href: '/products/improvit', gradient: 'from-amber-500 to-orange-500', Icon: Lightbulb },
+    { name: 'ResolvIT', desc: 'Drives & Simplifies Standardised Problem Solving', href: '/products/resolvit', gradient: 'from-violet-600 to-purple-600', Icon: Settings },
+    { name: 'MeasuriT', desc: 'Real Time Metrics and Insights', href: '/products/measurit', gradient: 'from-rose-500 to-orange-500', Icon: Gauge },
   ];
 
   const partners: { name: string; src: string }[] = [
-    { name: 'Alstom', src: '/alstom.png' },
+    { name: 'Alstom', src: '/Alstom_logo.png' },
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
-    { name: 'TIMET', src: '/timet.png' },
-
+    { name: 'TIMET', src: '/timet _logo.png' },
   ];
+
+  // Плавный скролл к секции Products с дополнительным смещением вниз,
+  // чтобы нижний элемент списка был виден.
+  const scrollToProducts: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+    e.preventDefault();
+    const target = document.getElementById('products');
+    if (!target) return;
+
+    const header = document.querySelector('header') as HTMLElement | null;
+    const headerH = header ? header.offsetHeight : 80; // fallback
+    const tuck = 1;                                     // на пиксель «поджать», чтобы не было светлой полосы
+    const top =
+      target.getBoundingClientRect().top + window.scrollY - (headerH - tuck);
+
+    window.scrollTo({ top, behavior: 'smooth' });
+  };
+
 
   return (
     <main>
       {/* HERO */}
-      <section className="relative isolate min-h-[72vh] md:min-h-[82vh] overflow-hidden">
-        {/* фон-картинка */}
+      <section className="relative isolate min-h-[73vh] md:min-h-[82vh] overflow-hidden">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -74,7 +59,6 @@ export default function LandingAnimated() {
           style={{ backgroundImage: "url('/hero_bg.svg')" }}
           aria-hidden
         />
-        {/* такой же радиальный градиент, как в остальных секциях */}
         <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
 
         <div className="mx-auto max-w-7xl px-4 pt-24 md:pt-40 pb-20 md:pb-28">
@@ -107,76 +91,31 @@ export default function LandingAnimated() {
             className="mt-8"
           >
             <Button
-              asChild
               size="lg"
-              className="rounded-full bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+              onClick={scrollToProducts}
+              className="rounded-full cursor-pointer bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
             >
-              <Link href="/products" className="inline-flex items-center gap-2 tracking-wide">
+              <a href="#products" onClick={scrollToProducts} className="inline-flex items-center gap-2 tracking-wide">
                 EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </Button>
           </motion.div>
         </div>
       </section>
 
       {/* IMAGE + COPY */}
-      <section className="mx-auto max-w-7xl px-4 mt-16 md:mt-24">
-        <div className="grid gap-8 md:grid-cols-2 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl overflow-hidden shadow-sm"
-          >
-            <Image
-              src="/main_page_1.svg"
-              alt="Vi-Tech tools in action"
-              fill
-              sizes="(min-width: 1024px) 48vw, 100vw"
-              className="object-cover"
-            />
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-          >
-            <h2 className="font-display text-3xl md:text-4xl font-bold">
-              Tools developed to empower you and your team
-            </h2>
-            <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-              We specialise in world-class software that understands today’s business requirements but more importantly their future needs. Book a demo today and find out how Vi-Tech tools can work for you.
-            </p>
-
-            <div className="mt-6">
-              <Button asChild className="rounded-2xl">
-                <Link href="/book-demo">Book a demo</Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* PRODUCTS LIST + IMAGE */}
-      <section className="relative isolate overflow-hidden mt-20 md:mt-28 py-16 md:py-24 bg-[#0e0a24]">
+      <section
+        id="products"
+        className=" min-h-[800px] relative isolate overflow-hidden mt-20 md:mt-28 py-16 md:py-24 bg-[#0e0a24]"
+      >
         <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid gap-10 md:grid-cols-2 items-start">
             <div>
-              <motion.h2
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="font-display text-white text-4xl md:text-5xl font-bold leading-tight"
-              >
-                Products designed to support
-                <br /> you at every step
-              </motion.h2>
-
+              
               <ul className="mt-10 divide-y divide-white/10">
                 {products.map((p, i) => (
                   <motion.li
@@ -189,9 +128,7 @@ export default function LandingAnimated() {
                   >
                     <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
                       <div className="flex items-center gap-4">
-                        <span
-                          className={`grid place-items-center h-16 w-16 rounded-xl text-white bg-gradient-to-br ${p.gradient} shadow-md`}
-                        >
+                        <span className={`grid place-items-center h-16 w-16 rounded-xl text-white bg-gradient-to-br ${p.gradient} shadow-md`}>
                           <p.Icon className="h-7 w-7" />
                         </span>
                         <div className="leading-snug">
