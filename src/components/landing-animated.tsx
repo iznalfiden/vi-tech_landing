@@ -50,58 +50,60 @@ export default function LandingAnimated() {
   return (
     <main>
       {/* HERO */}
-      <section className="relative isolate min-h-[73vh] md:min-h-[82vh] overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right md:bg-right"
-          style={{ backgroundImage: "url('/hero_bg.svg')" }}
-          aria-hidden
-        />
-        <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
+{/* HERO */}
+<section className="relative isolate min-h-[50vh]  overflow-hidden">
+  {/* Декоративный фон — скрыт на мобилке */}
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
+    className="hidden sm:block absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right"
+    aria-hidden
+  />
+  {/* Правый рад. градиент — тоже скрываем на мобиле */}
+  <div className="hidden sm:block pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
 
-        <div className="mx-auto max-w-7xl px-4 pt-24 md:pt-40 pb-20 md:pb-28">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-            className="font-display text-black text-5xl md:text-7xl font-bold leading-[1.05] drop-shadow-sm"
-          >
-            Simple,
-            <br className="hidden sm:block" />
-            standardised,
-            <br className="hidden sm:block" />
-            sustainable
-          </motion.h1>
+  <div className="mx-auto max-w-7xl px-4 pt-28 md:pt-40 pb-20 md:pb-28">
+    <motion.h1
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
+      className="font-display text-black font-bold tracking-tight
+                 leading-[1.15] md:leading-[1.05]
+                 text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
+    >
+      <span className="block sm:inline">Simple,</span>{' '}
+      <span className="block sm:inline">standardised,</span>{' '}
+      <span className="block sm:inline">sustainable</span>
+    </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
-            className="mt-6 max-w-2xl text-black text-lg md:text-xl drop-shadow"
-          >
-            The possibilities for efficiency improvement in every facet of the business and its operations are endless.
-          </motion.p>
+    <motion.p
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+      className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
+    >
+      The possibilities for efficiency improvement in every facet of the business and its operations are endless.
+    </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
-            className="mt-8"
-          >
-            <Button
-              size="lg"
-              onClick={scrollToProducts}
-              className="rounded-full cursor-pointer bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
-            >
-              <a href="#products" onClick={scrollToProducts} className="inline-flex items-center gap-2 tracking-wide">
-                EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
+      className="mt-6 sm:mt-8"
+    >
+      <Button
+        size="lg"
+        onClick={scrollToProducts}
+        className="rounded-full cursor-pointer bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+      >
+        <a href="#products" onClick={scrollToProducts} className="inline-flex items-center gap-2 tracking-wide">
+          EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
+        </a>
+      </Button>
+    </motion.div>
+  </div>
+</section>
 
       {/* IMAGE + COPY */}
 
@@ -109,7 +111,7 @@ export default function LandingAnimated() {
       {/* PRODUCTS LIST + IMAGE */}
       <section
         id="products"
-        className=" min-h-[800px] relative isolate overflow-hidden mt-20 md:mt-28 py-16 md:py-24 bg-[#0e0a24]"
+        className="min-h-[800px] relative isolate overflow-hidden py-16 bg-[#0e0a24]"
       >
         <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
         <div className="mx-auto max-w-7xl px-4">
@@ -118,27 +120,34 @@ export default function LandingAnimated() {
               
               <ul className="mt-10 divide-y divide-white/10">
                 {products.map((p, i) => (
-                  <motion.li
-                    key={p.name}
-                    initial={{ opacity: 0, y: 8 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
-                    className="min-h-[96px] flex items-center"
-                  >
-                    <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
-                      <div className="flex items-center gap-4">
-                        <span className={`grid place-items-center h-16 w-16 rounded-xl text-white bg-gradient-to-br ${p.gradient} shadow-md`}>
-                          <p.Icon className="h-7 w-7" />
-                        </span>
-                        <div className="leading-snug">
-                          <div className="text-2xl font-semibold text-white">{p.name}</div>
-                          <div className="text-white/75">{p.desc}</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-6 w-6 text-white/70 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </motion.li>
+                    <motion.li
+  key={p.name}
+  initial={{ opacity: 0, y: 8 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, margin: '-80px' }}
+  transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
+  className="min-h-[96px] flex items-center"
+>
+  <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
+    <div className="flex items-center gap-4">
+      {/* ИКОНОЧНЫЙ БЛОК — фиксированный размер */}
+      <span
+        className={`grid place-items-center size-16 rounded-2xl shrink-0
+                    bg-gradient-to-br ${p.gradient} text-white shadow-md`}
+        aria-hidden="true"
+      >
+        <p.Icon className="size-7 sm:size-8" strokeWidth={2} />
+      </span>
+
+      <div className="leading-snug">
+        <div className="text-2xl font-semibold text-white">{p.name}</div>
+        <div className="text-white/75">{p.desc}</div>
+      </div>
+    </div>
+
+    <ChevronRight className="h-6 w-6 text-white/70 transition-transform group-hover:translate-x-1" />
+  </Link>
+</motion.li>
                 ))}
               </ul>
             </div>

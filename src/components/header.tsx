@@ -16,7 +16,7 @@ import {
     DropdownMenuLabel,
     // DropdownMenuSeparator — удалён
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import {
     Menu,
@@ -161,17 +161,6 @@ export default function Header() {
                                 ))}
                             </div>
 
-                            {/* <div className="mt-3 flex items-center justify-between px-2">
-                <Link
-                  href="/products"
-                  className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                >
-                  View all products
-                </Link>
-                <Button asChild size="sm" variant="outline">
-                  <Link href="/book-demo">Book a demo</Link>
-                </Button>
-              </div> */}
                         </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -196,41 +185,51 @@ export default function Header() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-80 p-0">
+                    <SheetHeader className="sr-only">
+    <SheetTitle>Mobile navigation</SheetTitle>
+    <SheetDescription>Open site menu and product links</SheetDescription>
+  </SheetHeader>
                         <div className="flex h-16 items-center justify-between border-b px-4">
                             <Link href="/" className="flex items-center gap-2 font-semibold" onClick={() => setOpenSheet(false)}>
-                                <Image src="/logo.svg" alt="Brand logo" width={24} height={24} className="h-6 w-6" /> <span>Brand</span>
+                                <Image src="/logo.svg" alt="Brand logo" width={36} height={36} /> <span>Vi-Tech</span>
                             </Link>
-                            <Button asChild size="sm" className="rounded-2xl" onClick={() => setOpenSheet(false)}>
-                                <Link href="/book-demo">Book a demo</Link>
-                            </Button>
+                            
                         </div>
                         <nav className="p-2">
                             <div className="px-2 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">Products</div>
                             <ul className="px-2 space-y-2">
-                                {products.map((p) => (
-                                    <li key={p.name}>
-                                        <Link
-                                            href={p.href}
-                                            className="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-accent"
-                                            onClick={() => setOpenSheet(false)}
-                                        >
-                                            <span
-                                                className={cn(
-                                                    'grid place-items-center h-10 w-10 rounded-lg text-white shadow-md',
-                                                    'bg-gradient-to-br',
-                                                    p.gradient
-                                                )}
-                                            >
-                                                <p.Icon className="h-5 w-5" />
-                                            </span>
-                                            <div>
-                                                <div className="text-sm font-medium">{p.name}</div>
-                                                <div className="text-xs text-muted-foreground">{p.desc}</div>
-                                            </div>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+      {products.map((p) => (
+        <li key={p.name}>
+          <Link
+            href={p.href}
+            onClick={() => setOpenSheet(false)}
+            className="grid grid-cols-[48px_1fr] items-center gap-3 rounded-xl px-3 py-3 hover:bg-accent active:bg-accent/70 transition-colors"
+          >
+            {/* фиксированный контейнер иконки */}
+            <span
+              className={cn(
+                'grid place-items-center size-12 rounded-xl shrink-0',
+                'bg-gradient-to-br text-white shadow-md',
+                p.gradient
+              )}
+              aria-hidden="true"
+            >
+              <p.Icon className="size-6" strokeWidth={2} />
+            </span>
+
+            {/* текстовый столбец */}
+            <div className="min-w-0 pt-0.5">
+              <div className="text-sm font-medium leading-tight truncate">
+                {p.name}
+              </div>
+              <div className="text-xs text-muted-foreground leading-snug truncate">
+                {p.desc}
+              </div>
+            </div>
+          </Link>
+        </li>
+      ))}
+    </ul>
 
                             <Separator className="my-2" />
 
