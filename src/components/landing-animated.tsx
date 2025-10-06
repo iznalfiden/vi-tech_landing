@@ -17,7 +17,7 @@ export default function LandingAnimated() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="absolute inset-0 -z-10 bg-cover bg-center"
-          style={{ backgroundImage: "url('/hero.jpg')" }}
+          style={{ backgroundImage: "url('/hero_bg.svg')" }}
           aria-hidden
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/40 to-transparent" aria-hidden />
