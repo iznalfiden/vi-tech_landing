@@ -1,6 +1,7 @@
 // app/products/goseeit/GoSeeiTClient.tsx
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -8,50 +9,96 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
   Search as SearchIcon,
-  ClipboardCheck,
   Users,
   Gauge,
   CheckCircle2,
   Radar,
   ArrowRight,
+  Layers,
+  CalendarDays,
+  FileText,
+  Mail,
+  ShieldCheck,
+  AlertTriangle,
+  Lightbulb,
 } from 'lucide-react';
 
 export default function GoSeeiTClient() {
   const features = [
     {
-      title: 'Go Look & See',
-      desc: 'Стандартизированные обходы рабочих зон, чек-листы и фотофиксация.',
-      Icon: SearchIcon,
+      title: 'Templates & versioning',
+      desc: 'Publish signed-off templates as “latest”; previous versions auto-archive on sign-off.',
+      Icon: Layers,
     },
     {
-      title: 'Несоответствия → действия',
-      desc: 'Быстрое создание задач, ответственные и сроки прямо с обхода.',
-      Icon: ClipboardCheck,
+      title: 'Scheduling: Standard & Tiered',
+      desc: 'Role-based assignees, time slots and D/W/M/Q/Y frequency — or tiered round-robin by team levels.',
+      Icon: CalendarDays,
     },
     {
-      title: 'Вовлечение команды',
-      desc: 'Назначайте владельцев участков, подтверждайте исправления.',
+      title: 'Evidence in answers',
+      desc: 'Attach photos, documents and videos; resubmissions preserve kept attachments.',
+      Icon: FileText,
+    },
+    {
+      title: 'Approvals & quorum',
+      desc: 'Countersigners approve or reject; full quorum auto-finalizes the run.',
+      Icon: ShieldCheck,
+    },
+    {
+      title: 'My calendar',
+      desc: 'Personal list of occurrences with statuses and deep links to runs.',
       Icon: Users,
     },
     {
-      title: 'Метрики в реальном времени',
-      desc: 'Дашборды по зонам, типам проблем и скорости закрытия.',
-      Icon: Gauge,
+      title: 'Notifications',
+      desc: 'Emails to approvers and assignees with deep links and de-duplication.',
+      Icon: Mail,
+    },
+    // 🎨 спец-цвета для связки с другими тулзами
+    {
+      title: 'Raise Problem',
+      desc: 'Escalate a finding into a Problem Case with its own reference and follow-up tracking.',
+      Icon: AlertTriangle,
+      pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600',
+    },
+    {
+      title: 'Improvement Idea',
+      desc: 'Capture ideas during or outside a run and convert them into actions later.',
+      Icon: Lightbulb,
+      pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500',
     },
   ] as const;
 
-  const steps = [
-    { title: 'Выберите зону', desc: 'Цех/линия/участок — где требуется аудит.' },
-    { title: 'Пройдите чек-лист', desc: 'Отмечайте несоответствия, добавляйте фото/комментарии.' },
-    { title: 'Назначьте действие', desc: 'Кто отвечает и до какого срока, авто-уведомления.' },
-    { title: 'Проверьте результат', desc: 'Подтвердите исправление и закройте пункт.' },
+  // 🆕 плавный скролл к блоку "features"
+  const onSeeFeaturesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const el = document.getElementById('features');
+    if (!el) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    if (history.pushState) history.pushState(null, '', '#features');
+  };
+
+  // 🆕 bullets с цветными иконками для Problem/Idea
+  const heroBullets = [
+    { text: 'Templates with versioning & sign-off' },
+    { text: 'Standard & Tiered scheduling with preview' },
+    { text: 'Evidence: photos, documents & videos' },
+    {
+      text: 'Raise Problem: escalate a finding into a Problem Case with its own tracking',
+      Icon: AlertTriangle,
+      pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600',
+    },
+    {
+      text: 'Improvement Idea: capture ideas and convert them into actions later',
+      Icon: Lightbulb,
+      pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500',
+    },
   ] as const;
 
   return (
     <main>
-      {/* BREADCRUMB */}
-      
-
       {/* HERO */}
       <section className="relative isolate overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
@@ -66,12 +113,12 @@ export default function GoSeeiTClient() {
               </span>
 
               <h1 className="mt-4 font-display font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl">
-                GoSeeiT — стандартизированные обходы и быстрые улучшения
+                GoSeeiT — templates, schedules, evidence & approvals
               </h1>
 
               <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-                Продвигайте культуру «Go Look & See»: фиксируйте несоответствия в момент обнаружения,
-                назначайте действия и контролируйте их закрытие в одном месте.
+                From signed-off templates to scheduled runs: capture evidence (photos/docs/videos),
+                submit for approval with quorum, and track everything in one place.
               </p>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -82,19 +129,30 @@ export default function GoSeeiTClient() {
                   </Link>
                 </Button>
                 <Button asChild variant="outline" className="rounded-full">
-                  <Link href="#features">See features</Link>
+                  <Link href="#features" onClick={onSeeFeaturesClick}>
+                    See features
+                  </Link>
                 </Button>
               </div>
 
               <ul className="mt-6 grid gap-3 text-sm text-foreground/90">
-                {[
-                  'Чек-листы с фото и комментариями',
-                  'Назначение задач в один клик',
-                  'Онлайн-дашборды и отчёты',
-                ].map((t) => (
-                  <li key={t} className="flex items-start gap-2">
-                    <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
-                    <span>{t}</span>
+                {heroBullets.map((b) => (
+                  <li key={b.text} className="flex items-center gap-2">
+                    {b.pillClass ? (
+                      <span
+                        className={cn(
+                          'mt-0.5 grid place-items-center size-6 rounded-md text-white shrink-0',
+                          b.pillClass
+                        )}
+                        aria-hidden="true"
+                      >
+                        {/* маленькая иконка внутри цветной пилюли */}
+                        {b.Icon ? <b.Icon className="size-3.5" strokeWidth={2.5} /> : null}
+                      </span>
+                    ) : (
+                      <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
+                    )}
+                    <span>{b.text}</span>
                   </li>
                 ))}
               </ul>
@@ -122,9 +180,9 @@ export default function GoSeeiTClient() {
       </section>
 
       {/* FEATURES */}
-      <section id="features" className="bg-[#0e0a24] py-12 md:py-16">
+      <section id="features" className="scroll-mt-24 bg-[#0e0a24] py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">Что умеет GoSeeiT</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">What GoSeeiT includes</h2>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {features.map((f, i) => (
@@ -136,12 +194,12 @@ export default function GoSeeiTClient() {
                 transition={{ duration: 0.45, ease: 'easeOut', delay: i * 0.03 }}
                 className="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition"
               >
-                <div className="flex items-start gap-4">
-                  {/* Пилюля-иконка: единый размер и стиль */}
+                <div className="flex items-center gap-4">
                   <span
                     className={cn(
                       'grid place-items-center size-12 rounded-xl shrink-0 text-white shadow-md',
-                      'bg-gradient-to-br from-emerald-600 to-teal-500'
+                      // 🟩 дефолт, 🟪 Problem, 🟧 Idea
+                      f.pillClass ?? 'bg-gradient-to-br from-emerald-600 to-teal-500'
                     )}
                     aria-hidden="true"
                   >
@@ -149,7 +207,9 @@ export default function GoSeeiTClient() {
                   </span>
 
                   <div className="min-w-0">
-                    <div className="text-white text-lg font-semibold leading-tight">{f.title}</div>
+                    <div className="text-white text-lg font-semibold leading-tight">
+                      {f.title}
+                    </div>
                     <div className="text-white/80 leading-relaxed">{f.desc}</div>
                   </div>
                 </div>
@@ -159,39 +219,19 @@ export default function GoSeeiTClient() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="py-12 md:py-16">
-        <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-2xl md:text-3xl font-bold">Как это работает</h2>
-
-          <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((s, i) => (
-              <li key={s.title} className="rounded-2xl border bg-white p-4 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <span className="grid place-items-center size-9 rounded-lg bg-emerald-600 text-white font-semibold">
-                    {i + 1}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="font-semibold">{s.title}</div>
-                    <div className="text-muted-foreground text-sm leading-relaxed">{s.desc}</div>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       {/* METRICS/CTA */}
       <section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { Icon: Radar, value: '−35%', label: 'Время на выявление проблем' },
-              { Icon: Gauge, value: '×2.1', label: 'Скорость закрытия действий' },
-              { Icon: CheckCircle2, value: '95%', label: 'Подтверждённых исправлений' },
+              { Icon: Radar, value: '−35%', label: 'Time to identify issues' },
+              { Icon: Gauge, value: '×2.1', label: 'Action closure speed' },
+              { Icon: CheckCircle2, value: '95%', label: 'Verified fixes' },
             ].map((m, i) => (
-              <div key={i} className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4">
+              <div
+                key={i}
+                className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
+              >
                 <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
                   <m.Icon className="size-6" />
                 </span>
@@ -206,12 +246,12 @@ export default function GoSeeiTClient() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button asChild className="rounded-full">
               <Link href="/book-demo">
-                Запросить демо
+                Request a demo
                 <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" className="rounded-full">
-              <Link href="/products">К другим продуктам</Link>
+              <Link href="/products">Other products</Link>
             </Button>
           </div>
         </div>

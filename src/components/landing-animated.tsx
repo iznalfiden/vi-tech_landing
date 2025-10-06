@@ -12,7 +12,6 @@ import {
   Settings,
   Gauge,
   ChevronRight,
-  ListChecks,
   ChartCandlestick,
 } from 'lucide-react';
 
