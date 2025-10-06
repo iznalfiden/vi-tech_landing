@@ -120,3 +120,6 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+:root { --brand-navy: #120E2F; }

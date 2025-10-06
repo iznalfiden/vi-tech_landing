@@ -43,10 +43,10 @@ export default function Footer() {
               Virtuous Improvement Technologies
             </div>
             <Link
-              href="mailto:hello@vi-tech.io"
+              href="mailto:info@vi-tech.io"
               className="mt-1 inline-block text-white hover:text-white/80"
             >
-              hello@vi-tech.io
+              info@vi-tech.io
             </Link>
           </div>
         </div>
