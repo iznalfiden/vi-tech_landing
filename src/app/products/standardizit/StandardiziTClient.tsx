@@ -22,6 +22,8 @@ import {
   AlertTriangle,
   Lightbulb,
   ChartCandlestick,
+  LineChart,     // 🆕 Line Planning
+  TimerOff,      // 🆕 Losses
 } from 'lucide-react';
 
 type FeatureItem = {
@@ -68,18 +70,32 @@ export default function StandardiziTClient() {
       desc: 'Two-party approvals (creator/approver).',
       Icon: ShieldCheck,
     },
+    // 🆕 Line Planning
+    {
+      title: 'Line Planning',
+      desc:
+        'Set takt target, crew size, shift pattern, and planned output. These parameters directly feed Yamazumi balancing to keep each station under takt.',
+      Icon: LineChart,
+    },
+    // 🆕 Losses impact
+    {
+      title: 'Losses & availability',
+      desc:
+        'Model planned/unplanned losses (changeovers, microstops, meetings). Net available time is recalculated and Yamazumi bars update instantly, highlighting overloads after losses.',
+      Icon: TimerOff,
+    },
     // Highlighted tools from Yamazumi & Takt Config
     {
-      title: 'Raise Problem (Yamazumi & Takt Config)',
+      title: 'Raise Problem',
       desc:
-        'Spin off an issue discovered during Yamazumi balancing or Takt Config into a Problem case with its own ID, assignee and follow-up tracking.',
+        'Spin off an issue discovered during Yamazumi balancing into a Problem case with its own ID, assignee and follow-up tracking.',
       Icon: AlertTriangle,
       gradient: 'from-violet-600 to-purple-600',
     },
     {
-      title: 'Improvement Idea (Yamazumi & Takt Config)',
+      title: 'Improvement Idea ',
       desc:
-        'Capture an idea on the fly while working in Yamazumi or Takt Config; keep full context and convert into actions later.',
+        'Capture an idea on the fly while working in Yamazumi balancing keep full context and convert into actions later.',
       Icon: Lightbulb,
       gradient: 'from-amber-500 to-orange-500',
     },
@@ -101,7 +117,9 @@ export default function StandardiziTClient() {
     'Media: images, videos, layout diagrams + documents',
     'PPE/equipment, parts and assemblies at step or WES level',
     'Approvals and auto-reset on edits',
-    'Raise Problem / Improvement Idea directly from Yamazumi & Takt Config',
+    'Processes and Line Planning feeds Yamazumi balancing',
+    'Losses recalc net time — Yamazumi highlights overloads',
+    'Raise Problem / Improvement Idea directly from Yamazumi',
   ];
 
   return (
