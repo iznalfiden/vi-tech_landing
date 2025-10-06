@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white text-foreground">
-      <Header />
 
       {/* BRAND PANEL */}
       <section
@@ -192,7 +191,6 @@ export default function AboutPage() {
           </FM>
         </div>
       </section>
-      <Footer />
     </div>
   );
 }
