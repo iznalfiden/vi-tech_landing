@@ -1,0 +1,23 @@
+{
+    "seo": { "title": "Reduce losses. Accelerate production.", "desc": "Lean/AI toolkit: takt time, Yamazumi, loss control." },
+    "nav": { "products": "Products", "about": "About", "login": "Login", "bookDemo": "Book a demo", "language": "Language" },
+    "products": {
+      "standardizit": "Work standards, SWC",
+      "yamazumi": "Operations balancing",
+      "goseeit": "Tiered audits / checks",
+      "improvit": "Ideas & improvements"
+    },
+    "hero": {
+      "title": "Reduce losses. Accelerate production.",
+      "desc": "Lean/AI toolkit: takt time, Yamazumi, loss control, standard work.",
+      "learnMore": "Learn more",
+      "imagePlaceholder": "Hero image placeholder"
+    },
+    "features": {
+      "takt": { "title": "Takt time", "desc": "Ideal/actual takt with losses considered." },
+      "yamazumi": { "title": "Yamazumi", "desc": "Operator/line load balancing." },
+      "loss": { "title": "Loss control", "desc": "Daily tracking of downtimes and losses." }
+    },
+    "cta": { "title": "Ready to see results?", "desc": "Leave a request — we will contact you and show a demo." },
+    "footer": { "rights": "All rights reserved." }
+  }
