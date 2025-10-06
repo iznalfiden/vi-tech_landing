@@ -10,61 +10,63 @@ export default function LandingAnimated() {
   return (
     <main>
       {/* Full-bleed HERO */}
-      <section className="relative isolate min-h-[72vh] md:min-h-[82vh] overflow-hidden">
-        {/* background image + overlays */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="absolute inset-0 -z-10 bg-cover bg-center"
-          style={{ backgroundImage: "url('/hero_bg.svg')" }}
-          aria-hidden
-        />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/40 to-transparent" aria-hidden />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/20 via-transparent to-black/10" aria-hidden />
+{/* Full-bleed HERO */}
+<section className="relative isolate min-h-[72vh] md:min-h-[82vh] overflow-hidden">
+  {/* background image — целиком */}
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
+    className="absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right md:bg-right"
+    style={{ backgroundImage: "url('/hero_bg.svg')" }}
+    aria-hidden
+  />
+  {/* оверлеи для читаемости текста (можно оставить/убрать по вкусу) */}
+  <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/70 via-black/40 to-transparent" aria-hidden />
+  <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/20 via-transparent to-black/10" aria-hidden />
 
-        {/* content */}
-        <div className="mx-auto max-w-7xl px-4 pt-24 md:pt-40 pb-20 md:pb-28">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-            className="font-display text-white text-5xl md:text-7xl font-bold leading-[1.05] drop-shadow-sm"
-          >
-            Simple,
-            <br className="hidden sm:block" />
-            standardised,
-            <br className="hidden sm:block" />
-            sustainable
-          </motion.h1>
+  {/* content */}
+  <div className="mx-auto max-w-7xl px-4 pt-24 md:pt-40 pb-20 md:pb-28">
+    <motion.h1
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
+      className="font-display text-white text-5xl md:text-7xl font-bold leading-[1.05] drop-shadow-sm"
+    >
+      Simple,
+      <br className="hidden sm:block" />
+      standardised,
+      <br className="hidden sm:block" />
+      sustainable
+    </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
-            className="mt-6 max-w-2xl text-white/85 text-lg md:text-xl drop-shadow"
-          >
-            The possibilities for efficiency improvement in every facet of the business and its operations are endless.
-          </motion.p>
+    <motion.p
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+      className="mt-6 max-w-2xl text-white/85 text-lg md:text-xl drop-shadow"
+    >
+      The possibilities for efficiency improvement in every facet of the business and its operations are endless.
+    </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
-            className="mt-8"
-          >
-            <Button
-              asChild
-              size="lg"
-              className="rounded-full bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
-            >
-              <Link href="/products" className="inline-flex items-center gap-2 tracking-wide">
-                EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
+      className="mt-8"
+    >
+      <Button
+        asChild
+        size="lg"
+        className="rounded-full bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+      >
+        <Link href="/products" className="inline-flex items-center gap-2 tracking-wide">
+          EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
+        </Link>
+      </Button>
+    </motion.div>
+  </div>
+</section>
 
       {/* Features */}
       <section id="features" className="mx-auto max-w-7xl px-4 mt-16 md:mt-24 grid gap-6 md:grid-cols-3">
