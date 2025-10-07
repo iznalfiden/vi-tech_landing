@@ -191,8 +191,7 @@ export default function ResolvITClient() {
               </motion.h1>
 
               <motion.p variants={fadeUp} className="mt-4 text-lg text-muted-foreground max-w-2xl">
-                Go from signal to solved: intake from operations, analyze root causes, run countermeasures,
-                update the standard, and prove effectiveness — in one flow.
+              ResolviT takes the pain out of managing the Problem Solving process by embedding world class tools and techniques within its standardised digital format enabling Problem Solving teams to work in a structured and results driven manner
               </motion.p>
 
               <motion.div variants={fadeUp} className="mt-6 flex flex-wrap items-center gap-3">
