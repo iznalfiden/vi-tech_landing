@@ -163,104 +163,92 @@ export default function ResolvITClient() {
   return (
     <main>
       {/* HERO */}
-      <section className="relative isolate overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
-            {/* text */}
-            <motion.div
-              variants={containerStagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.25 }}
-            >
-              <motion.span
-                variants={fadeUp}
-                className="inline-flex items-center gap-2 rounded-full bg-fuchsia-50 px-3 py-1 text-fuchsia-700 ring-1 ring-fuchsia-100"
-              >
-                <span className="inline-grid place-items-center size-5 rounded-md bg-fuchsia-600 text-white">
-                  <Target className="size-3.5" />
+{/* HERO */}
+{/* HERO */}
+<section
+  className="
+    relative isolate overflow-hidden
+    bg-[url('/ReolviTCircle.svg')] bg-no-repeat bg-cover bg-top
+  "
+>
+  <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
+    <div className="grid gap-10 md:grid-cols-2 md:items-center">
+      {/* text */}
+      <motion.div
+        variants={containerStagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+      >
+        <motion.span
+          variants={fadeUp}
+          className="inline-flex items-center gap-2 rounded-full bg-fuchsia-50 px-3 py-1 text-fuchsia-700 ring-1 ring-fuchsia-100"
+        >
+          <span className="inline-grid place-items-center size-5 rounded-md bg-fuchsia-600 text-white">
+            <Target className="size-3.5" />
+          </span>
+          Problem Solving
+        </motion.span>
+
+        <motion.h1
+          variants={fadeUp}
+          className="mt-4 font-display font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
+        >
+          ResolvIT — structured problem solving & action tracking
+        </motion.h1>
+
+        <motion.p variants={fadeUp} className="mt-4 text-lg text-muted-foreground max-w-2xl">
+          ResolviT takes the pain out of managing the Problem Solving process by embedding world class tools and
+          techniques within its standardised digital format enabling Problem Solving teams to work in a structured
+          and results driven manner
+        </motion.p>
+
+        <motion.div variants={fadeUp} className="mt-6 flex flex-wrap items-center gap-3">
+          <motion.div whileHover={{ y: shouldReduce ? 0 : -2 }} whileTap={{ scale: shouldReduce ? 1 : 0.98 }}>
+            <Button asChild className="rounded-full">
+              <Link href="/book-demo">
+                Book a demo
+                <ArrowRight className="ml-2 size-4" />
+              </Link>
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ y: shouldReduce ? 0 : -2 }} whileTap={{ scale: shouldReduce ? 1 : 0.98 }}>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="#features" onClick={onSeeFeaturesClick}>
+                See features
+              </Link>
+            </Button>
+          </motion.div>
+        </motion.div>
+
+        <motion.ul
+          variants={containerStagger}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          className="mt-6 grid gap-3 text-sm text-foreground/90"
+        >
+          {heroBullets.map((b) => (
+            <motion.li key={b.text} variants={fadeUp} className="flex items-center gap-2">
+              {b.pillClass ? (
+                <span
+                  className={cn('mt-0.5 grid place-items-center size-6 rounded-md text-white shrink-0', b.pillClass)}
+                  aria-hidden="true"
+                >
+                  {b.Icon ? <b.Icon className="size-3.5" strokeWidth={2.5} /> : null}
                 </span>
-                Problem Solving
-              </motion.span>
-
-              <motion.h1
-                variants={fadeUp}
-                className="mt-4 font-display font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
-              >
-                ResolvIT — structured problem solving & action tracking
-              </motion.h1>
-
-              <motion.p variants={fadeUp} className="mt-4 text-lg text-muted-foreground max-w-2xl">
-              ResolviT takes the pain out of managing the Problem Solving process by embedding world class tools and techniques within its standardised digital format enabling Problem Solving teams to work in a structured and results driven manner
-              </motion.p>
-
-              <motion.div variants={fadeUp} className="mt-6 flex flex-wrap items-center gap-3">
-                <motion.div whileHover={{ y: shouldReduce ? 0 : -2 }} whileTap={{ scale: shouldReduce ? 1 : 0.98 }}>
-                  <Button asChild className="rounded-full">
-                    <Link href="/book-demo">
-                      Book a demo
-                      <ArrowRight className="ml-2 size-4" />
-                    </Link>
-                  </Button>
-                </motion.div>
-
-                <motion.div whileHover={{ y: shouldReduce ? 0 : -2 }} whileTap={{ scale: shouldReduce ? 1 : 0.98 }}>
-                  <Button asChild variant="outline" className="rounded-full">
-                    <Link href="#features" onClick={onSeeFeaturesClick}>
-                      See features
-                    </Link>
-                  </Button>
-                </motion.div>
-              </motion.div>
-
-              <motion.ul
-                variants={containerStagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.25 }}
-                className="mt-6 grid gap-3 text-sm text-foreground/90"
-              >
-                {heroBullets.map((b) => (
-                  <motion.li key={b.text} variants={fadeUp} className="flex items-center gap-2">
-                    {b.pillClass ? (
-                      <span
-                        className={cn(
-                          'mt-0.5 grid place-items-center size-6 rounded-md text-white shrink-0',
-                          b.pillClass
-                        )}
-                        aria-hidden="true"
-                      >
-                        {b.Icon ? <b.Icon className="size-3.5" strokeWidth={2.5} /> : null}
-                      </span>
-                    ) : (
-                      <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
-                    )}
-                    <span>{b.text}</span>
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </motion.div>
-
-            {/* visual */}
-            <motion.div
-              initial={{ opacity: 0, y: shouldReduce ? 0 : 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: shouldReduce ? 0 : 0.6, ease: 'easeOut' }}
-              className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl border bg-white/60 backdrop-blur overflow-hidden"
-            >
-              <Image
-                src="/resolvit_hero.svg"
-                alt="ResolvIT overview"
-                fill
-                className="object-contain"
-                sizes="(min-width: 1024px) 48vw, 100vw"
-                priority
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+              ) : (
+                <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
+              )}
+              <span>{b.text}</span>
+            </motion.li>
+          ))}
+        </motion.ul>
+      </motion.div>
+    </div>
+  </div>
+</section>
 
       {/* FEATURES */}
       <section id="features" className="scroll-mt-24 bg-[#0e0a24] py-12 md:py-16">
