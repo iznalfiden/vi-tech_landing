@@ -74,37 +74,42 @@ export default function ResolvITClient() {
       desc:
         'Work through structured analysis. Attach photos, documents, and references to evidence right in the case.',
       Icon: FileText,
+      gradient: 'from-violet-600 to-purple-600',
     },
     {
       title: 'Lean Coach (AI)',
       desc:
         'Context-aware assistant: suggests next stage, validates required fields, drafts 4W1H/Fishbone text, proposes KPIs, and finds similar cases.',
       Icon: Bot,
-      gradient: 'from-emerald-600 to-teal-500',
+      gradient: 'from-violet-600 to-purple-600',
     },
     {
       title: 'Countermeasures & actions',
       desc:
         'Owners, due dates, SLAs, and reminders. Track on-time completion and verification of effectiveness.',
       Icon: ClipboardCheck,
+      gradient: 'from-violet-600 to-purple-600',
     },
     {
       title: 'Approvals & stage gates',
       desc:
         'D-stages and sign-offs per policy. Clear status, rejections with comments, and full audit trail.',
       Icon: ShieldCheck,
+      gradient: 'from-violet-600 to-purple-600',
     },
     {
       title: 'Update the standard',
       desc:
         'When a fix changes the method, trigger a StandardiziT update and link the case to the new version.',
       Icon: Layers,
+      gradient: 'from-violet-600 to-purple-600',
     },
     {
       title: 'Notifications',
       desc:
         'Email alerts with deep links for assignees and approvers. Noise-reduced deduplication.',
       Icon: Mail,
+      gradient: "from-violet-600 to-purple-600"
     },
     {
       title: 'Improvement Idea',
@@ -149,7 +154,7 @@ export default function ResolvITClient() {
   const ToolTag = ({ children, title }: { children: React.ReactNode; title?: string }) => (
     <span
       title={title}
-      className="inline-flex items-center rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 px-2 py-0.5 text-[11px] leading-5"
+      className="inline-flex items-center rounded-md bg-violet-50 text-violet-700 ring-1 ring-violet-100 px-2 py-0.5 text-[11px] leading-5"
     >
       {children}
     </span>
@@ -293,7 +298,7 @@ export default function ResolvITClient() {
                     className={cn(
                       'grid place-items-center size-12 rounded-xl shrink-0 text-white shadow-md',
                       'bg-gradient-to-br',
-                      f.gradient ? f.gradient : 'from-emerald-600 to-teal-500'
+                      f.gradient ? f.gradient : 'from-violet-600 to-purple-600'
                     )}
                     aria-hidden="true"
                   >
@@ -340,7 +345,7 @@ export default function ResolvITClient() {
                 className="rounded-2xl border bg-white p-4 shadow-sm h-full flex"
               >
                 <div className="flex items-start gap-3 w-full">
-                  <span className="grid place-items-center size-9 rounded-lg bg-emerald-600 text-white font-semibold shrink-0">
+                  <span className="grid place-items-center size-9 rounded-lg bg-violet-600 text-white font-semibold shrink-0">
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -441,7 +446,7 @@ export default function ResolvITClient() {
                 whileHover={{ y: shouldReduce ? 0 : -3 }}
                 className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
               >
-                <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
+                <span className="grid place-items-center size-12 rounded-xl bg-violet-600 text-white">
                   <m.Icon className="size-6" />
                 </span>
                 <div>
