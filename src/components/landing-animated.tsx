@@ -64,7 +64,7 @@ export default function LandingAnimated() {
           >
             <span className="block sm:inline">Simple,</span>{' '}
             <span className="block sm:inline">standardised,</span>{' '}
-            <span className="block sm:inline">sustainable</span>
+            <span className="block sm:inline">sustainable.</span>
           </motion.h1>
 
           <motion.p
