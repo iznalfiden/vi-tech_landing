@@ -26,7 +26,6 @@ import {
     Lightbulb,
     Settings,
     Gauge,
-    ListChecks,
     ChartCandlestick,
 } from 'lucide-react';
 

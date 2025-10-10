@@ -18,7 +18,6 @@ import {
   Gauge,
   CheckCircle2,
   Layers,
-  AlertTriangle,
   Lightbulb,
   Target,
   Mail,

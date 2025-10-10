@@ -2,11 +2,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { FM } from "@/components/motion";
 import { Lightbulb, Settings, ShieldCheck, Wrench, ArrowRight } from "lucide-react";
-import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "About – Vi-Tech",
