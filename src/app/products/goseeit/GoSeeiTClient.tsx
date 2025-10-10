@@ -114,7 +114,10 @@ export default function GoSeeiTClient() {
   return (
     <main>
       {/* HERO */}
-      <section className="relative isolate overflow-hidden">
+      <section className="
+    relative isolate overflow-hidden
+    bg-[url('/GoSeeItCircle.svg')] bg-no-repeat bg-cover bg-top
+  ">
         <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             {/* text */}
@@ -180,7 +183,7 @@ export default function GoSeeiTClient() {
               className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl border bg-white/60 backdrop-blur overflow-hidden"
             >
               <Image
-                src="/main_page_1.svg"
+                src="/hero_bg.svg"
                 alt="GoSeeiT overview"
                 fill
                 className="object-contain"

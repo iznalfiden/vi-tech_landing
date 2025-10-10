@@ -246,6 +246,22 @@ export default function ResolvITClient() {
           ))}
         </motion.ul>
       </motion.div>
+      <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl border bg-white/60 backdrop-blur overflow-hidden"
+                  >
+                    <Image
+                      src="/hero_bg.svg"
+                      alt="Resolvit overview"
+                      fill
+                      className="object-contain"
+                      sizes="(min-width: 1024px) 48vw, 100vw"
+                      priority
+                    />
+                  </motion.div>
     </div>
   </div>
 </section>

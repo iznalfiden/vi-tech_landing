@@ -163,7 +163,12 @@ export default function StandardiziTClient() {
   return (
     <main>
       {/* HERO */}
-      <section className="relative isolate overflow-hidden">
+      <section
+  className="
+    relative isolate overflow-hidden
+    bg-[url('/StandardiziTCircle.svg')] bg-no-repeat bg-cover bg-center
+  "
+>
         <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             {/* text */}
@@ -248,8 +253,8 @@ export default function StandardiziTClient() {
               className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl border bg-white/60 backdrop-blur overflow-hidden"
             >
               <Image
-                src="/standardizit_hero.svg"
-                alt="standardiziT overview"
+                      src="/hero_bg.svg"
+                      alt="standardiziT overview"
                 fill
                 className="object-contain"
                 sizes="(min-width: 1024px) 48vw, 100vw"
