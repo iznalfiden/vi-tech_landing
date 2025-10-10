@@ -161,9 +161,6 @@ export default function ResolvITClient() {
 
   return (
     <main>
-      {/* HERO */}
-{/* HERO */}
-{/* HERO */}
 <section
   className="
     relative isolate overflow-hidden
@@ -181,9 +178,9 @@ export default function ResolvITClient() {
       >
         <motion.span
           variants={fadeUp}
-          className="inline-flex items-center gap-2 rounded-full bg-fuchsia-50 px-3 py-1 text-fuchsia-700 ring-1 ring-fuchsia-100"
+          className="inline-flex items-center gap-2 rounded-full bg-violet-50 px-3 py-1 text-violet-700 ring-1 ring-fuchsia-100"
         >
-          <span className="inline-grid place-items-center size-5 rounded-md bg-fuchsia-600 text-white">
+          <span className="inline-grid place-items-center size-5 rounded-md bg-violet-600 text-white">
             <Target className="size-3.5" />
           </span>
           Problem Solving
