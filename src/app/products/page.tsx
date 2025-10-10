@@ -14,6 +14,7 @@ import {
   ChartCandlestick,
   ChevronRight,
 } from 'lucide-react';
+import ProductsOverviewFlow from './components/ProductsOverviewFlow';
 
 type Tool = {
   name: string;
@@ -87,8 +88,7 @@ export default function ProductsOverviewPage() {
             transition={{ duration: 0.5, ease: easeOut, delay: 0.12 }}
             className="mt-4 max-w-2xl text-muted-foreground text-lg"
           >
-            Tools built to empower teams, standardise processes and surface
-            performance insights — from shopfloor to leadership.
+            Each Vi-Tech tool works individually but are most effective when combined and applied as a structured process embedded into your teams workflow
           </motion.p>
 
           <motion.div
@@ -107,55 +107,7 @@ export default function ProductsOverviewPage() {
 
       {/* GRID OF TOOLS */}
       <section className="mx-auto max-w-7xl px-4 pb-16 md:pb-24">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {tools.map((t, i) => (
-            <motion.article
-              key={t.name}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.5, ease: easeOut, delay: i * 0.06 }}
-              className="group rounded-2xl border bg-white hover:shadow-lg transition-shadow"
-            >
-              <Link href={t.slug} className="flex h-full flex-col">
-                {/* cover (optional) */}
-                <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl bg-gradient-to-br from-slate-50 to-slate-100">
-                  {t.cover ? (
-                    <Image
-                      src={t.cover}
-                      alt={`${t.name} preview`}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, 100vw"
-                      className="object-contain p-4"
-                    />
-                  ) : (
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-br ${t.gradient} opacity-90`}
-                    />
-                  )}
-                </div>
-
-                <div className="p-5">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`grid size-10 place-items-center rounded-xl text-white bg-gradient-to-br ${t.gradient} shadow-sm`}
-                      aria-hidden
-                    >
-                      <t.Icon className="size-5" />
-                    </span>
-                    <h3 className="text-xl font-semibold">{t.name}</h3>
-                  </div>
-
-                  <p className="mt-3 text-muted-foreground">{t.desc}</p>
-
-                  <div className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                    Learn more <ChevronRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </Link>
-            </motion.article>
-          ))}
-        </div>
+        <ProductsOverviewFlow />
       </section>
     </main>
   );
