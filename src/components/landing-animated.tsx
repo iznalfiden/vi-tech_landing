@@ -199,7 +199,7 @@ export default function LandingAnimated() {
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
       className="h-full"
     >
-      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+      <h3 className="text-white font-extrabold text-2xl md:text-3xl">
         Suitable for all business
       </h3>
       <p className="mt-4 text-white/85 text-lg leading-relaxed">
@@ -215,7 +215,7 @@ export default function LandingAnimated() {
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
       className="h-full"
     >
-      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+      <h3 className="text-white font-extrabold text-2xl md:text-3xl">
         Tailored to serve you best
       </h3>
       <p className="mt-4 text-white/85 text-lg leading-relaxed">
@@ -231,7 +231,7 @@ export default function LandingAnimated() {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className="h-full"
     >
-      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+      <h3 className="text-white font-extrabold text-2xl md:text-3xl">
         Embedded in your work flow
       </h3>
       <p className="mt-4 text-white/85 text-lg leading-relaxed">
@@ -251,7 +251,7 @@ export default function LandingAnimated() {
       transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
       className="h-full"
     >
-      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+      <h3 className="text-white font-extrabold text-2xl md:text-3xl">
         There when you need us
       </h3>
       <p className="mt-4 text-white/85 text-lg leading-relaxed">

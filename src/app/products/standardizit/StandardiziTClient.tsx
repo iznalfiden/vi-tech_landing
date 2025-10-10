@@ -237,7 +237,7 @@ export default function StandardiziTClient() {
                     variants={fadeUp}
                     className="flex items-start gap-2"
                   >
-                    <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
+                    <CheckCircle2 className="mt-0.5 size-4 text-fuchsia-600 shrink-0" />
                     <span>{t}</span>
                   </motion.li>
                 ))}
@@ -300,7 +300,7 @@ export default function StandardiziTClient() {
                     className={cn(
                       'grid place-items-center size-12 rounded-xl shrink-0 text-white shadow-md',
                       'bg-gradient-to-br',
-                      f.gradient ? f.gradient : 'from-emerald-600 to-teal-500'
+                      f.gradient ? f.gradient : 'from-fuchsia-600 to-teal-500'
                     )}
                     aria-hidden="true"
                   >
@@ -321,7 +321,7 @@ export default function StandardiziTClient() {
       </section>
 
       {/* METRICS/CTA */}
-      <section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-fuchsia-50 to-white">
         <div className="mx-auto max-w-7xl px-4">
           <motion.div
             variants={containerStagger}

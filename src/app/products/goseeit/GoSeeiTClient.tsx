@@ -28,63 +28,43 @@ type FeatureItem = {
   title: string;
   desc: string;
   Icon: LucideIcon;
-  pillClass?: string; // optional accent gradient for the pill
+  pillClass?: string;
 };
 
 type HeroBullet = {
   text: string;
   Icon?: LucideIcon;
-  pillClass?: string; // optional accent pill for special bullets
+  pillClass?: string;
 };
 
 export default function GoSeeiTClient() {
   const features: FeatureItem[] = [
-    {
-      title: 'Templates & versioning',
-      desc: 'Publish signed-off templates as “latest”; previous versions auto-archive on sign-off.',
-      Icon: Layers,
-    },
-    {
-      title: 'Scheduling: Standard & Tiered',
-      desc: 'Role-based assignees, time slots and D/W/M/Q/Y frequency — or tiered round-robin by team levels.',
-      Icon: CalendarDays,
-    },
-    {
-      title: 'Evidence in answers',
-      desc: 'Attach photos, documents and videos; resubmissions preserve kept attachments.',
-      Icon: FileText,
-    },
-    {
-      title: 'Approvals & quorum',
-      desc: 'Countersigners approve or reject; full quorum auto-finalizes the run.',
-      Icon: ShieldCheck,
-    },
-    {
-      title: 'My calendar',
-      desc: 'Personal list of occurrences with statuses and deep links to runs.',
-      Icon: Users,
-    },
-    {
-      title: 'Notifications',
-      desc: 'Emails to approvers and assignees with deep links and de-duplication.',
-      Icon: Mail,
-    },
-    // linked tools accents
-    {
-      title: 'Raise Problem',
-      desc: 'Escalate a finding into a Problem Case with its own reference and follow-up tracking.',
-      Icon: AlertTriangle,
-      pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600',
-    },
-    {
-      title: 'Improvement Idea',
-      desc: 'Capture ideas during or outside a run and convert them into actions later.',
-      Icon: Lightbulb,
-      pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500',
-    },
+    { title: 'Templates & versioning', desc: 'Publish signed-off templates as “latest”; previous versions auto-archive on sign-off.', Icon: Layers },
+    { title: 'Scheduling: Standard & Tiered', desc: 'Role-based assignees, time slots and D/W/M/Q/Y frequency — or tiered round-robin by team levels.', Icon: CalendarDays },
+    { title: 'Evidence in answers', desc: 'Attach photos, documents and videos; resubmissions preserve kept attachments.', Icon: FileText },
+    { title: 'Approvals & quorum', desc: 'Countersigners approve or reject; full quorum auto-finalizes the run.', Icon: ShieldCheck },
+    { title: 'My calendar', desc: 'Personal list of occurrences with statuses and deep links to runs.', Icon: Users },
+    { title: 'Notifications', desc: 'Emails to approvers and assignees with deep links and de-duplication.', Icon: Mail },
+    { title: 'Raise Problem', desc: 'Escalate a finding into a Problem Case with its own reference and follow-up tracking.', Icon: AlertTriangle, pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600' },
+    { title: 'Improvement Idea', desc: 'Capture ideas during or outside a run and convert them into actions later.', Icon: Lightbulb, pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500' },
   ];
 
-  // smooth scroll to "features"
+  const heroBullets: HeroBullet[] = [
+    { text: 'Templates with versioning & sign-off' },
+    { text: 'Standard & Tiered scheduling with preview' },
+    { text: 'Evidence: photos, documents & videos' },
+    { text: 'Raise Problem: escalate a finding into a Problem Case with its own tracking', Icon: AlertTriangle, pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600' },
+    { text: 'Improvement Idea: capture ideas and convert them into actions later', Icon: Lightbulb, pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500' },
+  ];
+
+  // helper для однотипного fade-up
+  const mk = (delay = 0) => ({
+    initial: { opacity: 0, y: 12 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-80px' as const },
+    transition: { duration: 0.5, ease: 'easeOut' as const, delay },
+  });
+
   const onSeeFeaturesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const el = document.getElementById('features');
@@ -94,51 +74,40 @@ export default function GoSeeiTClient() {
     if (history.pushState) history.pushState(null, '', '#features');
   };
 
-  // hero bullets (two special ones have colored pills)
-  const heroBullets: HeroBullet[] = [
-    { text: 'Templates with versioning & sign-off' },
-    { text: 'Standard & Tiered scheduling with preview' },
-    { text: 'Evidence: photos, documents & videos' },
-    {
-      text: 'Raise Problem: escalate a finding into a Problem Case with its own tracking',
-      Icon: AlertTriangle,
-      pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600',
-    },
-    {
-      text: 'Improvement Idea: capture ideas and convert them into actions later',
-      Icon: Lightbulb,
-      pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500',
-    },
-  ];
-
   return (
     <main>
       {/* HERO */}
-      <section className="
-    relative isolate overflow-hidden
-    bg-[url('/GoSeeItCircle.svg')] bg-no-repeat bg-cover bg-top
-  ">
+      <section className="relative isolate overflow-hidden bg-[url('/GoSeeItCircle.svg')] bg-no-repeat bg-cover bg-top">
         <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             {/* text */}
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-emerald-700 ring-1 ring-emerald-100">
+              <motion.span
+                {...mk(0.02)}
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-emerald-700 ring-1 ring-emerald-100"
+              >
                 <span className="inline-grid place-items-center size-5 rounded-md bg-emerald-600 text-white">
                   <SearchIcon className="size-3.5" />
                 </span>
                 Workplace Audit
-              </span>
+              </motion.span>
 
-              <h1 className="mt-4 font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl">
+              <motion.h1
+                {...mk(0.06)}
+                className="mt-4 font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
+              >
                 GoSeeiT — templates, schedules, evidence & approvals
-              </h1>
+              </motion.h1>
 
-              <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
+              <motion.p
+                {...mk(0.12)}
+                className="mt-4 text-lg text-muted-foreground max-w-2xl"
+              >
                 From signed-off templates to scheduled runs: capture evidence (photos/docs/videos),
                 submit for approval with quorum, and track everything in one place.
-              </p>
+              </motion.p>
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <motion.div {...mk(0.18)} className="mt-6 flex flex-wrap items-center gap-3">
                 <Button asChild className="rounded-full">
                   <Link href="/book-demo">
                     Book a demo
@@ -150,11 +119,15 @@ export default function GoSeeiTClient() {
                     See features
                   </Link>
                 </Button>
-              </div>
+              </motion.div>
 
               <ul className="mt-6 grid gap-3 text-sm text-foreground/90">
-                {heroBullets.map((b) => (
-                  <li key={b.text} className="flex items-center gap-2">
+                {heroBullets.map((b, i) => (
+                  <motion.li
+                    key={b.text}
+                    {...mk(0.1 + i * 0.05)}
+                    className="flex items-center gap-2"
+                  >
                     {b.pillClass ? (
                       <span
                         className={cn(
@@ -169,7 +142,7 @@ export default function GoSeeiTClient() {
                       <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
                     )}
                     <span>{b.text}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
@@ -198,7 +171,9 @@ export default function GoSeeiTClient() {
       {/* FEATURES */}
       <section id="features" className="scroll-mt-24 bg-[#0e0a24] py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">What GoSeeiT includes</h2>
+          <motion.h2 {...mk()} className="text-2xl md:text-3xl font-bold text-white">
+            What GoSeeiT includes
+          </motion.h2>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {features.map((f, i) => (
@@ -243,8 +218,9 @@ export default function GoSeeiTClient() {
               { Icon: Gauge, value: '×2.1', label: 'Action closure speed' },
               { Icon: CheckCircle2, value: '95%', label: 'Verified fixes' },
             ].map((m, i) => (
-              <div
+              <motion.div
                 key={i}
+                {...mk(i * 0.05)}
                 className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
               >
                 <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
@@ -254,11 +230,11 @@ export default function GoSeeiTClient() {
                   <div className="text-2xl font-bold">{m.value}</div>
                   <div className="text-muted-foreground">{m.label}</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <motion.div {...mk(0.15)} className="mt-8 flex flex-wrap items-center gap-3">
             <Button asChild className="rounded-full">
               <Link href="/book-demo">
                 Request a demo
@@ -268,7 +244,7 @@ export default function GoSeeiTClient() {
             <Button asChild variant="outline" className="rounded-full">
               <Link href="/products">Other products</Link>
             </Button>
-          </div>
+          </motion.div>
         </div>
       </section>
     </main>

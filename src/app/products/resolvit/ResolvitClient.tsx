@@ -235,7 +235,7 @@ export default function ResolvITClient() {
                   {b.Icon ? <b.Icon className="size-3.5" strokeWidth={2.5} /> : null}
                 </span>
               ) : (
-                <CheckCircle2 className="mt-0.5 size-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="mt-0.5 size-4 text-violet-600 shrink-0" />
               )}
               <span>{b.text}</span>
             </motion.li>
@@ -425,7 +425,7 @@ export default function ResolvITClient() {
       </section>
 
       {/* METRICS/CTA */}
-      <section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-violet-50 to-white">
         <div className="mx-auto max-w-7xl px-4">
           <motion.div
             variants={containerStagger}
