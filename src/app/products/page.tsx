@@ -76,7 +76,7 @@ export default function ProductsOverviewPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6, ease: easeOut, delay: 0.05 }}
-            className="font-display text-4xl md:text-6xl font-bold tracking-tight"
+            className="text-4xl md:text-6xl font-bold tracking-tight"
           >
             Our product suite
           </motion.h1>
@@ -90,18 +90,6 @@ export default function ProductsOverviewPage() {
           >
             Each Vi-Tech tool works individually but are most effective when combined and applied as a structured process embedded into your teams workflow
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.45, ease: easeOut, delay: 0.18 }}
-            className="mt-6"
-          >
-            <Button asChild className="rounded-2xl">
-              <Link href="/book-demo">Book a demo</Link>
-            </Button>
-          </motion.div>
         </div>
       </section>
 
