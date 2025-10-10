@@ -129,7 +129,7 @@ export default function GoSeeiTClient() {
                 Workplace Audit
               </span>
 
-              <h1 className="mt-4 font-display font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl">
+              <h1 className="mt-4 font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl">
                 GoSeeiT — templates, schedules, evidence & approvals
               </h1>
 

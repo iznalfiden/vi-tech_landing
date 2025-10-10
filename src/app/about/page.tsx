@@ -26,7 +26,7 @@ export default function AboutPage() {
             {/* Our Mission + illustration (right) */}
             <div className="grid items-center gap-8 md:grid-cols-2">
               <div className="max-w-3xl">
-                <FM as="h2" className="font-display text-3xl md:text-4xl font-bold text-white">
+                <FM as="h2" className="text-3xl md:text-4xl font-bold text-white">
                   Our Mission
                 </FM>
                 <FM
@@ -68,7 +68,7 @@ export default function AboutPage() {
 
               {/* Text right */}
               <div className="order-1 md:order-2 max-w-4xl">
-                <FM as="h2" className="font-display text-3xl md:text-4xl font-bold text-white">
+                <FM as="h2" className="text-3xl md:text-4xl font-bold text-white">
                   Our Products
                 </FM>
                 <FM
@@ -87,7 +87,7 @@ export default function AboutPage() {
       {/* GENUINE SUPPORT */}
       <section className="py-20 md:py-24 bg-white">
         <div className="mx-auto max-w-7xl px-4">
-          <FM as="h2" className="text-center font-display text-3xl md:text-4xl font-bold">
+          <FM as="h2" className="text-center text-3xl md:text-4xl font-bold">
             Genuine Support
           </FM>
           <FM
@@ -126,7 +126,7 @@ export default function AboutPage() {
       {/* OUR RESEARCH */}
       <section className="py-20 md:py-24 bg-[#f7f7fb]">
         <div className="mx-auto max-w-3xl px-4 text-center">
-          <FM as="h2" className="font-display text-3xl md:text-4xl font-bold">
+          <FM as="h2" className="text-3xl md:text-4xl font-bold">
             Our Research
           </FM>
           <FM
@@ -164,7 +164,7 @@ export default function AboutPage() {
             <div className="pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-indigo-900/40 blur-3xl" />
 
             <div className="relative mx-auto max-w-3xl text-center">
-              <FM as="h3" className="font-display text-3xl md:text-4xl font-bold">
+              <FM as="h3" className="text-3xl md:text-4xl font-bold">
                 Get in touch
               </FM>
               <FM

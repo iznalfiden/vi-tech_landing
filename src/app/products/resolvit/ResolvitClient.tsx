@@ -191,7 +191,7 @@ export default function ResolvITClient() {
 
         <motion.h1
           variants={fadeUp}
-          className="mt-4 font-display font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
+          className="mt-4 font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
         >
           ResolvIT — structured problem solving & action tracking
         </motion.h1>

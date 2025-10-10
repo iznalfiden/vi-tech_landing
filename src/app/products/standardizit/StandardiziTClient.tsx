@@ -190,7 +190,7 @@ export default function StandardiziTClient() {
 
               <motion.h1
                 variants={fadeUp}
-                className="mt-4 font-display font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
+                className="mt-4 font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,7.5vw,44px)] md:text-6xl"
               >
                 StandardiziT — create & approve standard processes
               </motion.h1>

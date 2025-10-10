@@ -65,7 +65,7 @@ export default function LandingAnimated() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-      className="font-display text-black font-bold tracking-tight
+      className="text-black font-bold tracking-tight
                  leading-[1.15] md:leading-[1.05]
                  text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
     >
@@ -177,7 +177,7 @@ export default function LandingAnimated() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="text-center"
         >
-          <h2 className="font-display text-3xl md:text-4xl font-bold">Working with valued partners</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
           <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
             We are currently working with trusted partners across a wide range of industries, to help build efficient
             and rewarding processes through embedding Vi-Tech tools
