@@ -30,8 +30,7 @@ export default function LandingAnimated() {
     { name: 'TIMET', src: '/timet _logo.png' },
   ];
 
-  // Плавный скролл к секции Products с дополнительным смещением вниз,
-  // чтобы нижний элемент списка был виден.
+  // плавный скролл к секции Products с небольшим «прижимом»
   const scrollToProducts = (e: React.MouseEvent) => {
     e.preventDefault();
     const target = document.getElementById('products');
@@ -43,108 +42,93 @@ export default function LandingAnimated() {
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
-
   return (
     <main>
-      {/* HERO */}
-{/* HERO */}
-<section className="relative isolate min-h-[50vh]  overflow-hidden">
-  {/* Декоративный фон — скрыт на мобилке */}
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.6, ease: 'easeOut' }}
-    className="hidden sm:block absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right"
-    aria-hidden
-  />
-  {/* Правый рад. градиент — тоже скрываем на мобиле */}
-  <div className="hidden sm:block pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
+      {/* HERO (мобайл — без сложных фонов) */}
+      <section className="relative isolate min-h-[50vh] overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="hidden sm:block absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right"
+          aria-hidden
+        />
+        <div className="hidden sm:block pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
 
-  <div className="mx-auto max-w-7xl px-4 pt-28 md:pt-40 pb-20 md:pb-28">
-    <motion.h1
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-      className="text-black font-bold tracking-tight
-                 leading-[1.15] md:leading-[1.05]
-                 text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
-    >
-      <span className="block sm:inline">Simple,</span>{' '}
-      <span className="block sm:inline">standardised,</span>{' '}
-      <span className="block sm:inline">sustainable</span>
-    </motion.h1>
+        <div className="mx-auto max-w-7xl px-4 pt-28 md:pt-40 pb-20 md:pb-28">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
+            className="text-black font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
+          >
+            <span className="block sm:inline">Simple,</span>{' '}
+            <span className="block sm:inline">standardised,</span>{' '}
+            <span className="block sm:inline">sustainable</span>
+          </motion.h1>
 
-    <motion.p
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
-      className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
-    >
-      The possibilities for efficiency improvement in every facet of the business and its operations are endless.
-    </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+            className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
+          >
+            The possibilities for efficiency improvement in every facet of the business and its operations are endless.
+          </motion.p>
 
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
-      className="mt-6 sm:mt-8"
-    >
-      <Button
-        size="lg"
-        onClick={scrollToProducts}
-        className="rounded-full cursor-pointer bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
-      >
-        <a href="#products" onClick={scrollToProducts} className="inline-flex items-center gap-2 tracking-wide">
-          EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
-        </a>
-      </Button>
-    </motion.div>
-  </div>
-</section>
-
-      {/* IMAGE + COPY */}
-
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
+            className="mt-6 sm:mt-8"
+          >
+            <Button
+              size="lg"
+              onClick={scrollToProducts}
+              className="rounded-full cursor-pointer bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+            >
+              <a href="#products" onClick={scrollToProducts} className="inline-flex items-center gap-2 tracking-wide">
+                EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
+              </a>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
 
       {/* PRODUCTS LIST + IMAGE */}
-      <section
-        id="products"
-        className="min-h-[800px] relative isolate overflow-hidden py-16 bg-[#0e0a24]"
-      >
+      <section id="products" className="min-h-[800px] relative isolate overflow-hidden py-16 bg-[#0e0a24]">
         <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid gap-10 md:grid-cols-2 items-start">
             <div>
-              
               <ul className="mt-10 divide-y divide-white/10">
                 {products.map((p, i) => (
-                    <motion.li
-  key={p.name}
-  initial={{ opacity: 0, y: 8 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true, margin: '-80px' }}
-  transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
-  className="min-h-[96px] flex items-center"
->
-  <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
-    <div className="flex items-center gap-4">
-      {/* ИКОНОЧНЫЙ БЛОК — фиксированный размер */}
-      <span
-        className={`grid place-items-center size-16 rounded-2xl shrink-0
-                    bg-gradient-to-br ${p.gradient} text-white shadow-md`}
-        aria-hidden="true"
-      >
-        <p.Icon className="size-7 sm:size-8" strokeWidth={2} />
-      </span>
+                  <motion.li
+                    key={p.name}
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
+                    className="min-h-[96px] flex items-center"
+                  >
+                    <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
+                      <div className="flex items-center gap-4">
+                        <span
+                          className={`grid place-items-center size-16 rounded-2xl shrink-0 bg-gradient-to-br ${p.gradient} text-white shadow-md`}
+                          aria-hidden="true"
+                        >
+                          <p.Icon className="size-7 sm:size-8" strokeWidth={2} />
+                        </span>
 
-      <div className="leading-snug">
-        <div className="text-2xl font-semibold text-white">{p.name}</div>
-        <div className="text-white/75">{p.desc}</div>
-      </div>
-    </div>
+                        <div className="leading-snug">
+                          <div className="text-2xl font-semibold text-white">{p.name}</div>
+                          <div className="text-white/75">{p.desc}</div>
+                        </div>
+                      </div>
 
-    <ChevronRight className="h-6 w-6 text-white/70 transition-transform group-hover:translate-x-1" />
-  </Link>
-</motion.li>
+                      <ChevronRight className="h-6 w-6 text-white/70 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </motion.li>
                 ))}
               </ul>
             </div>
@@ -179,8 +163,8 @@ export default function LandingAnimated() {
         >
           <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
           <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
-            We are currently working with trusted partners across a wide range of industries, to help build efficient
-            and rewarding processes through embedding Vi-Tech tools
+            We are currently working with trusted partners across a wide range of industries,
+            to help build efficient and rewarding processes through embedding Vi-Tech tools
           </p>
         </motion.div>
 
@@ -201,6 +185,85 @@ export default function LandingAnimated() {
           ))}
         </div>
       </section>
+
+      {/* VALUE PROPS (ниже партнёров) */}
+    {/* VALUE PROPS (ниже партнёров) — 4 колонки в ряд */}
+<section className="relative isolate overflow-hidden bg-[#0e0a24] py-16 md:py-24">
+  <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(139,92,246,0.20),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.16),transparent_60%)]" />
+
+  <div className="mx-auto max-w-7xl px-4 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+  <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+      className="h-full"
+    >
+      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+        Suitable for all business
+      </h3>
+      <p className="mt-4 text-white/85 text-lg leading-relaxed">
+        Vi-Tech software can be embedded
+        across a multitude of industries including Construction, Manufacturing, Service &amp; Maintenance,
+        Healthcare, FMCG, Transactional, Mining, Oil &amp; Gas.
+      </p>
+    </motion.div>
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
+      className="h-full"
+    >
+      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+        Tailored to serve you best
+      </h3>
+      <p className="mt-4 text-white/85 text-lg leading-relaxed">
+        The Vi-Tech suite can be adapted to collaborate with 3rd-party applications.
+        We’re always happy to discuss bespoke solutions to suit your needs.
+      </p>
+    </motion.div>
+    {/* 1 */}
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="h-full"
+    >
+      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+        Embedded in your work flow
+      </h3>
+      <p className="mt-4 text-white/85 text-lg leading-relaxed">
+        We partner with your existing team and tools to ensure the seamless integration and
+        evolution of Vi-Tech products throughout your work flow.
+      </p>
+    </motion.div>
+
+    {/* 2 */}
+   
+
+    {/* 3 */}
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+      className="h-full"
+    >
+      <h3 className="font-display text-white font-extrabold text-2xl md:text-3xl">
+        There when you need us
+      </h3>
+      <p className="mt-4 text-white/85 text-lg leading-relaxed">
+        Our support team are always on hand to help you get the most out of Vi-Tech tools,
+        allowing you to focus on the important stuff.
+      </p>
+    </motion.div>
+
+    {/* 4 — новый текст */}
+    
+  </div>
+</section>
     </main>
   );
 }
