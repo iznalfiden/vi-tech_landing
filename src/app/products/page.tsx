@@ -2,18 +2,8 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { motion, easeOut } from 'framer-motion';
 import {
-    Search,
-    Settings,
-    Gauge,
-    Lightbulb,
-    ChartCandlestick,
-    ChevronRight,
-    // NEW icons for the benefits section
     Cog,
     Users,
     BookOpen,
@@ -25,15 +15,7 @@ import ProductsOverviewFlow from './components/ProductsOverviewFlow';
 
 
 export default function ProductsOverviewPage() {
-    // данные для секции “Empowering…”
-    const benefits = [
-        { Icon: Cog, text: 'Catalyst for improvement' },
-        { Icon: Users, text: 'Encourages collaborative problem solving' },
-        { Icon: BookOpen, text: 'Develop a shared knowledge base and gives every employee a voice' },
-        { Icon: RefreshCw, text: 'Engaged workforce identifying & eliminating waste' },
-        { Icon: Coins, text: 'Cost benefit decision making' },
-        { Icon: Globe, text: 'Connects remote teams & aligns workforces' },
-    ] as const;
+
 
     return (
         <main className="bg-white text-foreground">
