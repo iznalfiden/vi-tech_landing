@@ -447,14 +447,36 @@ export default function ResolvITClient() {
             </section>
 
             {/* METRICS/CTA */}
+            {/* METRICS/CTA */}
             <section className="py-12 md:py-16 bg-gradient-to-b from-violet-50 to-white">
                 <div className="mx-auto max-w-7xl px-4">
+                    {/* заголовок + подпись */}
+                    <motion.h3
+                        variants={fadeUp}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, amount: 0.2 }}
+                        className="text-center font-lg font-bold tracking-wider uppercase"
+                    >
+                        Outcomes with ResolvIT
+                    </motion.h3>
+
+                    <motion.p
+                        variants={fadeUp}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, amount: 0.2 }}
+                        className="mt-2 text-center text-sm text-muted-foreground max-w-2xl mx-auto"
+                    >
+                        Indicative results from early customer deployments; impact varies by baseline, team size, and rollout maturity.
+                    </motion.p>
+
                     <motion.div
                         variants={containerStagger}
                         initial="hidden"
                         whileInView="show"
                         viewport={{ once: true, amount: 0.2 }}
-                        className="grid gap-6 md:grid-cols-3"
+                        className="mt-6 grid gap-6 md:grid-cols-3"
                     >
                         {[
                             { Icon: Gauge, value: '−35%', label: 'Mean time to resolve (MTTR)' },
