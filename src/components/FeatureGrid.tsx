@@ -11,14 +11,14 @@ export type FeatureGridItem = {
   onClick?: () => void;
 };
 
-export type FeatureGridTheme = 'violet' | 'emerald';
+export type FeatureGridTheme = 'violet' | 'emerald' | 'fuchsia' | 'amber';
 
 type Props = {
   heading?: string;
   items: FeatureGridItem[];
   id?: string;
   className?: string;
-  theme?: FeatureGridTheme; // ⬅️ теперь поддерживает emerald
+  theme?: FeatureGridTheme;
 };
 
 export default function FeatureGrid({
@@ -55,6 +55,14 @@ export default function FeatureGrid({
     emerald: {
       border: 'border-emerald-200/70 hover:border-emerald-300',
       iconWrap: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+    },
+    fuchsia: {
+      border: 'border-fuchsia-200/70 hover:border-fuchsia-300',
+      iconWrap: 'bg-fuchsia-50 text-fuchsia-700 ring-1 ring-fuchsia-200',
+    },
+    amber: {
+      border: 'border-amber-200/70 hover:border-amber-300',
+      iconWrap: 'bg-amber-50 text-amber-800 ring-1 ring-amber-200',
     },
   };
 

@@ -274,7 +274,7 @@ export default function StandardiziTClient() {
       <FeatureGrid
         heading="Simple, standardised & scalable"
         items={benefitsGrid}
-        theme="violet"          // фиолетовая палитра для StandardiziT
+        theme="fuchsia"          // фиолетовая палитра для StandardiziT
         className="bg-white"    // фон — белый
       />
 

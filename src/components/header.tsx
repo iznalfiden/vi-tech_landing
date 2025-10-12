@@ -65,28 +65,28 @@ export default function Header() {
                 href: '/products/goseeit',
                 desc: 'Workplace Audit',
                 Icon: Search,
-                gradient: 'from-emerald-500 to-teal-500',
+                gradient: 'from-emerald-500 to-emerald-500',
             },
             {
                 name: 'StandardiziT',
                 href: '/products/standardizit',
-                desc: 'Work Standards & SWC',
+                desc: 'Work Standards',
                 Icon: ChartCandlestick,
-                gradient: 'from-fuchsia-600 to-pink-600',
+                gradient: 'from-fuchsia-600 to-fuchsia-600',
             },
             {
                 name: 'Resolvit',
                 href: '/products/resolvit',
                 desc: 'Drives & simplifies standardised problem solving',
                 Icon: Settings,
-                gradient: 'from-violet-600 to-purple-600',
+                gradient: 'from-violet-600 to-violet-600',
             },
             {
                 name: 'ImproviT',
                 href: '/products/improvit',
                 desc: 'Structured Idea Generation & Implementation',
                 Icon: Lightbulb,
-                gradient: 'from-amber-500 to-orange-500',
+                gradient: 'from-amber-500 to-amber-500',
             },
         ],
         []
@@ -109,7 +109,7 @@ export default function Header() {
         >
             <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 font-semibold">
+                <Link href="/" className="flex items-center gap-2 font-semibold cursor-pointer">
                     <Image src="/LOGO_V1.svg" alt="Brand logo" width={200} height={200} className="rounded" priority />
                 </Link>
 
