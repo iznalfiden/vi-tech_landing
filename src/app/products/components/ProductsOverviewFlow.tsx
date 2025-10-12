@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { motion, easeOut } from 'framer-motion';
 
 export default function ProductsOverviewFlowSVG() {
@@ -9,6 +8,10 @@ export default function ProductsOverviewFlowSVG() {
   const r = 96;
   const gap = 16;
   const branchExtra = 48;
+
+  // разнесение ветвления от GoSeeiT, чтобы не было "капли"
+  const splitDx = 8;
+  const splitDy = 7;
 
   const resY = 170 - branchExtra;
   const impY = 350 + branchExtra;
@@ -22,29 +25,41 @@ export default function ProductsOverviewFlowSVG() {
 
   const order: Array<keyof typeof nodes> = ['std', 'gsi', 'res', 'imp'];
 
-  const midStdGsi = (nodes.std.cx + nodes.gsi.cx) / 2;
-  const midGsiRes = (nodes.gsi.cx + nodes.res.cx) / 2;
-  const midGsiImp = (nodes.gsi.cx + nodes.imp.cx) / 2;
+  const bezier = (sx: number, sy: number, ex: number, ey: number) => {
+    const mx = (sx + ex) / 2;
+    return `M ${sx} ${sy} C ${mx} ${sy}, ${mx} ${ey}, ${ex} ${ey}`;
+  };
 
-  const pathStdToGsi =
-    `M ${nodes.std.cx + r + gap} ${nodes.std.cy} ` +
-    `C ${midStdGsi} ${nodes.std.cy}, ${midStdGsi} ${nodes.gsi.cy}, ` +
-    `${nodes.gsi.cx - r - gap} ${nodes.gsi.cy}`;
+  // Std -> Gsi (с зазором от кругов)
+  const pathStdToGsi = bezier(
+    nodes.std.cx + r + gap,
+    nodes.std.cy,
+    nodes.gsi.cx - r - gap,
+    nodes.gsi.cy
+  );
 
-  const pathGsiToRes =
-    `M ${nodes.gsi.cx + r + gap} ${nodes.gsi.cy} ` +
-    `C ${midGsiRes} ${nodes.gsi.cy}, ${midGsiRes} ${nodes.res.cy}, ` +
-    `${nodes.res.cx - r - gap} ${nodes.res.cy}`;
+  // ветвление из Gsi — стартуем чуть правее и выше/ниже
+  const startX = nodes.gsi.cx + r + gap + splitDx;
+  const startUpY = nodes.gsi.cy - splitDy;
+  const startDownY = nodes.gsi.cy + splitDy;
 
-  const pathGsiToImp =
-    `M ${nodes.gsi.cx + r + gap} ${nodes.gsi.cy} ` +
-    `C ${midGsiImp} ${nodes.gsi.cy}, ${midGsiImp} ${nodes.imp.cy}, ` +
-    `${nodes.imp.cx - r - gap} ${nodes.imp.cy}`;
+  const pathGsiToRes = bezier(
+    startX,
+    startUpY,
+    nodes.res.cx - r - gap,
+    nodes.res.cy
+  );
+  const pathGsiToImp = bezier(
+    startX,
+    startDownY,
+    nodes.imp.cx - r - gap,
+    nodes.imp.cy
+  );
 
   const stroke = '#120b2b';
-  const arrowSize = 20;
+  const arrowSize = 12; // << уменьшили стрелки
 
-  // motion presets (ease — Easing, не строка!)
+  // motion пресеты
   const draw = (delay = 0) => ({
     initial: { pathLength: 0, opacity: 0 },
     whileInView: { pathLength: 1, opacity: 1 },
@@ -80,17 +95,18 @@ export default function ProductsOverviewFlowSVG() {
           <title id="flowTitle">Products flow: StandardiziT → GoSeeiT → Resolvit/ImproviT</title>
 
           <defs>
+            {/* аккуратная маленькая стрелка */}
             <marker
               id="arrow"
               viewBox={`0 0 ${arrowSize} ${arrowSize}`}
               markerUnits="userSpaceOnUse"
               markerWidth={arrowSize}
               markerHeight={arrowSize}
-              refX={arrowSize}
+              refX={arrowSize - 1}
               refY={arrowSize / 2}
               orient="auto"
             >
-              <path d={`M0,0 L${arrowSize},${arrowSize / 2} L0,${arrowSize} Z`} fill={stroke} />
+              <path d={`M0,0 L${arrowSize},${arrowSize/2} L0,${arrowSize} Z`} fill={stroke} />
             </marker>
 
             {order.map((key) => (
@@ -100,14 +116,15 @@ export default function ProductsOverviewFlowSVG() {
             ))}
           </defs>
 
-          {/* линии с «рисованием» */}
+          {/* линии */}
           <motion.path
             d={pathStdToGsi}
             fill="none"
             stroke={stroke}
-            strokeWidth="3"
-            strokeLinecap="round"
+            strokeWidth={2.5}
+            strokeLinecap="butt"
             strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
             markerEnd="url(#arrow)"
             {...draw(0.05)}
           />
@@ -115,9 +132,10 @@ export default function ProductsOverviewFlowSVG() {
             d={pathGsiToRes}
             fill="none"
             stroke={stroke}
-            strokeWidth="3"
-            strokeLinecap="round"
+            strokeWidth={2.5}
+            strokeLinecap="butt"
             strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
             markerEnd="url(#arrow)"
             {...draw(0.15)}
           />
@@ -125,9 +143,10 @@ export default function ProductsOverviewFlowSVG() {
             d={pathGsiToImp}
             fill="none"
             stroke={stroke}
-            strokeWidth="3"
-            strokeLinecap="round"
+            strokeWidth={2.5}
+            strokeLinecap="butt"
             strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
             markerEnd="url(#arrow)"
             {...draw(0.2)}
           />
