@@ -22,6 +22,11 @@ import {
   ShieldCheck,
   AlertTriangle,
   Lightbulb,
+  ClipboardList,
+  GitBranch,
+  KeyRound,
+  PenLine,
+  Database,
 } from 'lucide-react';
 
 type FeatureItem = {
@@ -55,6 +60,16 @@ export default function GoSeeiTClient() {
     { text: 'Evidence: photos, documents & videos' },
     { text: 'Raise Problem: escalate a finding into a Problem Case with its own tracking', Icon: AlertTriangle, pillClass: 'bg-gradient-to-br from-violet-600 to-purple-600' },
     { text: 'Improvement Idea: capture ideas and convert them into actions later', Icon: Lightbulb, pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500' },
+  ];
+
+  // блок преимуществ в стиле референса (собственная палитра)
+  const benefits: { text: string; Icon: LucideIcon }[] = [
+    { Icon: ClipboardList, text: 'Workplace audits managed to desired frequency by role' },
+    { Icon: Layers,        text: 'Promotes tiered audits, ensuring knowledge transfer' },
+    { Icon: GitBranch,     text: 'Develops detailed process understanding for all' },
+    { Icon: PenLine,       text: 'Not generic but specific to your business' },
+    { Icon: KeyRound,      text: 'Feeds the improvement tools directly for ownership' },
+    { Icon: Database,      text: 'Robust traceability of all actions back to their source' },
   ];
 
   // helper для однотипного fade-up
@@ -123,11 +138,7 @@ export default function GoSeeiTClient() {
 
               <ul className="mt-6 grid gap-3 text-sm text-foreground/90">
                 {heroBullets.map((b, i) => (
-                  <motion.li
-                    key={b.text}
-                    {...mk(0.1 + i * 0.05)}
-                    className="flex items-center gap-2"
-                  >
+                  <motion.li key={b.text} {...mk(0.1 + i * 0.05)} className="flex items-center gap-2">
                     {b.pillClass ? (
                       <span
                         className={cn(
@@ -165,6 +176,44 @@ export default function GoSeeiTClient() {
               />
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* BENEFITS (в стиле референса, цвета — наши) */}
+      <section className="mx-auto max-w-7xl px-4 py-12 md:py-16">
+        <motion.h2
+          {...mk()}
+          className="text-center text-3xl md:text-4xl font-extrabold tracking-tight"
+        >
+          Simple, structured &amp; highly effective
+        </motion.h2>
+
+        <div className="mt-8 md:mt-10 grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {benefits.map((b, i) => (
+            <motion.div
+              key={b.text}
+              {...mk(0.04 * i)}
+              className="group rounded-3xl border border-emerald-200/60 bg-white p-6 md:p-8 shadow-sm hover:bg-emerald-50/40 hover:shadow-md transition"
+            >
+              <div className="flex flex-col items-center text-center gap-4">
+                <span className="grid place-items-center size-14 md:size-16 rounded-2xl text-emerald-700 border border-emerald-200 bg-emerald-50">
+                  <b.Icon className="size-7 md:size-8" strokeWidth={2.2} />
+                </span>
+
+                <p className="text-lg leading-snug">
+                  {b.text}
+                </p>
+
+                <Link
+                  href="#features"
+                  onClick={onSeeFeaturesClick}
+                  className="mt-2 inline-flex items-center gap-2 font-semibold tracking-wide uppercase text-[#120b2b] hover:opacity-80"
+                >
+                  Read more <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
