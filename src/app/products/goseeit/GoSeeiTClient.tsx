@@ -29,6 +29,9 @@ import {
   Database,
 } from 'lucide-react';
 
+// 🔹 добавили переиспользуемый компонент
+import FeatureGrid, { type FeatureGridItem } from '@/components/FeatureGrid';
+
 type FeatureItem = {
   title: string;
   desc: string;
@@ -62,14 +65,14 @@ export default function GoSeeiTClient() {
     { text: 'Improvement Idea: capture ideas and convert them into actions later', Icon: Lightbulb, pillClass: 'bg-gradient-to-br from-amber-500 to-orange-500' },
   ];
 
-  // блок преимуществ в стиле референса (собственная палитра)
-  const benefits: { text: string; Icon: LucideIcon }[] = [
-    { Icon: ClipboardList, text: 'Workplace audits managed to desired frequency by role' },
-    { Icon: Layers,        text: 'Promotes tiered audits, ensuring knowledge transfer' },
-    { Icon: GitBranch,     text: 'Develops detailed process understanding for all' },
-    { Icon: PenLine,       text: 'Not generic but specific to your business' },
-    { Icon: KeyRound,      text: 'Feeds the improvement tools directly for ownership' },
-    { Icon: Database,      text: 'Robust traceability of all actions back to their source' },
+  // 🔹 данные для FeatureGrid (бывший benefits)
+  const benefitsGrid: FeatureGridItem[] = [
+    { Icon: ClipboardList, title: 'Workplace audits managed to desired frequency by role' },
+    { Icon: Layers,        title: 'Promotes tiered audits, ensuring knowledge transfer' },
+    { Icon: GitBranch,     title: 'Develops detailed process understanding for all' },
+    { Icon: PenLine,       title: 'Not generic but specific to your business' },
+    { Icon: KeyRound,      title: 'Feeds the improvement tools directly for ownership' },
+    { Icon: Database,      title: 'Robust traceability of all actions back to their source' },
   ];
 
   // helper для однотипного fade-up
@@ -179,43 +182,13 @@ export default function GoSeeiTClient() {
         </div>
       </section>
 
-      {/* BENEFITS (в стиле референса, цвета — наши) */}
-      <section className="mx-auto max-w-7xl px-4 py-12 md:py-16">
-        <motion.h2
-          {...mk()}
-          className="text-center text-3xl md:text-4xl font-extrabold tracking-tight"
-        >
-          Simple, structured &amp; highly effective
-        </motion.h2>
-
-        <div className="mt-8 md:mt-10 grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {benefits.map((b, i) => (
-            <motion.div
-              key={b.text}
-              {...mk(0.04 * i)}
-              className="group rounded-3xl border border-emerald-200/60 bg-white p-6 md:p-8 shadow-sm hover:bg-emerald-50/40 hover:shadow-md transition"
-            >
-              <div className="flex flex-col items-center text-center gap-4">
-                <span className="grid place-items-center size-14 md:size-16 rounded-2xl text-emerald-700 border border-emerald-200 bg-emerald-50">
-                  <b.Icon className="size-7 md:size-8" strokeWidth={2.2} />
-                </span>
-
-                <p className="text-lg leading-snug">
-                  {b.text}
-                </p>
-
-                <Link
-                  href="#features"
-                  onClick={onSeeFeaturesClick}
-                  className="mt-2 inline-flex items-center gap-2 font-semibold tracking-wide uppercase text-[#120b2b] hover:opacity-80"
-                >
-                  Read more <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      {/* 🔁 Переиспользуемый грид вместо старого BENEFITS */}
+      <FeatureGrid
+        heading="Simple, structured & highly effective"
+        items={benefitsGrid}
+        theme="emerald"           // зелёная палитра для GoSeeiT
+        className="bg-white"      // фон блока — белый
+      />
 
       {/* FEATURES */}
       <section id="features" className="scroll-mt-24 bg-[#0e0a24] py-12 md:py-16">
@@ -259,52 +232,47 @@ export default function GoSeeiTClient() {
       </section>
 
       {/* METRICS/CTA */}
-{/* METRICS/CTA */}
-<section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
-  <div className="mx-auto max-w-7xl px-4">
-    {/* подпись */}
-    <motion.h3
-      {...mk()}
-      className="text-center font-lg font-bold tracking-wider uppercase"
-    >
-      Outcomes with GoSeeiT
-    </motion.h3>
+      <section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
+        <div className="mx-auto max-w-7xl px-4">
+          <motion.h3 {...mk()} className="text-center font-lg font-bold tracking-wider uppercase">
+            Outcomes with GoSeeiT
+          </motion.h3>
 
-    <div className="mt-6 grid gap-6 md:grid-cols-3">
-      {[
-        { Icon: Radar, value: '−35%', label: 'Time to identify issues' },
-        { Icon: Gauge, value: '×2.1', label: 'Action closure speed' },
-        { Icon: CheckCircle2, value: '95%', label: 'Verified fixes' },
-      ].map((m, i) => (
-        <motion.div
-          key={i}
-          {...mk(i * 0.05)}
-          className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
-        >
-          <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
-            <m.Icon className="size-6" />
-          </span>
-          <div>
-            <div className="text-2xl font-bold">{m.value}</div>
-            <div className="text-muted-foreground">{m.label}</div>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">
+            {[
+              { Icon: Radar, value: '−35%', label: 'Time to identify issues' },
+              { Icon: Gauge, value: '×2.1', label: 'Action closure speed' },
+              { Icon: CheckCircle2, value: '95%', label: 'Verified fixes' },
+            ].map((m, i) => (
+              <motion.div
+                key={i}
+                {...mk(i * 0.05)}
+                className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
+              >
+                <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
+                  <m.Icon className="size-6" />
+                </span>
+                <div>
+                  <div className="text-2xl font-bold">{m.value}</div>
+                  <div className="text-muted-foreground">{m.label}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
-      ))}
-    </div>
 
-    <motion.div {...mk(0.15)} className="mt-8 flex flex-wrap items-center gap-3">
-      <Button asChild className="rounded-full">
-        <Link href="/book-demo">
-          Request a demo
-          <ArrowRight className="ml-2 size-4" />
-        </Link>
-      </Button>
-      <Button asChild variant="outline" className="rounded-full">
-        <Link href="/products">Other products</Link>
-      </Button>
-    </motion.div>
-  </div>
-</section>
+          <motion.div {...mk(0.15)} className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild className="rounded-full">
+              <Link href="/book-demo">
+                Request a demo
+                <ArrowRight className="ml-2 size-4" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="rounded-full">
+              <Link href="/products">Other products</Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
     </main>
   );
 }

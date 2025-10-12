@@ -8,19 +8,17 @@ import { cn } from '@/lib/utils';
 export type FeatureGridItem = {
   title: string;
   Icon: LucideIcon;
-  /** опционально: клик по карточке */
   onClick?: () => void;
 };
+
+export type FeatureGridTheme = 'violet' | 'emerald';
 
 type Props = {
   heading?: string;
   items: FeatureGridItem[];
-  /** id якоря для скролла */
   id?: string;
-  /** классы для <section> */
   className?: string;
-  /** тема: управляет фиолетовыми классами; можно расширить при желании */
-  theme?: 'violet';
+  theme?: FeatureGridTheme; // ⬅️ теперь поддерживает emerald
 };
 
 export default function FeatureGrid({
@@ -48,18 +46,19 @@ export default function FeatureGrid({
     },
   };
 
-  // цветовые токены (как в существующем блоке)
-  const palette =
-    theme === 'violet'
-      ? {
-          border: 'border-violet-200/70 hover:border-violet-300',
-          iconWrap:
-            'bg-violet-50 text-violet-700 ring-1 ring-violet-200',
-        }
-      : {
-          border: 'border-neutral-200',
-          iconWrap: 'bg-neutral-50 text-neutral-700 ring-1 ring-neutral-200',
-        };
+  // Палитры по темам
+  const palettes: Record<FeatureGridTheme, { border: string; iconWrap: string }> = {
+    violet: {
+      border: 'border-violet-200/70 hover:border-violet-300',
+      iconWrap: 'bg-violet-50 text-violet-700 ring-1 ring-violet-200',
+    },
+    emerald: {
+      border: 'border-emerald-200/70 hover:border-emerald-300',
+      iconWrap: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+    },
+  };
+
+  const palette = palettes[theme];
 
   return (
     <section id={id} className={cn('py-14 md:py-20 bg-white', className)}>
@@ -93,7 +92,7 @@ export default function FeatureGrid({
               transition={{ type: 'spring', stiffness: 320, damping: 26 }}
               className={cn(
                 'text-left rounded-3xl border bg-white p-8 md:p-10 text-center',
-                'shadow-[0_1px_0_rgba(109,40,217,.06)] hover:shadow-md transition',
+                'shadow-[0_1px_0_rgba(16,24,40,.06)] hover:shadow-md transition',
                 palette.border
               )}
             >
