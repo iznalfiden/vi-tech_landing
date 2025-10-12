@@ -94,7 +94,7 @@ export default function ProductsOverviewPage() {
       </section>
 
       {/* GRID OF TOOLS */}
-      <section className="mx-auto max-w-7xl px-4 pb-16 md:pb-24">
+      <section className="mx-auto max-w-7xl px-4">
         <ProductsOverviewFlow />
       </section>
     </main>
