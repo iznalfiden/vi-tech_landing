@@ -63,10 +63,10 @@ export default function ProductsOverviewFlowSVG() {
   });
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 pb-16 md:pb-24">
+    <section className="relative mx-auto max-w-7xl pb-16 md:pb-24">
       <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
-      <div className="rounded-3xl border bg-white/80 backdrop-blur p-4 shadow-sm">
+      <div className="rounded-3xl border bg-white/80 backdrop-blur shadow-sm">
         <motion.svg
           viewBox={`0 0 ${vb.w} ${vb.h}`}
           role="img"
