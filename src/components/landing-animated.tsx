@@ -44,7 +44,12 @@ export default function LandingAnimated() {
   return (
     <main>
       {/* HERO (мобайл — без сложных фонов) */}
-      <section className="relative isolate min-h-[50vh] overflow-hidden">
+      <section   className="
+    relative isolate overflow-hidden
+    min-h-[calc(100dvh-80px)] md:min-h-[calc(100svh-80px)]
+    after:content-[''] after:absolute after:inset-x-0 after:bottom-0
+    after:h-10 sm:after:h-12 after:bg-white
+  ">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -95,61 +100,62 @@ export default function LandingAnimated() {
       </section>
 
       {/* PRODUCTS LIST + IMAGE */}
-      <section id="products" className="min-h-[800px] relative isolate overflow-hidden py-16 bg-[#0e0a24]">
-        <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="grid gap-10 md:grid-cols-2 items-start">
-            <div>
-              <ul className="mt-10 divide-y divide-white/10">
-                {products.map((p, i) => (
-                  <motion.li
-                    key={p.name}
-                    initial={{ opacity: 0, y: 8 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
-                    className="min-h-[96px] flex items-center"
-                  >
-                    <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={`grid place-items-center size-16 rounded-2xl shrink-0 bg-gradient-to-br ${p.gradient} text-white shadow-md`}
-                          aria-hidden="true"
-                        >
-                          <p.Icon className="size-7 sm:size-8" strokeWidth={2} />
-                        </span>
-
-                        <div className="leading-snug">
-                          <div className="text-2xl font-semibold text-white">{p.name}</div>
-                          <div className="text-white/75">{p.desc}</div>
-                        </div>
-                      </div>
-
-                      <ChevronRight className="h-6 w-6 text-white/70 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 16 }}
-              whileInView={{ opacity: 1, x: 0 }}
+{/* PRODUCTS LIST + IMAGE */}
+<section
+  id="products"
+  className="relative isolate overflow-hidden py-24 md:py-36 lg:py-40 bg-[#0e0a24] scroll-mt-[88px] md:scroll-mt-[100px]"
+>
+  <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]" />
+  <div className="mx-auto max-w-7xl px-4">
+    <div className="grid gap-10 md:grid-cols-2 items-start">
+      <div>
+        <ul className="mt-2 md:mt-4 divide-y divide-white/10">
+          {products.map((p, i) => (
+            <motion.li
+              key={p.name}
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl overflow-hidden"
+              transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
+              className="min-h-[88px] md:min-h-[96px] flex items-center"
             >
-              <Image
-                src="/main_page_1.svg"
-                alt="Vi-Tech product suite"
-                fill
-                sizes="(min-width: 1024px) 48vw, 100vw"
-                className="object-contain"
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+              <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <span
+                    className={`grid place-items-center size-14 md:size-16 rounded-2xl shrink-0 bg-gradient-to-br ${p.gradient} text-white shadow-md`}
+                    aria-hidden="true"
+                  >
+                    <p.Icon className="size-6 md:size-8" strokeWidth={2} />
+                  </span>
+                  <div className="leading-snug">
+                    <div className="text-xl md:text-2xl font-semibold text-white">{p.name}</div>
+                    <div className="text-white/75 text-sm md:text-base">{p.desc}</div>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-white/70 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </motion.li>
+          ))}
+        </ul>
+      </div>
+      <motion.div
+        initial={{ opacity: 0, x: 16 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="relative rounded-2xl overflow-hidden min-h-[260px] md:min-h-[380px]"
+      >
+        <Image
+          src="/main_page_1.svg"
+          alt="Vi-Tech product suite"
+          fill
+          sizes="(min-width: 1024px) 48vw, 100vw"
+          className="object-contain"
+        />
+      </motion.div>
+    </div>
+  </div>
+</section>
 
       {/* PARTNERS */}
       <section className="mx-auto max-w-7xl px-4 my-20">
