@@ -156,7 +156,7 @@ export default function GoSeeiTClient() {
               className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl border bg-white/60 backdrop-blur overflow-hidden"
             >
               <Image
-                src="/hero_bg.svg"
+                src="/goseeit.svg"
                 alt="GoSeeiT overview"
                 fill
                 className="object-contain"
