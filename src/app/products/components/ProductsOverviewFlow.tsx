@@ -46,6 +46,7 @@ export default function ProductsOverviewFlowSVG() {
   const stroke = '#120b2b';
   const arrowSize = 12;
 
+  // motion пресеты
   const draw = (delay = 0) => ({
     initial: { pathLength: 0, opacity: 0 },
     whileInView: { pathLength: 1, opacity: 1 },
@@ -66,8 +67,8 @@ export default function ProductsOverviewFlowSVG() {
       <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
       <div className="rounded-3xl border bg-white/80 backdrop-blur shadow-sm">
-        {/* ОБЯЗАТЕЛЬНО: оболочка с фикс. аспектом */}
-        <div className="relative w-full aspect-[1200/620]">
+        {/* Оболочка: фикс. высота на мобилках, aspect-ratio — с md и выше */}
+        <div className="relative w-full min-h-[380px] h-[460px] sm:h-[540px] md:min-h-0 md:h-auto md:aspect-[1200/620]">
           <motion.svg
             viewBox={`0 0 ${vb.w} ${vb.h}`}
             role="img"
@@ -147,9 +148,11 @@ export default function ProductsOverviewFlowSVG() {
 
               return (
                 <motion.g key={key} {...pop(0.1 + i * 0.08)}>
-                  {/* картинка в круге */}
+                  {/* изображение в круге — добавили xlinkHref для Safari/iOS */}
+                  {/* @ts-ignore: xlinkHref нужен для части мобильных браузеров */}
                   <image
                     href={n.img}
+                    xlinkHref={n.img}
                     x={n.cx - r}
                     y={n.cy - r}
                     width={2 * r}
