@@ -76,7 +76,6 @@ export default function BookDemoClient() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        // серверная валидация (zod.flatten().fieldErrors)
         if (res.status === 400 && data?.issues) {
           const mapped: Record<string, string> = {};
           for (const [k, arr] of Object.entries<Record<string, string[]>>(data.issues)) {
@@ -99,10 +98,22 @@ export default function BookDemoClient() {
   }
 
   return (
-    <main>
+    <main className="relative isolate">
+      {/* 🌈 лёгкий градиент на ВСЮ страницу (фиксированный слой) */}
+      <div
+        aria-hidden
+        className="
+    pointer-events-none fixed inset-0 -z-10
+    bg-white
+    bg-[radial-gradient(1800px_1000px_at_95%_-300px,rgba(139,92,246,0.36),transparent_72%),
+        radial-gradient(1600px_900px_at_-280px_115%,rgba(37,99,235,0.28),transparent_74%),
+        radial-gradient(1200px_700px_at_40%_-120px,rgba(16,185,129,0.18),transparent_68%),
+        radial-gradient(900px_520px_at_110%_85%,rgba(124,58,237,0.22),transparent_70%)]
+  "
+      />
+
       {/* HERO */}
       <section className="relative isolate overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(139,92,246,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
         <div className="mx-auto max-w-7xl px-4 pt-20 md:pt-28 pb-10 md:pb-14">
           <motion.h1
             initial={{ opacity: 0, y: 18 }}
