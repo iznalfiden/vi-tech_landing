@@ -44,13 +44,13 @@ type HeroBullet = {
 };
 
 const integratedItems: FeatureGridItem[] = [
-    { Icon: GitBranch,  title: 'Drives & simplifies standardised problem solving' },
-    { Icon: Settings,   title: 'Enables robust management of all problems within the business' },
-    { Icon: LineChart,  title: 'Links all problems to a recorded metric for analysis' },
-    { Icon: Lightbulb,  title: 'Creates a shared knowledge base for all solutions' },
-    { Icon: Handshake,  title: 'Encourages collaboration and collective problem solving' },
-    { Icon: Users,      title: 'Connects remote teams & aligns workforces' },
-  ];
+    { Icon: GitBranch, title: 'Drives & simplifies standardised problem solving' },
+    { Icon: Settings, title: 'Enables robust management of all problems within the business' },
+    { Icon: LineChart, title: 'Links all problems to a recorded metric for analysis' },
+    { Icon: Lightbulb, title: 'Creates a shared knowledge base for all solutions' },
+    { Icon: Handshake, title: 'Encourages collaboration and collective problem solving' },
+    { Icon: Users, title: 'Connects remote teams & aligns workforces' },
+];
 
 export default function ResolvITClient() {
     const shouldReduce = useReducedMotion();
@@ -278,11 +278,11 @@ export default function ResolvITClient() {
             </section>
 
             <FeatureGrid
-  id="integrated"
-  heading="Integrated Problem Solving"
-  items={integratedItems}
-  theme="violet"
-/>
+                id="integrated"
+                heading="Integrated Problem Solving"
+                items={integratedItems}
+                theme="violet"
+            />
 
             {/* FEATURES */}
             <section id="features" className="scroll-mt-24 bg-[#0e0a24] py-12 md:py-16">
