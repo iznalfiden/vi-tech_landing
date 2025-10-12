@@ -21,7 +21,6 @@ export default function LandingAnimated() {
     { name: 'StandardiziT', desc: 'Work Standards & SWC', href: '/products/standardizit', gradient: 'bg-fuchsia-600', Icon: ChartCandlestick },
     { name: 'ImproviT', desc: 'Structured Idea Generation & Implementation', href: '/products/improvit', gradient: 'from-amber-500 to-orange-500', Icon: Lightbulb },
     { name: 'ResolvIT', desc: 'Drives & Simplifies Standardised Problem Solving (AI Powered)', href: '/products/resolvit', gradient: 'from-violet-600 to-purple-600', Icon: Settings },
-    { name: 'MeasuriT', desc: 'Real Time Metrics and Insights', href: '/products/measurit', gradient: 'from-rose-500 to-orange-500', Icon: Gauge },
   ];
 
   const partners: { name: string; src: string }[] = [

@@ -1,156 +1,98 @@
-// app/products/overview/page.tsx  (фрагмент секции с flow)
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
-import { motion, easeOut } from 'framer-motion';
-import { ArrowRight, Search, Settings, Lightbulb, ChartCandlestick } from 'lucide-react';
 
-const Pill = ({ children }: { children: React.ReactNode }) => (
-  <span className="inline-grid place-items-center h-8 w-8 rounded-xl bg-violet-600 text-white shadow-sm">
-    {children}
-  </span>
-);
+export default function ProductsOverviewFlowSVG() {
+  // ↑ увеличили высоту, чтобы влезла подпись ImproviT
+  const vb = { w: 1200, h: 620 };
+  const r = 96;
+  const gap = 16;
+  const branchExtra = 48;
 
-const CirclePreview = ({
-  bg,
-  pill,
-}: {
-  bg: string; // url('/...') или tailwind gradient
-  pill: React.ReactNode;
-}) => (
-  <div className="relative mx-auto">
-    <div
-      className="h-44 w-44 md:h-56 md:w-56 rounded-full bg-center bg-cover ring-4 ring-white/80 shadow-xl"
-      style={{ backgroundImage: bg.startsWith('url(') ? bg : undefined }}
-    >
-      {/* если хочешь градиент вместо картинки: className дополни bg-gradient-to-br ... */}
-    </div>
-    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">{pill}</div>
-  </div>
-);
+  const resY = 170 - branchExtra;
+  const impY = 350 + branchExtra;
 
-const Learn = ({ href }: { href: string }) => (
-  <Link
-    href={href}
-    className="mt-3 inline-flex items-center gap-2 font-semibold tracking-wide uppercase text-[#120b2b] hover:opacity-80"
-  >
-    Learn more <ArrowRight className="h-4 w-4" />
-  </Link>
-);
+  const nodes = {
+    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards & SWC',             href: '/products/standardizit', img: '/main_page_1.svg' },
+    gsi: { cx: 520, cy: 260, title: 'GoSeeiT',      sub: 'Promotes ‘Go Look & See’',         href: '/products/goseeit',      img: '/main_page_1.svg' },
+    res: { cx: 900, cy: resY, title: 'Resolvit',    sub: 'Standardised Problem Solving',     href: '/products/resolvit',     img: '/main_page_1.svg' },
+    imp: { cx: 900, cy: impY, title: 'ImproviT',    sub: 'Idea Generation & Implementation', href: '/products/improvit',     img: '/main_page_1.svg' },
+  } as const;
 
-export default function ProductsOverviewFlow() {
+  const midStdGsi = (nodes.std.cx + nodes.gsi.cx) / 2;
+  const midGsiRes = (nodes.gsi.cx + nodes.res.cx) / 2;
+  const midGsiImp = (nodes.gsi.cx + nodes.imp.cx) / 2;
+
+  const pathStdToGsi =
+    `M ${nodes.std.cx + r + gap} ${nodes.std.cy} ` +
+    `C ${midStdGsi} ${nodes.std.cy}, ${midStdGsi} ${nodes.gsi.cy}, ` +
+    `${nodes.gsi.cx - r - gap} ${nodes.gsi.cy}`;
+
+  const pathGsiToRes =
+    `M ${nodes.gsi.cx + r + gap} ${nodes.gsi.cy} ` +
+    `C ${midGsiRes} ${nodes.gsi.cy}, ${midGsiRes} ${nodes.res.cy}, ` +
+    `${nodes.res.cx - r - gap} ${nodes.res.cy}`;
+
+  const pathGsiToImp =
+    `M ${nodes.gsi.cx + r + gap} ${nodes.gsi.cy} ` +
+    `C ${midGsiImp} ${nodes.gsi.cy}, ${midGsiImp} ${nodes.imp.cy}, ` +
+    `${nodes.imp.cx - r - gap} ${nodes.imp.cy}`;
+
+  const stroke = '#120b2b';
+  const arrowSize = 20;
+
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-16 md:py-24">
-      <div className="grid gap-16 md:grid-cols-2">
-        {/* LEFT COLUMN — 1) StandardiziT  2) GoSeeiT */}
-        <div className="flex flex-col gap-16">
-          {/* StandardiziT */}
-          <motion.article
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.55, ease: easeOut }}
-            className="text-center"
-          >
-            <CirclePreview
-              bg={"url('/main_page_1.svg')"}
-              pill={
-                <Pill>
-                  <ChartCandlestick className="h-4 w-4" />
-                </Pill>
-              }
-            />
-            <h3 className="mt-4 text-3xl md:text-4xl font-extrabold text-[#120b2b]">StandardiziT</h3>
-            <p className="mt-2 text-base md:text-lg text-[#120b2b]/70">
-              Work Standards &amp; Standard Work Combination (SWC)
-            </p>
-            <Learn href="/products/standardizit" />
-          </motion.article>
+      <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
-          {/* GoSeeiT */}
-          <motion.article
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.55, ease: easeOut, delay: 0.05 }}
-            className="text-center"
-          >
-            <CirclePreview
-              bg={"url('/main_page_1.svg')"}
-              pill={
-                <Pill>
-                  <Search className="h-4 w-4" />
-                </Pill>
-              }
-            />
-            <h3 className="mt-4 text-3xl md:text-4xl font-extrabold text-[#120b2b]">GoSeeiT</h3>
-            <p className="mt-2 text-base md:text-lg text-[#120b2b]/70">
-              Promotes ‘Go Look &amp; See’ Approach
-            </p>
-            <Learn href="/products/goseeit" />
-          </motion.article>
-        </div>
+      <div className="rounded-3xl border bg-white/80 backdrop-blur p-4 shadow-sm">
+        <svg
+          viewBox={`0 0 ${vb.w} ${vb.h}`}
+          role="img"
+          aria-labelledby="flowTitle"
+          className="w-full h-auto"
+          preserveAspectRatio="xMidYMid meet"
+          style={{ overflow: 'visible' }}
+        >
+          <title id="flowTitle">Products flow: StandardiziT → GoSeeiT → Resolvit/ImproviT</title>
 
-        {/* RIGHT COLUMN — вертикальная линия + Resolvit, ImprovIT */}
-        <div className="relative pl-10 md:pl-14">
-          {/* вертикальная линия */}
-          <span className="pointer-events-none absolute left-2 md:left-4 top-0 bottom-0 w-[3px] bg-[#120b2b]" />
+          <defs>
+            <marker
+              id="arrow"
+              viewBox={`0 0 ${arrowSize} ${arrowSize}`}
+              markerUnits="userSpaceOnUse"
+              markerWidth={arrowSize}
+              markerHeight={arrowSize}
+              refX={arrowSize}
+              refY={arrowSize / 2}
+              orient="auto"
+            >
+              <path d={`M0,0 L${arrowSize},${arrowSize / 2} L0,${arrowSize} Z`} fill={stroke} />
+            </marker>
 
-          {/* стрелка → (сверху) */}
-          <ArrowRight className="pointer-events-none absolute -left-1 md:-left-0 top-20 h-7 w-7 text-[#120b2b]" />
+            {Object.entries(nodes).map(([key, n]) => (
+              <clipPath key={`clip-${key}`} id={`clip-${key}`}>
+                <circle cx={n.cx} cy={n.cy} r={r} />
+              </clipPath>
+            ))}
+          </defs>
 
-          {/* Resolvit */}
-          <motion.article
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.55, ease: easeOut }}
-            className="text-center"
-          >
-            <CirclePreview
-              bg={"url('/main_page_1.svg')"}
-              pill={
-                <Pill>
-                  <Settings className="h-4 w-4" />
-                </Pill>
-              }
-            />
-            <h3 className="mt-4 text-3xl md:text-4xl font-extrabold text-[#120b2b]">Resolvit</h3>
-            <p className="mt-2 text-base md:text-lg text-[#120b2b]/70">
-              Drives &amp; Simplifies Standardised Problem Solving
-            </p>
-            <Learn href="/products/resolvit" />
-          </motion.article>
+          <path d={pathStdToGsi} fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#arrow)" />
+          <path d={pathGsiToRes} fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#arrow)" />
+          <path d={pathGsiToImp} fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#arrow)" />
 
-          {/* стрелка вниз на линии */}
-          <ArrowRight className="pointer-events-none absolute -left-1 md:-left-0 top-1/2 rotate-90 h-7 w-7 text-[#120b2b]" />
-
-          {/* ImprovIT */}
-          <motion.article
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.55, ease: easeOut }}
-            className="mt-14 text-center"
-          >
-            <CirclePreview
-              bg={"url('/main_page_1.svg')"}
-              pill={
-                <Pill>
-                  <Lightbulb className="h-4 w-4" />
-                </Pill>
-              }
-            />
-            <h3 className="mt-4 text-3xl md:text-4xl font-extrabold text-[#120b2b]">ImproviT</h3>
-            <p className="mt-2 text-base md:text-lg text-[#120b2b]/70">
-              Structured Idea Generation &amp; Implementation
-            </p>
-            <Learn href="/products/improvit" />
-          </motion.article>
-
-          {/* финальная стрелка → на уровне нижнего элемента */}
-          <ArrowRight className="pointer-events-none absolute -left-1 md:-left-0 bottom-16 h-7 w-7 text-[#120b2b]" />
-        </div>
+          {Object.entries(nodes).map(([key, n]) => (
+            <g key={key}>
+              <image href={n.img} x={n.cx - r} y={n.cy - r} width={2 * r} height={2 * r} preserveAspectRatio="xMidYMid slice" clipPath={`url(#clip-${key})`} />
+              <circle cx={n.cx} cy={n.cy} r={r} fill="transparent" stroke="#ffffff" strokeWidth="8" />
+              <a href={n.href}>
+                <text x={n.cx} y={n.cy + r + 28} textAnchor="middle" fontWeight={800} fontSize="28" fill="#120b2b">{n.title}</text>
+                <text x={n.cx} y={n.cy + r + 56} textAnchor="middle" fontSize="16" fill="#120b2bB3">{n.sub}</text>
+              </a>
+            </g>
+          ))}
+        </svg>
       </div>
     </section>
   );
