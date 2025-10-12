@@ -10,7 +10,6 @@ import {
   Search,
   Lightbulb,
   Settings,
-  Gauge,
   ChevronRight,
   ChartCandlestick,
 } from 'lucide-react';

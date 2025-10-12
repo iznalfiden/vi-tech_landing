@@ -183,7 +183,7 @@ export default function ProductsOverviewFlowSVG() {
                     fontSize="14"
                     fontWeight={700}
                     fill="#120b2b"
-                    style={{ letterSpacing: 1.2, textTransform: 'uppercase' as any }}
+                    style={{ letterSpacing: 1.2, textTransform: 'uppercase' }}
                   >
                     LEARN MORE
                   </text>
