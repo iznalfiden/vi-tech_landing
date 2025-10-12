@@ -26,6 +26,9 @@ import {
   Lightbulb,
 } from 'lucide-react';
 
+// 🔁 переиспользуемый грид
+import FeatureGrid, { type FeatureGridItem } from '@/components/FeatureGrid';
+
 type FeatureItem = {
   title: string;
   desc: string;
@@ -63,7 +66,6 @@ export default function StandardiziTClient() {
         'Structure your process: steps and WES substeps with time (VA/NVA/Walk). When a step is renamed, WES numbering updates automatically.',
       Icon: FileText,
       gradient: 'bg-fuchsia-600',
-
     },
     {
       title: 'Options / variants',
@@ -71,7 +73,6 @@ export default function StandardiziTClient() {
         'Link options to product variants. Deletion is protected: if an option is used in takt-time configuration, deletion is blocked.',
       Icon: GitBranch,
       gradient: 'bg-fuchsia-600',
-
     },
     {
       title: 'PPE & Equipment',
@@ -79,7 +80,6 @@ export default function StandardiziTClient() {
         'Associate PPE and equipment with steps and WES substeps. Bulk add/remove and update links in one click.',
       Icon: Wrench,
       gradient: 'bg-fuchsia-600',
-
     },
     {
       title: 'Media & documents',
@@ -87,7 +87,6 @@ export default function StandardiziTClient() {
         'Images, videos, layout diagrams and supporting documents (S3). Smart, collision-safe file names.',
       Icon: ImageIcon,
       gradient: 'bg-fuchsia-600',
-
     },
     {
       title: 'Key Points (SQK) & reasons',
@@ -95,14 +94,12 @@ export default function StandardiziTClient() {
         'Key Points with types/codes and reasons — on steps and WES substeps. Flexible edit and delete.',
       Icon: ClipboardCheck,
       gradient: 'bg-fuchsia-600',
-
     },
     {
       title: 'Approval',
       desc: 'Two-party approvals (creator/approver).',
       Icon: ShieldCheck,
       gradient: 'bg-fuchsia-600',
-
     },
     // Line Planning
     {
@@ -111,7 +108,6 @@ export default function StandardiziTClient() {
         'Set takt target, crew size, shift pattern, and planned output. These parameters directly feed Yamazumi balancing to keep each station under takt.',
       Icon: LineChart,
       gradient: 'bg-fuchsia-600',
-
     },
     // Losses impact
     {
@@ -120,7 +116,6 @@ export default function StandardiziTClient() {
         'Model planned/unplanned losses (changeovers, microstops, meetings). Net available time is recalculated and Yamazumi bars update instantly, highlighting overloads after losses.',
       Icon: TimerOff,
       gradient: 'bg-fuchsia-600',
-
     },
     // Highlighted tools
     {
@@ -138,6 +133,16 @@ export default function StandardiziTClient() {
       gradient: 'from-amber-500 to-orange-500',
     },
   ];
+
+  // 🔹 данные для FeatureGrid (короткие тезисы, как в других продуктах)
+  const benefitsGrid: FeatureGridItem[] = [
+    { Icon: ChartCandlestick, title: 'Captures the “one best way”' },
+    { Icon: FileText,         title: 'Publishes signed standards with versions' },
+    { Icon: GitBranch,        title: 'Supports variants without losing control' },
+    { Icon: ImageIcon,        title: 'Explains work clearly with visuals' },
+    { Icon: Wrench,           title: 'Links steps to people, tools and safety' },
+    { Icon: ClipboardCheck,   title: 'Creates accountability with approvals & traceability' },
+  ];;
 
   // smooth scroll to features
   const onSeeFeaturesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -164,11 +169,11 @@ export default function StandardiziTClient() {
     <main>
       {/* HERO */}
       <section
-  className="
-    relative isolate overflow-hidden
-    bg-[url('/StandardiziTCircle.svg')] bg-no-repeat bg-cover bg-center
-  "
->
+        className="
+          relative isolate overflow-hidden
+          bg-[url('/StandardiziTCircle.svg')] bg-no-repeat bg-cover bg-center
+        "
+      >
         <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             {/* text */}
@@ -253,8 +258,8 @@ export default function StandardiziTClient() {
               className="relative aspect-[16/11] md:aspect-[4/3] rounded-2xl border bg-white/60 backdrop-blur overflow-hidden"
             >
               <Image
-                      src="/hero_bg.svg"
-                      alt="standardiziT overview"
+                src="/hero_bg.svg"
+                alt="standardiziT overview"
                 fill
                 className="object-contain"
                 sizes="(min-width: 1024px) 48vw, 100vw"
@@ -264,6 +269,14 @@ export default function StandardiziTClient() {
           </div>
         </div>
       </section>
+
+      {/* 🔁 Переиспользуемый грид (как на других продуктах) */}
+      <FeatureGrid
+        heading="Simple, standardised & scalable"
+        items={benefitsGrid}
+        theme="violet"          // фиолетовая палитра для StandardiziT
+        className="bg-white"    // фон — белый
+      />
 
       {/* FEATURES */}
       <section id="features" className="scroll-mt-24 bg-[#0e0a24] py-12 md:py-16">
@@ -323,17 +336,39 @@ export default function StandardiziTClient() {
       {/* METRICS/CTA */}
       <section className="py-12 md:py-16 bg-gradient-to-b from-fuchsia-50 to-white">
         <div className="mx-auto max-w-7xl px-4">
+          {/* подпись к блоку метрик */}
+          <motion.h3
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.25 }}
+            className="text-center font-lg font-bold tracking-wider uppercase"
+          >
+            Outcomes with StandardiziT
+          </motion.h3>
+
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.25 }}
+            className="mt-2 text-center text-sm text-muted-foreground max-w-2xl mx-auto"
+          >
+            Indicative results from customer rollouts; actual impact depends on baseline,
+            process complexity, and adoption maturity.
+          </motion.p>
+
           <motion.div
             variants={containerStagger}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
-            className="grid gap-6 md:grid-cols-3"
+            className="mt-6 grid gap-6 md:grid-cols-3"
           >
             {[
-              { Icon: Gauge, value: '−30%', label: 'Time to update standards' },
-              { Icon: ShieldCheck, value: '100%', label: 'Version traceability' },
-              { Icon: ClipboardCheck, value: '×2.0', label: 'Approval throughput' },
+              { Icon: Gauge,         value: '−30%', label: 'Time to update standards' },
+              { Icon: ShieldCheck,   value: '100%', label: 'Version traceability' },
+              { Icon: ClipboardCheck,value: '×2.0', label: 'Approval throughput' },
             ].map((m) => (
               <motion.div
                 key={m.label}
