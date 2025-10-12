@@ -259,43 +259,52 @@ export default function GoSeeiTClient() {
       </section>
 
       {/* METRICS/CTA */}
-      <section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { Icon: Radar, value: '−35%', label: 'Time to identify issues' },
-              { Icon: Gauge, value: '×2.1', label: 'Action closure speed' },
-              { Icon: CheckCircle2, value: '95%', label: 'Verified fixes' },
-            ].map((m, i) => (
-              <motion.div
-                key={i}
-                {...mk(i * 0.05)}
-                className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
-              >
-                <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
-                  <m.Icon className="size-6" />
-                </span>
-                <div>
-                  <div className="text-2xl font-bold">{m.value}</div>
-                  <div className="text-muted-foreground">{m.label}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+{/* METRICS/CTA */}
+<section className="py-12 md:py-16 bg-gradient-to-b from-emerald-50 to-white">
+  <div className="mx-auto max-w-7xl px-4">
+    {/* подпись */}
+    <motion.h3
+      {...mk()}
+      className="text-center font-lg font-bold tracking-wider uppercase"
+    >
+      Outcomes with GoSeeiT
+    </motion.h3>
 
-          <motion.div {...mk(0.15)} className="mt-8 flex flex-wrap items-center gap-3">
-            <Button asChild className="rounded-full">
-              <Link href="/book-demo">
-                Request a demo
-                <ArrowRight className="ml-2 size-4" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="rounded-full">
-              <Link href="/products">Other products</Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
+    <div className="mt-6 grid gap-6 md:grid-cols-3">
+      {[
+        { Icon: Radar, value: '−35%', label: 'Time to identify issues' },
+        { Icon: Gauge, value: '×2.1', label: 'Action closure speed' },
+        { Icon: CheckCircle2, value: '95%', label: 'Verified fixes' },
+      ].map((m, i) => (
+        <motion.div
+          key={i}
+          {...mk(i * 0.05)}
+          className="rounded-2xl border bg-white p-6 shadow-sm flex items-center gap-4"
+        >
+          <span className="grid place-items-center size-12 rounded-xl bg-emerald-600 text-white">
+            <m.Icon className="size-6" />
+          </span>
+          <div>
+            <div className="text-2xl font-bold">{m.value}</div>
+            <div className="text-muted-foreground">{m.label}</div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+
+    <motion.div {...mk(0.15)} className="mt-8 flex flex-wrap items-center gap-3">
+      <Button asChild className="rounded-full">
+        <Link href="/book-demo">
+          Request a demo
+          <ArrowRight className="ml-2 size-4" />
+        </Link>
+      </Button>
+      <Button asChild variant="outline" className="rounded-full">
+        <Link href="/products">Other products</Link>
+      </Button>
+    </motion.div>
+  </div>
+</section>
     </main>
   );
 }
