@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Montserrat, Comfortaa } from "next/font/google";
 import "./globals.css";
 
-// ⬇️ Подключаем ваш Header и Footer
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
