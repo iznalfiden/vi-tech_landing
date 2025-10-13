@@ -99,7 +99,6 @@ export default function BookDemoClient() {
 
   return (
     <main className="relative isolate">
-      {/* 🌈 лёгкий градиент на ВСЮ страницу (фиксированный слой) */}
       <div
         aria-hidden
         className="
