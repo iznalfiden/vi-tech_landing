@@ -111,27 +111,9 @@ export default function BookDemoClient() {
   "
       />
 
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 pt-20 md:pt-28 pb-10 md:pb-14">
-          <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-            className="text-4xl md:text-6xl font-bold tracking-tight"
-          >
-            Book a demo
-          </motion.h1>
-
-          <motion.p {...mk(0.08)} className="mt-4 max-w-2xl text-muted-foreground text-lg">
-            Fill in the form below — First name, Last name, Company, Email, and Message — and we’ll get back to you to arrange a convenient time.
-          </motion.p>
-        </div>
-      </section>
 
       {/* FORM */}
-      <section className="relative isolate overflow-hidden pb-16 md:pb-24">
+      <section className="relative isolate overflow-hidden py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4">
           <motion.div {...mk(0.06)} className="rounded-3xl border bg-white/80 backdrop-blur p-6 md:p-8 shadow-sm">
             {submitted ? (
