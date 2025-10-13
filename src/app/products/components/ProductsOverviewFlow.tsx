@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, easeOut } from 'framer-motion';
-
+import Image from 'next/image';
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
 function NodeImg({
@@ -59,7 +59,7 @@ export default function ProductsOverviewFlowSVG() {
   const impY = 350 + branchExtra;
 
   const nodes = {
-    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards & SWC',             href: '/products/standardizit', img: '/standardizit.svg' },
+    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards',             href: '/products/standardizit', img: '/standardizit.svg' },
     gsi: { cx: 520, cy: 260, title: 'GoSeeiT',      sub: 'Promotes ‘Go Look & See’',         href: '/products/goseeit',      img: '/goseeit.svg' },
     res: { cx: 900, cy: resY, title: 'ResolvIT',    sub: 'Standardised Problem Solving',     href: '/products/resolvit',     img: '/resolvit.svg' },
     imp: { cx: 900, cy: impY, title: 'ImproviT',    sub: 'Idea Generation & Implementation', href: '/products/improvit',     img: '/improvit.svg' },
@@ -132,14 +132,14 @@ export default function ProductsOverviewFlowSVG() {
                   )}
 
                   <span className="shrink-0 grid place-items-center size-14 rounded-full ring-4 ring-white overflow-hidden border bg-white">
-                    <img
-                      src={n.img}
-                      alt=""
-                      width={2 * r}
-                      height={2 * r}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
+                  <Image
+    src={n.img}
+    alt=""
+    fill
+    sizes="56px"            // size-14 = 3.5rem ≈ 56px
+    className="object-cover"
+    priority={false}
+  />
                   </span>
 
                   <div className="flex-1 pt-1 pb-6">
