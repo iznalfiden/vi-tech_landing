@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, easeOut } from 'framer-motion';
 import Image from 'next/image';
+
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
 function NodeImg({
@@ -23,7 +24,7 @@ function NodeImg({
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // дублируем href и через xlink для совместимости с Safari/iOS
+    // Дублируем href и через xlink для совместимости с Safari/iOS
     try {
       el.setAttributeNS(null, 'href', href);
       el.setAttributeNS(XLINK_NS, 'href', href);
@@ -59,10 +60,10 @@ export default function ProductsOverviewFlowSVG() {
   const impY = 350 + branchExtra;
 
   const nodes = {
-    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards',             href: '/products/standardizit', img: '/standardizit.svg' },
-    gsi: { cx: 520, cy: 260, title: 'GoSeeiT',      sub: 'Promotes ‘Go Look & See’',         href: '/products/goseeit',      img: '/goseeit.svg' },
-    res: { cx: 900, cy: resY, title: 'ResolvIT',    sub: 'Standardised Problem Solving',     href: '/products/resolvit',     img: '/resolvit.svg' },
-    imp: { cx: 900, cy: impY, title: 'ImproviT',    sub: 'Idea Generation & Implementation', href: '/products/improvit',     img: '/improvit.svg' },
+    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards',                 href: '/products/standardizit', img: '/standardizit.svg' },
+    gsi: { cx: 520, cy: 260, title: 'GoSeeiT',      sub: 'Promotes ‘Go Look & See’',       href: '/products/goseeit',      img: '/goseeit.svg' },
+    res: { cx: 900, cy: resY, title: 'ResolvIT',    sub: 'Standardised Problem Solving',   href: '/products/resolvit',     img: '/resolvit.svg' },
+    imp: { cx: 900, cy: impY, title: 'ImproviT',    sub: 'Idea Generation & Implementation', href: '/products/improvit',   img: '/improvit.svg' },
   } as const;
 
   const order: Array<keyof typeof nodes> = ['std', 'gsi', 'res', 'imp'];
@@ -131,15 +132,17 @@ export default function ProductsOverviewFlowSVG() {
                     />
                   )}
 
-                  <span className="shrink-0 grid place-items-center size-14 rounded-full ring-4 ring-white overflow-hidden border bg-white">
-                  <Image
-    src={n.img}
-    alt=""
-    fill
-    sizes="56px"            // size-14 = 3.5rem ≈ 56px
-    className="object-cover"
-    priority={false}
-  />
+                  {/* Контейнер круга + оптимизированная картинка */}
+                  <span className="shrink-0 inline-grid place-items-center h-14 w-14 rounded-full ring-4 ring-white overflow-hidden border bg-white">
+                    <Image
+                      src={n.img}
+                      alt=""
+                      width={56}
+                      height={56}
+                      className="h-14 w-14 object-cover rounded-full"
+                      sizes="56px"
+                      priority={false}
+                    />
                   </span>
 
                   <div className="flex-1 pt-1 pb-6">
