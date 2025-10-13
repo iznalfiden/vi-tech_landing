@@ -165,7 +165,7 @@ export default function Header() {
                     </DropdownMenu>
 
                     <NavLink href="/about" activePath={pathname}>About</NavLink>
-                    <NavLink href="/login" activePath={pathname}>Login</NavLink>
+                    <NavLink href="https://vi-front-qogd.vercel.app/login" activePath={pathname}>Login</NavLink>
 
                     <Separator orientation="vertical" className="mx-1 h-6" />
 
