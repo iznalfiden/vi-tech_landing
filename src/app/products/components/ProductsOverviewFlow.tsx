@@ -46,7 +46,6 @@ export default function ProductsOverviewFlowSVG() {
   const stroke = '#120b2b';
   const arrowSize = 12;
 
-  // motion пресеты
   const draw = (delay = 0) => ({
     initial: { pathLength: 0, opacity: 0 },
     whileInView: { pathLength: 1, opacity: 1 },
@@ -67,8 +66,60 @@ export default function ProductsOverviewFlowSVG() {
       <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
       <div className="rounded-3xl border bg-white/80 backdrop-blur shadow-sm">
-        {/* Оболочка: фикс. высота на мобилках, aspect-ratio — с md и выше */}
-        <div className="relative w-full min-h-[380px] h-[460px] sm:h-[540px] md:min-h-0 md:h-auto md:aspect-[1200/620]">
+        {/* ====== MOBILE FALLBACK (виден только на мобильных) ====== */}
+        <div className="md:hidden p-4 sm:p-6">
+          <ol className="relative">
+            {order.map((key, i) => {
+              const n = nodes[key];
+              const isLast = i === order.length - 1;
+              return (
+                <motion.li
+                  key={key}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.45, ease: easeOut, delay: i * 0.03 }}
+                  className="relative flex gap-4"
+                >
+                  {/* Вертикальная линия-связка */}
+                  {!isLast && (
+                    <span
+                      className="absolute left-7 top-14 bottom-[-12px] w-px bg-gradient-to-b from-[#120b2b33] to-transparent"
+                      aria-hidden
+                    />
+                  )}
+
+                  {/* Кружок-узел */}
+                  <span className="shrink-0 grid place-items-center size-14 rounded-full ring-4 ring-white overflow-hidden border bg-white">
+                    <img
+                      src={n.img}
+                      alt=""
+                      width={2 * r}
+                      height={2 * r}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </span>
+
+                  {/* Текст и ссылка */}
+                  <div className="flex-1 pt-1 pb-6">
+                    <div className="font-extrabold text-lg text-[#120b2b]">{n.title}</div>
+                    <div className="text-sm text-[#120b2bB3]">{n.sub}</div>
+                    <a
+                      href={n.href}
+                      className="mt-2 inline-block text-xs font-semibold tracking-wider uppercase text-[#120b2b]"
+                    >
+                      Learn more →
+                    </a>
+                  </div>
+                </motion.li>
+              );
+            })}
+          </ol>
+        </div>
+
+        {/* ====== DESKTOP SVG (начиная с md) ====== */}
+        <div className="relative hidden md:block w-full md:aspect-[1200/620]">
           <motion.svg
             viewBox={`0 0 ${vb.w} ${vb.h}`}
             role="img"
@@ -139,7 +190,7 @@ export default function ProductsOverviewFlowSVG() {
               {...draw(0.2)}
             />
 
-            {/* узлы + LEARN MORE */}
+            {/* узлы */}
             {order.map((key, i) => {
               const n = nodes[key];
               const titleY = n.cy + r + 28;
@@ -148,8 +199,8 @@ export default function ProductsOverviewFlowSVG() {
 
               return (
                 <motion.g key={key} {...pop(0.1 + i * 0.08)}>
-                  {/* изображение в круге — добавили xlinkHref для Safari/iOS */}
-                  {/* @ts-ignore: xlinkHref нужен для части мобильных браузеров */}
+                  {/* изображение в круге (добавлено xlinkHref для iOS/Safari) */}
+                  {/* @ts-ignore */}
                   <image
                     href={n.img}
                     xlinkHref={n.img}
