@@ -3,6 +3,49 @@
 import React from 'react';
 import { motion, easeOut } from 'framer-motion';
 
+const XLINK_NS = 'http://www.w3.org/1999/xlink';
+
+function NodeImg({
+  href,
+  x,
+  y,
+  size,
+  clipId,
+}: {
+  href: string;
+  x: number;
+  y: number;
+  size: number;
+  clipId: string;
+}) {
+  const ref = React.useRef<SVGImageElement | null>(null);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // дублируем href и через xlink для совместимости с Safari/iOS
+    try {
+      el.setAttributeNS(null, 'href', href);
+      el.setAttributeNS(XLINK_NS, 'href', href);
+    } catch {
+      /* no-op */
+    }
+  }, [href]);
+
+  return (
+    <image
+      ref={ref}
+      href={href}
+      x={x}
+      y={y}
+      width={size}
+      height={size}
+      preserveAspectRatio="xMidYMid slice"
+      clipPath={`url(#${clipId})`}
+    />
+  );
+}
+
 export default function ProductsOverviewFlowSVG() {
   const vb = { w: 1200, h: 620 };
   const r = 96;
@@ -66,7 +109,7 @@ export default function ProductsOverviewFlowSVG() {
       <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
       <div className="rounded-3xl border bg-white/80 backdrop-blur shadow-sm">
-        {/* ====== MOBILE FALLBACK (виден только на мобильных) ====== */}
+        {/* ====== MOBILE FALLBACK ====== */}
         <div className="md:hidden p-4 sm:p-6">
           <ol className="relative">
             {order.map((key, i) => {
@@ -81,7 +124,6 @@ export default function ProductsOverviewFlowSVG() {
                   transition={{ duration: 0.45, ease: easeOut, delay: i * 0.03 }}
                   className="relative flex gap-4"
                 >
-                  {/* Вертикальная линия-связка */}
                   {!isLast && (
                     <span
                       className="absolute left-7 top-14 bottom-[-12px] w-px bg-gradient-to-b from-[#120b2b33] to-transparent"
@@ -89,7 +131,6 @@ export default function ProductsOverviewFlowSVG() {
                     />
                   )}
 
-                  {/* Кружок-узел */}
                   <span className="shrink-0 grid place-items-center size-14 rounded-full ring-4 ring-white overflow-hidden border bg-white">
                     <img
                       src={n.img}
@@ -101,7 +142,6 @@ export default function ProductsOverviewFlowSVG() {
                     />
                   </span>
 
-                  {/* Текст и ссылка */}
                   <div className="flex-1 pt-1 pb-6">
                     <div className="font-extrabold text-lg text-[#120b2b]">{n.title}</div>
                     <div className="text-sm text-[#120b2bB3]">{n.sub}</div>
@@ -118,7 +158,7 @@ export default function ProductsOverviewFlowSVG() {
           </ol>
         </div>
 
-        {/* ====== DESKTOP SVG (начиная с md) ====== */}
+        {/* ====== DESKTOP SVG ====== */}
         <div className="relative hidden md:block w-full md:aspect-[1200/620]">
           <motion.svg
             viewBox={`0 0 ${vb.w} ${vb.h}`}
@@ -131,6 +171,7 @@ export default function ProductsOverviewFlowSVG() {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.4, ease: easeOut }}
             viewport={{ once: true, margin: '-80px' }}
+            xmlnsXlink={XLINK_NS}
           >
             <title id="flowTitle">Products flow: StandardiziT → GoSeeiT → ResolvIT/ImproviT</title>
 
@@ -199,22 +240,16 @@ export default function ProductsOverviewFlowSVG() {
 
               return (
                 <motion.g key={key} {...pop(0.1 + i * 0.08)}>
-                  {/* изображение в круге (добавлено xlinkHref для iOS/Safari) */}
-                  {/* @ts-ignore */}
-                  <image
+                  <NodeImg
                     href={n.img}
-                    xlinkHref={n.img}
                     x={n.cx - r}
                     y={n.cy - r}
-                    width={2 * r}
-                    height={2 * r}
-                    preserveAspectRatio="xMidYMid slice"
-                    clipPath={`url(#clip-${key})`}
+                    size={2 * r}
+                    clipId={`clip-${key}`}
                   />
-                  {/* белое кольцо */}
+
                   <circle cx={n.cx} cy={n.cy} r={r} fill="transparent" stroke="#ffffff" strokeWidth="8" />
 
-                  {/* кликабельная зона */}
                   <a href={n.href} target="_self">
                     <rect x={n.cx - 150} y={n.cy + r + 6} width={300} height={90} fill="transparent" />
                     <text x={n.cx} y={titleY} textAnchor="middle" fontWeight={800} fontSize="28" fill="#120b2b">
