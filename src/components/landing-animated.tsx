@@ -17,7 +17,7 @@ import {
 export default function LandingAnimated() {
   const products = [
     { name: 'GoSeeiT', desc: 'Promotes ’Go Look & See’ Approach', href: '/products/goseeit', gradient: 'bg-emerald-500', Icon: Search },
-    { name: 'StandardiziT', desc: 'Work Standards & SWC', href: '/products/standardizit', gradient: 'bg-fuchsia-600', Icon: ChartCandlestick },
+    { name: 'StandardiziT', desc: 'Work Standards', href: '/products/standardizit', gradient: 'bg-fuchsia-600', Icon: ChartCandlestick },
     { name: 'ImproviT', desc: 'Structured Idea Generation & Implementation', href: '/products/improvit', gradient: 'from-amber-500 to-orange-500', Icon: Lightbulb },
     { name: 'ResolvIT', desc: 'Drives & Simplifies Standardised Problem Solving (AI Powered)', href: '/products/resolvit', gradient: 'from-violet-600 to-purple-600', Icon: Settings },
   ];
