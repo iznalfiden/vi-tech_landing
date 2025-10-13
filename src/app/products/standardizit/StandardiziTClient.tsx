@@ -171,7 +171,7 @@ export default function StandardiziTClient() {
       <section
         className="
           relative isolate overflow-hidden
-          bg-[url('/StandardiziTCircle.svg')] bg-no-repeat bg-cover bg-center
+          bg-[url('/StandardizitCircle.svg')] bg-no-repeat bg-cover bg-center
         "
       >
         <div className="mx-auto max-w-7xl px-4 py-12 md:py-16">
