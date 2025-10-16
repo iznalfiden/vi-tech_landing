@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { motion, easeOut } from 'framer-motion';
 import {
     Search,
@@ -15,6 +14,7 @@ import {
     RefreshCw,
     Users,
 } from 'lucide-react';
+
 
 function NodeImg({
     href, x, y, size, maskId, bleed = 1.25,
@@ -68,9 +68,9 @@ export default function MainPageProductsOverviewFlow({
     const impY = 350 + branchExtra;
 
     const nodes = {
-        std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards', href: '/products/standardizit', img: '/standardizit.svg' },
+        std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards & SWC', href: '/products/standardizit', img: '/standardizit.svg' },
         gsi: { cx: 520, cy: 260, title: 'GoSeeiT', sub: 'Promotes ‘Go Look & See’', href: '/products/goseeit', img: '/goseeit.svg' },
-        res: { cx: 900, cy: resY, title: 'ResolviT', sub: 'Standardised Problem Solving (AI Powered)', href: '/products/resolvit', img: '/resolvit.svg' },
+        res: { cx: 900, cy: resY, title: 'ResolviT', sub: 'Standardised Problem Solving', href: '/products/resolvit', img: '/resolvit.svg' },
         imp: { cx: 900, cy: impY, title: 'ImproviT', sub: 'Idea Generation & Implementation', href: '/products/improvit', img: '/improvit.svg' },
     } as const;
 
@@ -170,59 +170,59 @@ export default function MainPageProductsOverviewFlow({
         React.useLayoutEffect(() => {
             measure();
             const ro = new ResizeObserver(measure);
-
-            // типизированный обработчик resize
-            const onResize = () => measure();
-
             if (wrapRef.current) ro.observe(wrapRef.current);
-            window.addEventListener('resize', onResize, { passive: true });
-
-            return () => {
-                ro.disconnect();
-                window.removeEventListener('resize', onResize);
-            };
+            window.addEventListener('resize', measure, { passive: true });
+            return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
         }, [measure]);
 
         // ---- paths ----
         const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
             `M ${Math.round(to.x)} ${Math.round(from.y)} V ${Math.round(to.y)}`;
 
+        // красивый кубический спуск: гладкий старт и мягкий заход
+        // более плавная кубическая кривая: мягкий старт и мягкий заход
         const curveOut = (
             s: { x: number; y: number },
             e: { x: number; y: number },
             side: 'left' | 'right'
         ) => {
-            const stem = 12; // короче «хвост» вниз
+            const stem = 12;                               // короче «хвост» вниз
             const start = { x: s.x, y: s.y + stem };
 
             const dx = e.x - start.x;
             const dy = e.y - start.y;
             const dist = Math.hypot(dx, dy) || 1;
 
+            // чуть меньше боковой «пухлости» + общая симметрия
             const spread = Math.max(Math.abs(dx) * 0.55, 110);
-            const pull = Math.min(240, dist * 0.48);
-            const drop = Math.min(56, dist * 0.22);
+            const pull = Math.min(240, dist * 0.48);     // мягкий заход к цели
+            const drop = Math.min(56, dist * 0.22);     // плавный сход с вершины
 
+            // C1: не строго под стартом — слегка в сторону ветки
             const sideSign = side === 'left' ? -1 : 1;
-            const c1 = { x: start.x + sideSign * Math.min(40, spread * 0.18), y: start.y + drop };
+            const c1 = {
+                x: start.x + sideSign * Math.min(40, spread * 0.18),
+                y: start.y + drop
+            };
 
+            // C2: «тянем» по направлению к цели и чуть наружу
             const theta = Math.atan2(dy, dx);
             const c2 = {
                 x: e.x - Math.cos(theta) * pull + sideSign * Math.min(80, spread * 0.35),
-                y: e.y - Math.sin(theta) * pull + Math.min(40, dist * 0.08),
+                y: e.y - Math.sin(theta) * pull + Math.min(40, dist * 0.08)
             };
 
             return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
         };
 
-        // двойной штрих (glow). linecap: 'butt', чтобы не торчала точка под маркером
+        // было: round → стало: butt (чтобы не торчал круглый кап)
         const PathWithGlow: React.FC<{ d: string; withArrow?: boolean }> = ({ d, withArrow = true }) => (
             <>
                 <path
                     d={d}
                     stroke="rgba(255,255,255,0.14)"
                     strokeWidth="5"
-                    strokeLinecap="butt"
+                    strokeLinecap="butt"           // ⬅️ было "round"
                     strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                     fill="none"
@@ -231,7 +231,7 @@ export default function MainPageProductsOverviewFlow({
                     d={d}
                     stroke="rgba(255,255,255,0.9)"
                     strokeWidth="2.25"
-                    strokeLinecap="butt"
+                    strokeLinecap="butt"           // ⬅️ было "round"
                     strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                     fill="none"
@@ -251,8 +251,6 @@ export default function MainPageProductsOverviewFlow({
             const n = nodes[k];
             const Icon = iconByKey[k];
             const color = iconColorByKey[k];
-            const wh = center ? 200 : 160;
-
             return (
                 <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
                     <a href={n.href} className="flex flex-col items-center text-center gap-3">
@@ -260,14 +258,7 @@ export default function MainPageProductsOverviewFlow({
                             ref={anchorRef}
                             className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}
                         >
-                            <Image
-                                src={n.img}
-                                alt=""
-                                width={wh}
-                                height={wh}
-                                className="h-full w-full object-cover"
-                                loading="lazy"
-                            />
+                            <img src={n.img} alt="" width={center ? 200 : 160} height={center ? 200 : 160} className="h-full w-full object-cover" loading="lazy" />
                         </span>
                         <div className="pt-1">
                             <div className={`flex items-center justify-center gap-2 font-extrabold text-white ${center ? 'text-lg' : 'text-[17px]'}`}>
@@ -322,7 +313,7 @@ export default function MainPageProductsOverviewFlow({
                             markerUnits="userSpaceOnUse"
                             markerWidth="10"
                             markerHeight="10"
-                            refX="9.8"
+                            refX="5"
                             refY="5"
                             orient="auto"
                         >
@@ -517,7 +508,7 @@ export default function MainPageProductsOverviewFlow({
     if (embed) return content;
 
     return (
-        <section className="relative isolate overflow-hidden bg-[#0e0a24]">
+        <section className="relative isolate overflow-hidden bg-[#0e0a24] py-24 md:py-36">
             <div className={gradientOverscanClass} style={gradientMaskStyle} />
             {content}
         </section>
