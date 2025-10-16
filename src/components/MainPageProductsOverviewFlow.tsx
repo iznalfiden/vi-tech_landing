@@ -15,35 +15,36 @@ import {
   Users,
 } from 'lucide-react';
 
+const XLINK_NS = 'http://www.w3.org/1999/xlink';
+
 function NodeImg({
   href, x, y, size, clipId, bleed = 1.25,
 }: {
   href: string; x: number; y: number; size: number; clipId: string; bleed?: number;
 }) {
   const ref = React.useRef<SVGImageElement | null>(null);
+
   React.useEffect(() => {
     const el = ref.current; if (!el) return;
     try {
       el.setAttributeNS(null, 'href', href);
-      el.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
+      el.setAttributeNS(XLINK_NS, 'xlink:href', href);
     } catch {}
   }, [href]);
 
   return (
     <image
       ref={ref}
+      // дублируем сразу, чтобы не ждать эффекта
       href={href}
+      xlinkHref={href as any}
       x={x - bleed}
       y={y - bleed}
       width={size + 2 * bleed}
       height={size + 2 * bleed}
       preserveAspectRatio="xMidYMid slice"
       clipPath={`url(#${clipId})`}
-      style={{
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden',
-        willChange: 'transform',
-      }}
+      style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
     />
   );
 }
@@ -134,7 +135,10 @@ export default function MainPageProductsOverviewFlow({
     const refStdOutBox = React.useRef<HTMLDivElement | null>(null);
     const refGsiOutBox = React.useRef<HTMLDivElement | null>(null);
 
-    const [box, setBox] = React.useState({ w: 0, h: 0 });
+    // ✅ только ширина в state, высота — «заморожена» в ref
+    const [boxW, setBoxW] = React.useState(0);
+    const boxHRef = React.useRef(0);
+
     const [pt, setPt] = React.useState<Record<string, { x: number; y: number }>>({});
 
     const bbox = (el: HTMLElement | null, root: DOMRect) => {
@@ -170,8 +174,11 @@ export default function MainPageProductsOverviewFlow({
       const round = (n: number) => Math.round(n);
       const cx = (b: { x: number; w: number }) => round(b.x + b.w / 2);
 
-      const nextBox = { w: round(wr.width), h: round(wr.height) };
-      setBox(prev => (prev.w !== nextBox.w || prev.h !== nextBox.h ? nextBox : prev));
+      const nextW = round(wr.width);
+      const nextH = round(wr.height);
+
+      setBoxW(prev => (Math.abs(prev - nextW) >= 1 ? nextW : prev)); // только ширина
+      boxHRef.current = nextH; // высота — в ref, без setState
 
       const nextPt = {
         stdIn:  stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
@@ -185,9 +192,7 @@ export default function MainPageProductsOverviewFlow({
       setPt(prev => {
         let same = true;
         for (const k of Object.keys(nextPt) as Array<keyof typeof nextPt>) {
-          if (!prev[k] || !nearEq(prev[k].x, nextPt[k].x) || !nearEq(prev[k].y, nextPt[k].y)) {
-            same = false; break;
-          }
+          if (!prev[k] || !nearEq(prev[k].x, nextPt[k].x) || !nearEq(prev[k].y, nextPt[k].y)) { same = false; break; }
         }
         return same ? prev : nextPt;
       });
@@ -195,28 +200,38 @@ export default function MainPageProductsOverviewFlow({
 
     // первый замер + наблюдатели
     React.useEffect(() => {
-      // сразу посчитать (без rAF), чтобы не было «пустого» кадра
       measure();
-      // затем зафиксировать координаты на кадр браузера
       schedule(measure);
 
-      const ro = new ResizeObserver(() => schedule(measure));
+      // реагируем ТОЛЬКО на изменение ширины контейнера
+      let lastW = 0;
+      const ro = new ResizeObserver((entries) => {
+        const w = Math.round(entries[0]?.contentRect.width ?? 0);
+        if (Math.abs(w - lastW) >= 1) {
+          lastW = w;
+          schedule(measure);
+        }
+      });
       if (wrapRef.current) ro.observe(wrapRef.current);
 
-      let prevW = window.innerWidth;
+      // окно — ТОЛЬКО ширина
+      let prevWinW = window.innerWidth;
       const onResize = () => {
         const w = window.innerWidth;
-        if (Math.abs(w - prevW) >= 1) {
-          prevW = w;
+        if (Math.abs(w - prevWinW) >= 1) {
+          prevWinW = w;
           schedule(measure);
         }
       };
       window.addEventListener('resize', onResize, { passive: true });
       window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
 
-      // fonts.ready без any
-      const fonts = (document as Document & { fonts?: { ready: Promise<void> } }).fonts;
-      fonts?.ready.then(() => schedule(measure));
+      // fonts.ready
+      // @ts-ignore
+      if (document.fonts?.ready) document.fonts.ready.then(() => schedule(measure));
+
+      // после полной загрузки
+      window.addEventListener('load', () => schedule(measure), { once: true });
 
       return () => {
         ro.disconnect();
@@ -301,9 +316,14 @@ export default function MainPageProductsOverviewFlow({
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
+
+      const px = center ? 80 : 64; // совпадает с size-20/size-16
+
+      const eager = k === 'std' || k === 'gsi';
+
       return (
         <motion.div
-          initial={false} // видим сразу, без мигания
+          initial={false}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.45, ease: 'easeOut', delay }}
           viewport={{ once: true, amount: 0.35 }}
@@ -318,12 +338,13 @@ export default function MainPageProductsOverviewFlow({
               <img
                 src={n.img}
                 alt=""
-                width={center ? 200 : 160}
-                height={center ? 200 : 160}
+                width={px}
+                height={px}
                 className="h-full w-full object-cover"
-                loading="lazy"
+                loading={eager ? 'eager' : 'lazy'}
                 decoding="async"
                 onLoad={() => schedule(measure)}
+                style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
               />
             </span>
             <div className="pt-1">
@@ -342,67 +363,66 @@ export default function MainPageProductsOverviewFlow({
     };
 
     return (
-      // ⬇️ убрал contain: он вызывает reflow/пересчёт клиппинга и «миг»
-      <div ref={wrapRef} className="relative">
-        {/* 1. StandardiziT (центр) */}
-        <div className="min-h-[176px] flex items-center justify-center">
-          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center delay={0.02} />
-        </div>
+      <>
+        {/* отключаем scroll anchoring локально */}
+        <style jsx>{`.no-anchor { overflow-anchor: none; }`}</style>
 
-        {/* 2. GoSeeiT (центр) */}
-        <div className="min-h-[188px] flex items-center justify-center">
-          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center delay={0.06} />
-        </div>
-
-        {/* 3. Разветвление: два столбца */}
-        <div className="grid grid-cols-2 gap-7 pt-8">
+        <div ref={wrapRef} className="relative no-anchor">
+          {/* 1. StandardiziT (центр) */}
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="res" anchorRef={refResAnchor} delay={0.1} />
+            <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center delay={0.02} />
           </div>
-          <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="imp" anchorRef={refImpAnchor} delay={0.12} />
+
+          {/* 2. GoSeeiT (центр) */}
+          <div className="min-h-[188px] flex items-center justify-center">
+            <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center delay={0.06} />
           </div>
+
+          {/* 3. Разветвление: два столбца */}
+          <div className="grid grid-cols-2 gap-7 pt-8">
+            <div className="min-h-[176px] flex items-center justify-center">
+              <Card k="res" anchorRef={refResAnchor} delay={0.1} />
+            </div>
+            <div className="min-h-[176px] flex items-center justify-center">
+              <Card k="imp" anchorRef={refImpAnchor} delay={0.12} />
+            </div>
+          </div>
+
+          {/* связи */}
+          <svg
+            className="pointer-events-none absolute inset-0 -z-10 w-full h-full"
+            viewBox={`0 0 ${Math.max(boxW, 1)} ${Math.max(boxHRef.current || 0, 1)}`}
+            preserveAspectRatio="none"
+            shapeRendering="geometricPrecision"
+            style={{ transform: 'translateZ(0)', willChange: 'transform' }}
+          >
+            <defs>
+              <marker
+                id="mobArrow"
+                viewBox="0 0 10 10"
+                markerUnits="userSpaceOnUse"
+                markerWidth="10"
+                markerHeight="10"
+                refX="5"
+                refY="5"
+                orient="auto"
+              >
+                <path d="M0,0 L10,5 L0,10 Z" fill="rgba(255,255,255,0.9)" />
+              </marker>
+            </defs>
+
+            {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
+              <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} />
+            )}
+            {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
+              <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} />
+            )}
+            {pt.gsiOut && pt.impIn && pt.gsiOut.x !== 0 && pt.impIn.x !== 0 && (
+              <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} />
+            )}
+          </svg>
         </div>
-
-        {/* связи */}
-        <svg
-          className="pointer-events-none absolute inset-0 -z-10"
-          width={Math.max(box.w, 1)}
-          height={Math.max(box.h, 1)}
-          viewBox={`0 0 ${Math.max(box.w, 1)} ${Math.max(box.h, 1)}`}
-          preserveAspectRatio="none"
-          shapeRendering="geometricPrecision"
-          style={{ transform: 'translateZ(0)', willChange: 'transform' }}
-        >
-          <defs>
-            <marker
-              id="mobArrow"
-              viewBox="0 0 10 10"
-              markerUnits="userSpaceOnUse"
-              markerWidth="10"
-              markerHeight="10"
-              refX="5"
-              refY="5"
-              orient="auto"
-            >
-              <path d="M0,0 L10,5 L0,10 Z" fill="rgba(255,255,255,0.9)" />
-            </marker>
-          </defs>
-
-          {/* std → gsi (строго вертикально) */}
-          {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
-            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} delay={0.12} />
-          )}
-
-          {/* gsi → res / imp (симметричные плавные дуги) */}
-          {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} delay={0.18} />
-          )}
-          {pt.gsiOut && pt.impIn && pt.gsiOut.x !== 0 && pt.impIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} delay={0.22} />
-          )}
-        </svg>
-      </div>
+      </>
     );
   }
 
