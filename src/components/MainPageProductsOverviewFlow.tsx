@@ -15,7 +15,6 @@ import {
     Users,
 } from 'lucide-react';
 
-const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
 function NodeImg({
     href, x, y, size, maskId, bleed = 1.25,
@@ -173,7 +172,7 @@ export default function MainPageProductsOverviewFlow({
             const ro = new ResizeObserver(measure);
             if (wrapRef.current) ro.observe(wrapRef.current);
             window.addEventListener('resize', measure, { passive: true });
-            return () => { ro.disconnect(); window.removeEventListener('resize', measure as any); };
+            return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
         }, [measure]);
 
         // ---- paths ----

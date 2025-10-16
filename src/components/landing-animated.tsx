@@ -13,7 +13,6 @@ import {
   ChevronRight,
   ChartCandlestick,
 } from 'lucide-react';
-import MainPageProductsOverviewFlowSVG from './MainPageProductsOverviewFlow';
 import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 
 // ⬇️ импорт секции с интерактивным flow (иконки + цвета уже внутри)

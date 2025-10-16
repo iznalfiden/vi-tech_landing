@@ -194,7 +194,7 @@ export default function ProductsOverviewFlowSVG() {
       window.addEventListener('resize', measure, { passive: true });
       return () => {
         ro.disconnect();
-        window.removeEventListener('resize', measure as any);
+        window.removeEventListener('resize', measure);
       };
     }, [measure]);
 
