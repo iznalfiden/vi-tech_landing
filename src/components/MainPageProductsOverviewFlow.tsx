@@ -37,7 +37,7 @@ function NodeImg({
       ref={ref}
       // дублируем сразу, чтобы не ждать эффекта
       href={href}
-      xlinkHref={href as any}
+      xlinkHref={href}
       x={x - bleed}
       y={y - bleed}
       width={size + 2 * bleed}

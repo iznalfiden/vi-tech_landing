@@ -57,7 +57,7 @@ function NodeImg({
       {/* лего-путь для Safari/старых движков */}
       <image
         ref={xlinkRef}
-        xlinkHref={href as any}
+        xlinkHref={href}
         x={x}
         y={y}
         width={size}
