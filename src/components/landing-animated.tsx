@@ -13,6 +13,10 @@ import {
   ChevronRight,
   ChartCandlestick,
 } from 'lucide-react';
+import MainPageProductsOverviewFlowSVG from './MainPageProductsOverviewFlow';
+import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
+
+// ⬇️ импорт секции с интерактивным flow (иконки + цвета уже внутри)
 
 export default function LandingAnimated() {
   const products = [
@@ -28,12 +32,10 @@ export default function LandingAnimated() {
     { name: 'TIMET', src: '/timet _logo.png' },
   ];
 
-  // единый фон-градиент для HERO и PRODUCTS (идентичный размер/параметры)
   const backdropClass =
     'hidden sm:block pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 ' +
     'bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]';
 
-  // плавный скролл к секции Products с небольшим «прижимом»
   const scrollToProducts = (e: React.MouseEvent) => {
     e.preventDefault();
     const target = document.getElementById('products');
@@ -47,7 +49,7 @@ export default function LandingAnimated() {
 
   return (
     <main>
-      {/* HERO (мобайл — без сложных фонов) */}
+      {/* HERO */}
       <section
         className="
           relative isolate overflow-hidden
@@ -63,7 +65,6 @@ export default function LandingAnimated() {
           className="hidden sm:block absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right"
           aria-hidden
         />
-        {/* идентичный градиент как во 2-м блоке */}
         <div className={backdropClass} />
 
         <div className="mx-auto max-w-7xl px-4 pt-28 md:pt-40 pb-20 md:pb-28">
@@ -111,7 +112,6 @@ export default function LandingAnimated() {
         id="products"
         className="relative isolate overflow-hidden py-24 md:py-36 lg:py-40 bg-[#0e0a24] scroll-mt-[88px] md:scroll-mt-[100px]"
       >
-        {/* идентичный градиент как в HERO */}
         <div className={backdropClass} />
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid gap-10 md:grid-cols-2 items-start">
@@ -145,6 +145,7 @@ export default function LandingAnimated() {
                 ))}
               </ul>
             </div>
+
             <motion.div
               initial={{ opacity: 0, x: 16 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -160,6 +161,11 @@ export default function LandingAnimated() {
                 className="object-contain"
               />
             </motion.div>
+          </div>
+
+          {/* ⤵️ встроенный flow — тот же фон, без отдельной секции */}
+          <div className="mt-16 md:mt-24 border-t border-white/10 pt-10 md:pt-14">
+            <MainPageProductsOverviewFlow embed overline="Product flow overview" />
           </div>
         </div>
       </section>
