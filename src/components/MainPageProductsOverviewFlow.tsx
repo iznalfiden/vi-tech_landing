@@ -107,7 +107,6 @@ export default function MainPageProductsOverviewFlow({
   const pathGsiToImp = bezier(startX, startDownY, nodes.imp.cx - r - gap, nodes.imp.cy);
 
   const stroke = 'rgba(255,255,255,0.9)';
-  const arrowSize = 12;
 
   const draw = (delay = 0) => ({
     initial: { pathLength: 0, opacity: 0 },
@@ -116,18 +115,19 @@ export default function MainPageProductsOverviewFlow({
     viewport: { once: true, margin: '-80px' },
   });
 
-  // ===== MOBILE: центр + развилка. Стрелки стартуют из реального блока "LEARN MORE" =====
+  // ===== MOBILE: центр + развилка. Стрелки стартуют из реального "LEARN MORE" и идут к верхам круглых аватаров =====
   function MobileStackBranched() {
     const wrapRef = React.useRef<HTMLDivElement | null>(null);
     type DivRef = React.MutableRefObject<HTMLDivElement | null>;
 
-    // якоря: in — верх карточки; outBox — сам блок Learn more (берём центр-низ)
-    const refStdIn = React.useRef<HTMLDivElement | null>(null);
+    // якоря: anchor — круг-аватар; outBox — "Learn more"
+    const refStdAnchor = React.useRef<HTMLDivElement | null>(null);
+    const refGsiAnchor = React.useRef<HTMLDivElement | null>(null);
+    const refResAnchor = React.useRef<HTMLDivElement | null>(null);
+    const refImpAnchor = React.useRef<HTMLDivElement | null>(null);
+
     const refStdOutBox = React.useRef<HTMLDivElement | null>(null);
-    const refGsiIn = React.useRef<HTMLDivElement | null>(null);
     const refGsiOutBox = React.useRef<HTMLDivElement | null>(null);
-    const refResIn = React.useRef<HTMLDivElement | null>(null);
-    const refImpIn = React.useRef<HTMLDivElement | null>(null);
 
     const [box, setBox] = React.useState({ w: 0, h: 0 });
     const [pt, setPt] = React.useState<Record<string, { x: number; y: number }>>({});
@@ -143,23 +143,28 @@ export default function MainPageProductsOverviewFlow({
       if (!w) return;
       const wr = w.getBoundingClientRect();
 
-      const stdIn = bbox(refStdIn.current, wr);
+      const stdA = bbox(refStdAnchor.current, wr);
+      const gsiA = bbox(refGsiAnchor.current, wr);
+      const resA = bbox(refResAnchor.current, wr);
+      const impA = bbox(refImpAnchor.current, wr);
+
       const stdOutB = bbox(refStdOutBox.current, wr);
-      const gsiIn = bbox(refGsiIn.current, wr);
       const gsiOutB = bbox(refGsiOutBox.current, wr);
-      const resIn = bbox(refResIn.current, wr);
-      const impIn = bbox(refImpIn.current, wr);
 
       const round = (n: number) => Math.round(n);
+      const cx = (b: { x: number; w: number }) => round(b.x + b.w / 2);
 
       setBox({ w: round(wr.width), h: round(wr.height) });
       setPt({
-        stdIn:  stdIn ? { x: round(stdIn.x + stdIn.w / 2), y: round(stdIn.y) } : { x: 0, y: 0 },
-        stdOut: stdOutB ? { x: round(stdOutB.x + stdOutB.w / 2), y: round(stdOutB.y + stdOutB.h + 10) } : { x: 0, y: 0 }, // +10px ниже текста
-        gsiIn:  gsiIn ? { x: round(gsiIn.x + gsiIn.w / 2), y: round(gsiIn.y) } : { x: 0, y: 0 },
-        gsiOut: gsiOutB ? { x: round(gsiOutB.x + gsiOutB.w / 2), y: round(gsiOutB.y + gsiOutB.h + 10) } : { x: 0, y: 0 },
-        resIn:  resIn ? { x: round(resIn.x + resIn.w / 2), y: round(resIn.y) } : { x: 0, y: 0 },
-        impIn:  impIn ? { x: round(impIn.x + impIn.w / 2), y: round(impIn.y) } : { x: 0, y: 0 },
+        // «вход» — верх круга (чуть выше, чтобы кончик стрелки попадал в обводку)
+        stdIn: stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
+        gsiIn: gsiA ? { x: cx(gsiA), y: round(gsiA.y) - 2 } : { x: 0, y: 0 },
+        resIn: resA ? { x: cx(resA), y: round(resA.y) - 2 } : { x: 0, y: 0 },
+        impIn: impA ? { x: cx(impA), y: round(impA.y) - 2 } : { x: 0, y: 0 },
+
+        // «выход» — центр “Learn more”, на 10px ниже
+        stdOut: stdOutB ? { x: cx(stdOutB), y: round(stdOutB.y + stdOutB.h + 10) } : { x: 0, y: 0 },
+        gsiOut: gsiOutB ? { x: cx(gsiOutB), y: round(gsiOutB.y + gsiOutB.h + 10) } : { x: 0, y: 0 },
       });
     }, []);
 
@@ -167,43 +172,49 @@ export default function MainPageProductsOverviewFlow({
       measure();
       const ro = new ResizeObserver(measure);
       if (wrapRef.current) ro.observe(wrapRef.current);
-      window.addEventListener('resize', measure);
-      return () => { ro.disconnect(); window.removeEventListener('resize', measure); };
+      window.addEventListener('resize', measure, { passive: true });
+      return () => { ro.disconnect(); window.removeEventListener('resize', measure as any); };
     }, [measure]);
 
-    // вертикальная линия от A к B (жёстко вертикальная, чтобы не было «наклона»)
-    const vertical = (a: {x:number;y:number}, b: {x:number;y:number}) => {
-      const x = Math.round((a.x + b.x) / 2);
-      const y0 = Math.min(a.y, b.y);
-      const y1 = Math.max(a.y, b.y);
-      return `M ${x} ${y0} V ${y1}`;
-    };
+    // прямая линия от точки к точке
+    const line = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+      `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
 
     // аккуратная симметричная дуга от s к e
-    const curveOut = (s: {x:number;y:number}, e: {x:number;y:number}, side: 'left'|'right') => {
-      const stem = 18;             // хвост вниз от точки старта
+    const curveOut = (s: { x: number; y: number }, e: { x: number; y: number }, side: 'left' | 'right') => {
+      const stem = 18; // хвост вниз от точки старта
       const from = { x: s.x, y: s.y + stem };
       const pushX = Math.max(Math.abs(e.x - s.x) * 0.6, 120);
-      const cx = side === 'left' ? from.x - pushX : from.x + pushX;
-      const cy = Math.round((from.y + e.y) / 2 + 24); // чуть ниже середины, чтобы не перекрывать текст
-      return `M ${from.x} ${from.y} Q ${cx} ${cy} ${e.x} ${e.y}`;
+      const cxVal = side === 'left' ? from.x - pushX : from.x + pushX;
+      const cy = Math.round((from.y + e.y) / 2 + 24); // чуть ниже середины
+      return `M ${from.x} ${from.y} Q ${cxVal} ${cy} ${e.x} ${e.y}`;
     };
 
+    // helpers (внутри MobileStackBranched)
+const verticalFromTo = (from: {x:number;y:number}, to: {x:number;y:number}) => {
+    // общий X; можно заменить на: const x = to.x;
+    const x = Math.round((from.x + to.x) / 2);
+    return `M ${x} ${from.y} V ${to.y}`;
+  };
+
     const Card = ({
-        k, topRef, learnMoreRef, center = false,
-      }: {
-        k: 'std' | 'gsi' | 'res' | 'imp';
-        topRef: DivRef;                         // было: RefObject<HTMLDivElement>
-        learnMoreRef?: DivRef;                  // было: RefObject<HTMLDivElement>
-        center?: boolean;
-      }) => {
+      k, anchorRef, learnMoreRef, center = false,
+    }: {
+      k: 'std' | 'gsi' | 'res' | 'imp';
+      anchorRef?: DivRef;       // якорь на круг-аватар
+      learnMoreRef?: DivRef;    // якорь на "Learn more"
+      center?: boolean;
+    }) => {
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
       return (
-        <div ref={topRef} className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
+        <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
-            <span className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}>
+            <span
+              ref={anchorRef}
+              className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}
+            >
               <img src={n.img} alt="" width={center ? 200 : 160} height={center ? 200 : 160} className="h-full w-full object-cover" loading="lazy" />
             </span>
             <div className="pt-1">
@@ -225,32 +236,32 @@ export default function MainPageProductsOverviewFlow({
       <div ref={wrapRef} className="relative">
         {/* 1. StandardiziT (центр) */}
         <div className="min-h-[176px] flex items-center justify-center">
-          <Card k="std" topRef={refStdIn} learnMoreRef={refStdOutBox} center />
+          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center />
         </div>
 
         {/* 2. GoSeeiT (центр) */}
         <div className="min-h-[188px] flex items-center justify-center">
-          <Card k="gsi" topRef={refGsiIn} learnMoreRef={refGsiOutBox} center />
+          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center />
         </div>
 
         {/* 3. Разветвление: два столбца */}
         <div className="grid grid-cols-2 gap-7 pt-8">
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="res" topRef={refResIn} />
+            <Card k="res" anchorRef={refResAnchor} />
           </div>
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="imp" topRef={refImpIn} />
+            <Card k="imp" anchorRef={refImpAnchor} />
           </div>
         </div>
 
         {/* связи */}
         <svg
           className="pointer-events-none absolute inset-0 -z-10"
-          width={box.w}
-          height={box.h}
-          viewBox={`0 0 ${box.w} ${box.h}`}
+          width={Math.max(box.w, 1)}
+          height={Math.max(box.h, 1)}
+          viewBox={`0 0 ${Math.max(box.w, 1)} ${Math.max(box.h, 1)}`}
           preserveAspectRatio="none"
-          shapeRendering="crispEdges"
+          shapeRendering="geometricPrecision"
         >
           <defs>
             <marker
@@ -267,11 +278,11 @@ export default function MainPageProductsOverviewFlow({
             </marker>
           </defs>
 
-          {/* std.LearnMore -> gsi.top — строго вертикально */}
-          {pt.stdOut && pt.gsiIn && (
+          {/* std.LearnMore -> gsi.circleTop */}
+          {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
             <path
-              d={vertical(pt.stdOut, pt.gsiIn)}
-              stroke="rgba(255,255,255,0.9)"
+            d={verticalFromTo(pt.stdOut, pt.gsiIn)}
+            stroke="rgba(255,255,255,0.9)"
               strokeWidth="2"
               strokeLinecap="butt"
               fill="none"
@@ -279,8 +290,8 @@ export default function MainPageProductsOverviewFlow({
             />
           )}
 
-          {/* gsi.LearnMore -> res.top / imp.top — симметричные дуги */}
-          {pt.gsiOut && pt.resIn && (
+          {/* gsi.LearnMore -> res/imp circleTop — симметричные дуги */}
+          {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
             <path
               d={curveOut(pt.gsiOut, pt.resIn, 'left')}
               stroke="rgba(255,255,255,0.9)"
@@ -290,7 +301,7 @@ export default function MainPageProductsOverviewFlow({
               markerEnd="url(#mobArrow)"
             />
           )}
-          {pt.gsiOut && pt.impIn && (
+          {pt.gsiOut && pt.impIn && pt.gsiOut.x !== 0 && pt.impIn.x !== 0 && (
             <path
               d={curveOut(pt.gsiOut, pt.impIn, 'right')}
               stroke="rgba(255,255,255,0.9)"
