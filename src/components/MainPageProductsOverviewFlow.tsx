@@ -227,7 +227,6 @@ export default function MainPageProductsOverviewFlow({
       window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
 
       // fonts.ready
-      // @ts-ignore
       if (document.fonts?.ready) document.fonts.ready.then(() => schedule(measure));
 
       // после полной загрузки

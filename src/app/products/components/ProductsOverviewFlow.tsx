@@ -247,7 +247,6 @@ export default function ProductsOverviewFlowSVG() {
       window.addEventListener('resize', onResize, { passive: true });
       window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
 
-      // @ts-ignore
       if (document.fonts?.ready) document.fonts.ready.then(() => schedule(measure));
       window.addEventListener('load', () => schedule(measure), { once: true });
 
