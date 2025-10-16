@@ -77,7 +77,7 @@ export default function Header() {
             {
                 name: 'Resolvit',
                 href: '/products/resolvit',
-                desc: 'Drives & simplifies standardised problem solving',
+                desc: 'Drives & simplifies standardised problem solving (AI Powered)',
                 Icon: Settings,
                 gradient: 'from-violet-600 to-violet-600',
             },
