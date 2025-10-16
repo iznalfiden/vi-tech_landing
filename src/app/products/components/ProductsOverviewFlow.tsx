@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { motion, easeOut } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Search,
   CandlestickChart as ChartCandlestick,
@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 function NodeImg({
   href,
@@ -25,29 +26,46 @@ function NodeImg({
   size: number;
   clipId: string;
 }) {
-  const ref = React.useRef<SVGImageElement | null>(null);
+  // фикс Safari: дублируем через setAttributeNS на монтировании
+  const hrefRef = React.useRef<SVGImageElement | null>(null);
+  const xlinkRef = React.useRef<SVGImageElement | null>(null);
 
   React.useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
     try {
-      el.setAttributeNS(null, 'href', href);
-      el.setAttributeNS(XLINK_NS, 'href', href);
+      if (hrefRef.current) {
+        hrefRef.current.setAttributeNS(null, 'href', href);
+      }
+      if (xlinkRef.current) {
+        xlinkRef.current.setAttributeNS(XLINK_NS, 'xlink:href', href);
+      }
     } catch {}
   }, [href]);
 
   return (
-    <image
-      ref={ref}
-      href={href}
-      x={x}
-      y={y}
-      width={size}
-      height={size}
-      preserveAspectRatio="xMidYMid slice"
-      clipPath={`url(#${clipId})`}
-      style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
-    />
+    <g clipPath={`url(#${clipId})`}>
+      {/* современный путь */}
+      <image
+        ref={hrefRef}
+        href={href}
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        preserveAspectRatio="xMidYMid slice"
+        style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
+      />
+      {/* лего-путь для Safari/старых движков */}
+      <image
+        ref={xlinkRef}
+        xlinkHref={href as any}
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        preserveAspectRatio="xMidYMid slice"
+        style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
+      />
+    </g>
   );
 }
 
@@ -110,7 +128,7 @@ export default function ProductsOverviewFlowSVG() {
   const draw = (delay = 0) => ({
     initial: { pathLength: 0, opacity: 0 },
     whileInView: { pathLength: 1, opacity: 1 },
-    transition: { duration: 0.9, ease: easeOut, delay },
+    transition: { duration: 0.9, ease: EASE, delay },
     viewport: { once: true, margin: '-80px' },
   });
 
@@ -150,7 +168,7 @@ export default function ProductsOverviewFlowSVG() {
       return { x: r.left - root.left, y: r.top - root.top, w: r.width, h: r.height };
     };
 
-    // rAF-троттлинг и фильтр по ШИРИНЕ (игнорим высоту — «дыхание» адресной строки)
+    // rAF-троттлинг + «ширина-только» для стабильности в iOS
     const rafId = React.useRef<number | null>(null);
     const schedule = React.useCallback((fn: () => void) => {
       if (rafId.current) cancelAnimationFrame(rafId.current);
@@ -170,15 +188,20 @@ export default function ProductsOverviewFlowSVG() {
       const gsiA = bbox(refGsiAnchor.current, wr);
       const resA = bbox(refResAnchor.current, wr);
       const impA = bbox(refImpAnchor.current, wr);
-
       const stdOutB = bbox(refStdOutBox.current, wr);
       const gsiOutB = bbox(refGsiOutBox.current, wr);
 
       const round = (n: number) => Math.round(n);
       const cx = (b: { x: number; w: number }) => round(b.x + b.w / 2);
 
-      const nextBox = { w: round(wr.width), h: round(wr.height) };
-      setBox(prev => (prev.w !== nextBox.w || prev.h !== nextBox.h ? nextBox : prev));
+      const nextW = round(wr.width);
+      const nextH = round(wr.height);
+
+      setBox(prev => {
+        const wChanged = Math.abs(prev.w - nextW) >= 1;
+        const hChanged = Math.abs(prev.h - nextH) >= 4; // игнор «дыхания» адресной строки
+        return (wChanged || hChanged) ? { w: nextW, h: nextH } : prev;
+      });
 
       const nextPt = {
         stdIn:  stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
@@ -201,7 +224,7 @@ export default function ProductsOverviewFlowSVG() {
     React.useEffect(() => {
       schedule(measure);
 
-      // Следим ТОЛЬКО за шириной контейнера
+      // только ширина контейнера
       let prevW = 0;
       const ro = new ResizeObserver((entries) => {
         const w = entries[0]?.contentRect.width ?? 0;
@@ -212,7 +235,7 @@ export default function ProductsOverviewFlowSVG() {
       });
       if (wrapRef.current) ro.observe(wrapRef.current);
 
-      // И только за шириной окна
+      // только ширина окна
       let lastW = window.innerWidth;
       const onResize = () => {
         const w = window.innerWidth;
@@ -224,10 +247,9 @@ export default function ProductsOverviewFlowSVG() {
       window.addEventListener('resize', onResize, { passive: true });
       window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
 
-      if ('fonts' in document) {
-        // @ts-ignore
-        (document as any).fonts.ready.then(() => schedule(measure));
-      }
+      // @ts-ignore
+      if (document.fonts?.ready) document.fonts.ready.then(() => schedule(measure));
+      window.addEventListener('load', () => schedule(measure), { once: true });
 
       return () => {
         ro.disconnect();
@@ -235,7 +257,7 @@ export default function ProductsOverviewFlowSVG() {
       };
     }, [measure, schedule]);
 
-    // --- пути + анимация ---
+    // paths
     const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
       `M ${Math.round(to.x)} ${Math.round(from.y)} V ${Math.round(to.y)}`;
 
@@ -262,36 +284,10 @@ export default function ProductsOverviewFlowSVG() {
       return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
     };
 
-    const drawMobile = (delay = 0) => ({
-      initial: { pathLength: 0, opacity: 0 },
-      whileInView: { pathLength: 1, opacity: 1 },
-      transition: { duration: 0.8, ease: easeOut, delay },
-      viewport: { once: true, amount: 0.3 },
-    });
-
-    const PathWithGlow: React.FC<{ d: string; withArrow?: boolean; delay?: number }> = ({ d, withArrow = true, delay = 0 }) => (
+    const PathWithGlow: React.FC<{ d: string; withArrow?: boolean }> = ({ d, withArrow = true }) => (
       <>
-        <motion.path
-          d={d}
-          stroke="rgba(18,11,43,0.14)"
-          strokeWidth="5"
-          strokeLinecap="butt"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-          fill="none"
-          {...drawMobile(delay)}
-        />
-        <motion.path
-          d={d}
-          stroke="#120b2b"
-          strokeWidth="2.25"
-          strokeLinecap="butt"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-          fill="none"
-          {...(withArrow ? { markerEnd: 'url(#mobArrow)' } : {})}
-          {...drawMobile(delay + 0.05)}
-        />
+        <path d={d} stroke="rgba(18,11,43,0.14)" strokeWidth="5" strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" fill="none" />
+        <path d={d} stroke="#120b2b" strokeWidth="2.25" strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" fill="none" {...(withArrow ? { markerEnd: 'url(#mobArrow)' } : {})} />
       </>
     );
 
@@ -300,43 +296,44 @@ export default function ProductsOverviewFlowSVG() {
       anchorRef,
       learnMoreRef,
       center = false,
-      delay = 0,
     }: {
       k: 'std' | 'gsi' | 'res' | 'imp';
       anchorRef?: DivRef;
       learnMoreRef?: DivRef;
       center?: boolean;
-      delay?: number;
     }) => {
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
-      const px = center ? 80 : 64; // равен size-20 / size-16
+      const px = center ? 80 : 64;
+
+      const isEager = k === 'res' || k === 'imp'; // нижние два — тоже грузим eager
 
       return (
-        <motion.div
-          initial={{ opacity: 0, y: 12, scale: 0.985 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.45, ease: easeOut, delay }}
-          viewport={{ once: true, amount: 0.35 }}
-          className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}
-        >
+        <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
             <span
               ref={anchorRef}
               className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/40 border bg-white`}
-              style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
+              style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
             >
               <Image
+                key={n.img}
                 src={n.img}
                 alt=""
                 width={px}
                 height={px}
-                sizes={`${px}px`}             // фикс srcset, чтобы не «плавал» размер
-                priority={k === 'std' || k === 'gsi'} // первые две — без lazy
+                sizes={`${px}px`}
+                // чтобы ничего не «ленилось» и ИО не путался с content-visibility
+                priority={k === 'std' || k === 'gsi'}
+                loading={isEager ? 'eager' : undefined}
                 className="h-full w-full object-cover"
                 style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
                 draggable={false}
+                onLoadingComplete={() => {
+                  // после фактической отрисовки картинки — пересчитать линии
+                  schedule(measure);
+                }}
               />
             </span>
             <div className="pt-1">
@@ -350,27 +347,35 @@ export default function ProductsOverviewFlowSVG() {
               </div>
             </div>
           </a>
-        </motion.div>
+        </div>
       );
     };
 
     return (
-      <div ref={wrapRef} className="relative" style={{ contain: 'layout paint', minHeight: 1,  }}>
+      <div
+        ref={wrapRef}
+        className="relative"
+        style={{
+          // важно: БЕЗ contentVisibility:auto, чтобы Next/Image не «терялся»
+          contain: 'layout paint',
+          minHeight: 1,
+        }}
+      >
         {/* 1. */}
         <div className="min-h-[176px] flex items-center justify-center">
-          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center delay={0.02} />
+          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center />
         </div>
         {/* 2. */}
         <div className="min-h-[188px] flex items-center justify-center">
-          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center delay={0.06} />
+          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center />
         </div>
         {/* 3. разветвление */}
         <div className="grid grid-cols-2 gap-7 pt-8">
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="res" anchorRef={refResAnchor} delay={0.1} />
+            <Card k="res" anchorRef={refResAnchor} />
           </div>
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="imp" anchorRef={refImpAnchor} delay={0.12} />
+            <Card k="imp" anchorRef={refImpAnchor} />
           </div>
         </div>
 
@@ -391,13 +396,13 @@ export default function ProductsOverviewFlowSVG() {
           </defs>
 
           {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
-            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} delay={0.12} />
+            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} />
           )}
           {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} delay={0.18} />
+            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} />
           )}
           {pt.gsiOut && pt.impIn && pt.gsiOut.x !== 0 && pt.impIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} delay={0.22} />
+            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} />
           )}
         </svg>
       </div>
@@ -425,7 +430,7 @@ export default function ProductsOverviewFlowSVG() {
             style={{ overflow: 'visible' }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.4, ease: easeOut }}
+            transition={{ duration: 0.4, ease: EASE }}
             viewport={{ once: true, margin: '-80px' }}
             xmlnsXlink={XLINK_NS}
           >
@@ -445,7 +450,7 @@ export default function ProductsOverviewFlowSVG() {
                 <path d={`M0,0 L${arrowSize},${arrowSize / 2} L0,${arrowSize} Z`} fill={stroke} />
               </marker>
 
-              {/* КЛЮЧЕВОЕ: фикс клипа */}
+              {/* фикс клипа */}
               {order.map((key) => (
                 <clipPath key={`clip-${key}`} id={`clip-${key}`} clipPathUnits="userSpaceOnUse">
                   <circle cx={nodes[key].cx} cy={nodes[key].cy} r={r} />
@@ -481,7 +486,7 @@ export default function ProductsOverviewFlowSVG() {
                   key={key}
                   initial={{ opacity: 0, y: 16, scale: 0.98 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.5, ease: easeOut, delay: 0.1 + i * 0.08 }}
+                  transition={{ duration: 0.5, ease: EASE, delay: 0.1 + i * 0.08 }}
                   viewport={{ once: true, margin: '-80px' }}
                 >
                   <NodeImg href={n.img} x={n.cx - r} y={n.cy - r} size={2 * r} clipId={`clip-${key}`} />

@@ -20,7 +20,6 @@ import { Separator } from '@/components/ui/separator';
 import {
     Menu,
     ChevronDown,
-    LayoutGrid,
     Search,
     Lightbulb,
     Settings,
@@ -52,14 +51,6 @@ export default function Header() {
     // ——— БЕЗ MeasuriT ———
     const products: ProductItem[] = useMemo(
         () => [
-            {
-                name: 'Overview',
-                href: '/products',
-                desc: 'Discover how our suite works together',
-                Icon: LayoutGrid,
-                gradient: 'from-indigo-700 to-indigo-500',
-            },
-
             {
                 name: 'GoSeeiT',
                 href: '/products/goseeit',
