@@ -2,6 +2,12 @@
 
 import React from 'react';
 import { motion, easeOut } from 'framer-motion';
+import {
+  Search,
+  CandlestickChart as ChartCandlestick,
+  Lightbulb,
+  Settings,
+} from 'lucide-react';
 
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
@@ -23,13 +29,10 @@ function NodeImg({
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // дублируем href и через xlink для совместимости с Safari/iOS
     try {
       el.setAttributeNS(null, 'href', href);
       el.setAttributeNS(XLINK_NS, 'href', href);
-    } catch {
-      /* no-op */
-    }
+    } catch { }
   }, [href]);
 
   return (
@@ -59,11 +62,24 @@ export default function ProductsOverviewFlowSVG() {
   const impY = 350 + branchExtra;
 
   const nodes = {
-    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards & SWC',             href: '/products/standardizit', img: '/standardizit.svg' },
-    gsi: { cx: 520, cy: 260, title: 'GoSeeiT',      sub: 'Promotes ‘Go Look & See’',         href: '/products/goseeit',      img: '/goseeit.svg' },
-    res: { cx: 900, cy: resY, title: 'ResolviT',    sub: 'Standardised Problem Solving',     href: '/products/resolvit',     img: '/resolvit.svg' },
-    imp: { cx: 900, cy: impY, title: 'ImproviT',    sub: 'Idea Generation & Implementation', href: '/products/improvit',     img: '/improvit.svg' },
+    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards & SWC', href: '/products/standardizit', img: '/standardizit.svg' },
+    gsi: { cx: 520, cy: 260, title: 'GoSeeiT', sub: 'Promotes ‘Go Look & See’', href: '/products/goseeit', img: '/goseeit.svg' },
+    res: { cx: 900, cy: resY, title: 'ResolviT', sub: 'Standardised Problem Solving', href: '/products/resolvit', img: '/resolvit.svg' },
+    imp: { cx: 900, cy: impY, title: 'ImproviT', sub: 'Idea Generation & Implementation', href: '/products/improvit', img: '/improvit.svg' },
   } as const;
+
+  const iconByKey: Record<keyof typeof nodes, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+    std: ChartCandlestick,
+    gsi: Search,
+    res: Settings,
+    imp: Lightbulb,
+  };
+  const iconColorByKey: Record<keyof typeof nodes, string> = {
+    gsi: '#10B981', // emerald-500
+    std: '#C026D3', // fuchsia-600
+    imp: '#F59E0B', // amber-500
+    res: '#7C3AED', // violet-600
+  };
 
   const order: Array<keyof typeof nodes> = ['std', 'gsi', 'res', 'imp'];
 
@@ -71,6 +87,9 @@ export default function ProductsOverviewFlowSVG() {
     const mx = (sx + ex) / 2;
     return `M ${sx} ${sy} C ${mx} ${sy}, ${mx} ${ey}, ${ex} ${ey}`;
   };
+
+  type NodeKey = keyof typeof nodes;
+
 
   const pathStdToGsi = bezier(
     nodes.std.cx + r + gap,
@@ -104,16 +123,34 @@ export default function ProductsOverviewFlowSVG() {
     whileHover: { y: -2 },
   });
 
+  // ===== измеряем ширину заголовков, чтобы центрировать "иконка+текст" =====
+  const titleRefs = React.useRef<Record<string, SVGTextElement | null>>({});
+  const [titleW, setTitleW] = React.useState<Record<string, number>>({});
+
+  const setTitleRef = (key: NodeKey) => (el: SVGTextElement | null) => {
+    titleRefs.current[key] = el;
+  };
+
+  React.useLayoutEffect(() => {
+    const widths: Record<string, number> = {};
+    for (const key of order) {
+      const el = titleRefs.current[key];
+      if (el) widths[key] = el.getBBox().width;
+    }
+    setTitleW(widths);
+  }, []);
+
   return (
     <section className="relative mx-auto max-w-7xl pb-16 md:pb-24">
       <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
       <div className="rounded-3xl border bg-white/80 backdrop-blur shadow-sm">
-        {/* ====== MOBILE FALLBACK ====== */}
+        {/* ====== MOBILE ====== */}
         <div className="md:hidden p-4 sm:p-6">
           <ol className="relative">
             {order.map((key, i) => {
               const n = nodes[key];
+              const Icon = iconByKey[key];
               const isLast = i === order.length - 1;
               return (
                 <motion.li
@@ -143,7 +180,11 @@ export default function ProductsOverviewFlowSVG() {
                   </span>
 
                   <div className="flex-1 pt-1 pb-6">
-                    <div className="font-extrabold text-lg text-[#120b2b]">{n.title}</div>
+                    <div className="flex items-center gap-2 font-extrabold text-lg text-[#120b2b]">
+                      <Icon className="size-5" color={iconColorByKey[key]} aria-hidden />
+                      {n.title}
+                    </div>
+
                     <div className="text-sm text-[#120b2bB3]">{n.sub}</div>
                     <a
                       href={n.href}
@@ -186,7 +227,7 @@ export default function ProductsOverviewFlowSVG() {
                 refY={arrowSize / 2}
                 orient="auto"
               >
-                <path d={`M0,0 L${arrowSize},${arrowSize/2} L0,${arrowSize} Z`} fill={stroke} />
+                <path d={`M0,0 L${arrowSize},${arrowSize / 2} L0,${arrowSize} Z`} fill={stroke} />
               </marker>
 
               {order.map((key) => (
@@ -197,64 +238,58 @@ export default function ProductsOverviewFlowSVG() {
             </defs>
 
             {/* линии */}
-            <motion.path
-              d={pathStdToGsi}
-              fill="none"
-              stroke={stroke}
-              strokeWidth={2.5}
-              strokeLinecap="butt"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              markerEnd="url(#arrow)"
-              {...draw(0.05)}
-            />
-            <motion.path
-              d={pathGsiToRes}
-              fill="none"
-              stroke={stroke}
-              strokeWidth={2.5}
-              strokeLinecap="butt"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              markerEnd="url(#arrow)"
-              {...draw(0.15)}
-            />
-            <motion.path
-              d={pathGsiToImp}
-              fill="none"
-              stroke={stroke}
-              strokeWidth={2.5}
-              strokeLinecap="butt"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              markerEnd="url(#arrow)"
-              {...draw(0.2)}
-            />
+            <motion.path d={pathStdToGsi} fill="none" stroke={stroke} strokeWidth={2.5} strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" markerEnd="url(#arrow)" {...draw(0.05)} />
+            <motion.path d={pathGsiToRes} fill="none" stroke={stroke} strokeWidth={2.5} strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" markerEnd="url(#arrow)" {...draw(0.15)} />
+            <motion.path d={pathGsiToImp} fill="none" stroke={stroke} strokeWidth={2.5} strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" markerEnd="url(#arrow)" {...draw(0.2)} />
 
             {/* узлы */}
             {order.map((key, i) => {
               const n = nodes[key];
+              const Icon = iconByKey[key];
+              const iconColor = iconColorByKey[key];
+
               const titleY = n.cy + r + 28;
               const subY = n.cy + r + 56;
               const linkY = n.cy + r + 84;
 
+              // параметры для центрирования
+              const iconSize = 20;
+              const gapIcon = 8;
+              const textWidth = titleW[key] ?? 180; // запас на первый рендер
+              const total = iconSize + gapIcon + textWidth;
+              const startX = n.cx - total / 2; // начало строки "иконка+текст"
+              const iconX = startX;
+              const iconY = titleY - iconSize; // выравнивание по базовой линии
+              const titleX = startX + iconSize + gapIcon;
+
               return (
                 <motion.g key={key} {...pop(0.1 + i * 0.08)}>
-                  <NodeImg
-                    href={n.img}
-                    x={n.cx - r}
-                    y={n.cy - r}
-                    size={2 * r}
-                    clipId={`clip-${key}`}
-                  />
+                  <NodeImg href={n.img} x={n.cx - r} y={n.cy - r} size={2 * r} clipId={`clip-${key}`} />
 
+                  {/* кольцо вокруг аватара (как было) */}
                   <circle cx={n.cx} cy={n.cy} r={r} fill="transparent" stroke="#ffffff" strokeWidth="8" />
 
                   <a href={n.href} target="_self">
-                    <rect x={n.cx - 150} y={n.cy + r + 6} width={300} height={90} fill="transparent" />
-                    <text x={n.cx} y={titleY} textAnchor="middle" fontWeight={800} fontSize="28" fill="#120b2b">
+                    {/* невидимый hit-area */}
+                    <rect x={n.cx - 180} y={n.cy + r + 6} width={360} height={90} fill="transparent" />
+
+                    {/* иконка слева от заголовка */}
+                    <Icon x={iconX} y={iconY} width={iconSize} height={iconSize} color={iconColor} strokeWidth={2} aria-hidden />
+
+                    {/* заголовок — измеряется и центрируется вместе с иконкой */}
+                    <text
+                      ref={setTitleRef(key)}   // ⬅️ раньше было ref={(el) => (titleRefs.current[key] = el)}
+                      x={titleX}
+                      y={titleY}
+                      textAnchor="start"
+                      fontWeight={800}
+                      fontSize="28"
+                      fill="#120b2b"
+                    >
                       {n.title}
                     </text>
+
+                    {/* сабхедер и CTA — строго по центру под кругом */}
                     <text x={n.cx} y={subY} textAnchor="middle" fontSize="16" fill="#120b2bB3">
                       {n.sub}
                     </text>
