@@ -15,7 +15,7 @@ import {
   Users,
 } from 'lucide-react';
 
-// ===== Картинка внутри круга через clipPath (без mask) =====
+// ===== картинка в круге через clipPath (без mask) =====
 function NodeImg({
   href, x, y, size, clipId, bleed = 1.25,
 }: {
@@ -45,7 +45,7 @@ function NodeImg({
         filter: 'none',
         opacity: 1,
         imageRendering: 'auto',
-        // фикс мерцания при скролле
+        // анти-мерцание при скролле
         transform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
         willChange: 'transform',
@@ -126,7 +126,7 @@ export default function MainPageProductsOverviewFlow({
     viewport: { once: true, margin: '-80px' },
   });
 
-  // ===== MOBILE (стрелки от Learn more к кругам) =====
+  // ===== MOBILE (стрелки от Learn more к кругам) c анимацией =====
   function MobileStackBranched() {
     const wrapRef = React.useRef<HTMLDivElement | null>(null);
     type DivRef = React.MutableRefObject<HTMLDivElement | null>;
@@ -176,15 +176,17 @@ export default function MainPageProductsOverviewFlow({
       });
     }, []);
 
+    const onResize = React.useCallback(() => { measure(); }, [measure]);
+
     React.useLayoutEffect(() => {
       measure();
       const ro = new ResizeObserver(measure);
       if (wrapRef.current) ro.observe(wrapRef.current);
-      window.addEventListener('resize', measure, { passive: true });
-      return () => { ro.disconnect(); window.removeEventListener('resize', measure as any); };
-    }, [measure]);
+      window.addEventListener('resize', onResize, { passive: true });
+      return () => { ro.disconnect(); window.removeEventListener('resize', onResize); };
+    }, [measure, onResize]);
 
-    // paths
+    // пути
     const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
       `M ${Math.round(to.x)} ${Math.round(from.y)} V ${Math.round(to.y)}`;
 
@@ -205,11 +207,7 @@ export default function MainPageProductsOverviewFlow({
       const drop = Math.min(56, dist * 0.22);
 
       const sideSign = side === 'left' ? -1 : 1;
-      const c1 = {
-        x: start.x + sideSign * Math.min(40, spread * 0.18),
-        y: start.y + drop,
-      };
-
+      const c1 = { x: start.x + sideSign * Math.min(40, spread * 0.18), y: start.y + drop };
       const theta = Math.atan2(dy, dx);
       const c2 = {
         x: e.x - Math.cos(theta) * pull + sideSign * Math.min(80, spread * 0.35),
@@ -219,9 +217,18 @@ export default function MainPageProductsOverviewFlow({
       return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
     };
 
-    const PathWithGlow: React.FC<{ d: string; withArrow?: boolean }> = ({ d, withArrow = true }) => (
+    // анимация прорисовки для мобильных линий
+    const drawMobile = (delay = 0) => ({
+      initial: { pathLength: 0, opacity: 0 },
+      whileInView: { pathLength: 1, opacity: 1 },
+      transition: { duration: 0.8, ease: easeOut, delay },
+      viewport: { once: true, margin: '-20% 0px -10% 0px' },
+    });
+
+    // двойной штрих (glow) + motion.path
+    const PathWithGlow: React.FC<{ d: string; withArrow?: boolean; delay?: number }> = ({ d, withArrow = true, delay = 0 }) => (
       <>
-        <path
+        <motion.path
           d={d}
           stroke="rgba(255,255,255,0.14)"
           strokeWidth="5"
@@ -229,8 +236,9 @@ export default function MainPageProductsOverviewFlow({
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
           fill="none"
+          {...drawMobile(delay)}
         />
-        <path
+        <motion.path
           d={d}
           stroke="rgba(255,255,255,0.9)"
           strokeWidth="2.25"
@@ -239,29 +247,44 @@ export default function MainPageProductsOverviewFlow({
           vectorEffect="non-scaling-stroke"
           fill="none"
           {...(withArrow ? { markerEnd: 'url(#mobArrow)' } : {})}
+          {...drawMobile(delay + 0.05)}
         />
       </>
     );
 
     const Card = ({
-      k, anchorRef, learnMoreRef, center = false,
+      k, anchorRef, learnMoreRef, center = false, delay = 0,
     }: {
       k: 'std' | 'gsi' | 'res' | 'imp';
       anchorRef?: DivRef;
       learnMoreRef?: DivRef;
       center?: boolean;
+      delay?: number;
     }) => {
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
       return (
-        <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
+        <motion.div
+          initial={{ opacity: 0, y: 12, scale: 0.985 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, ease: 'easeOut', delay }}
+          viewport={{ once: true, margin: '-40px' }}
+          className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}
+        >
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
             <span
               ref={anchorRef}
               className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}
             >
-              <img src={n.img} alt="" width={center ? 200 : 160} height={center ? 200 : 160} className="h-full w-full object-cover" loading="lazy" />
+              <img
+                src={n.img}
+                alt=""
+                width={center ? 200 : 160}
+                height={center ? 200 : 160}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
             </span>
             <div className="pt-1">
               <div className={`flex items-center justify-center gap-2 font-extrabold text-white ${center ? 'text-lg' : 'text-[17px]'}`}>
@@ -274,7 +297,7 @@ export default function MainPageProductsOverviewFlow({
               </div>
             </div>
           </a>
-        </div>
+        </motion.div>
       );
     };
 
@@ -282,21 +305,21 @@ export default function MainPageProductsOverviewFlow({
       <div ref={wrapRef} className="relative">
         {/* 1. StandardiziT (центр) */}
         <div className="min-h-[176px] flex items-center justify-center">
-          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center />
+          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center delay={0.02} />
         </div>
 
         {/* 2. GoSeeiT (центр) */}
         <div className="min-h-[188px] flex items-center justify-center">
-          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center />
+          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center delay={0.06} />
         </div>
 
         {/* 3. Разветвление: два столбца */}
         <div className="grid grid-cols-2 gap-7 pt-8">
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="res" anchorRef={refResAnchor} />
+            <Card k="res" anchorRef={refResAnchor} delay={0.1} />
           </div>
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="imp" anchorRef={refImpAnchor} />
+            <Card k="imp" anchorRef={refImpAnchor} delay={0.12} />
           </div>
         </div>
 
@@ -326,15 +349,15 @@ export default function MainPageProductsOverviewFlow({
 
           {/* std → gsi (строго вертикально) */}
           {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
-            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} />
+            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} delay={0.12} />
           )}
 
           {/* gsi → res / imp (симметричные плавные дуги) */}
           {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} />
+            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} delay={0.18} />
           )}
           {pt.gsiOut && pt.impIn && pt.gsiOut.x !== 0 && pt.impIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} />
+            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} delay={0.22} />
           )}
         </svg>
       </div>
@@ -377,7 +400,6 @@ export default function MainPageProductsOverviewFlow({
           style={{
             overflow: 'visible',
             pointerEvents: 'none',
-            // фикс мерцания при скролле
             transform: 'translateZ(0)',
             willChange: 'transform',
           }}
@@ -403,7 +425,6 @@ export default function MainPageProductsOverviewFlow({
               <path d={`M0,0 L12,6 L0,12 Z`} fill={stroke} />
             </marker>
 
-            {/* clipPath вместо mask */}
             {order.map((key) => (
               <clipPath key={`clip-${key}`} id={`clip-${key}`}>
                 <circle cx={nodes[key].cx} cy={nodes[key].cy} r={r} />
