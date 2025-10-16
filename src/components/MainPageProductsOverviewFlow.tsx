@@ -340,30 +340,25 @@ export default function MainPageProductsOverviewFlow({
                             transition={{ duration: 0.45, ease: 'easeOut', delay: i * 0.03 }}
                             viewport={{ once: true, margin: '-80px' }}
                             className="
-          group relative flex h-full items-center justify-center
-          rounded-2xl border border-white/10 bg-white/[0.045] backdrop-blur-sm
-          p-6 md:p-8
-          transition
-        "
+        relative flex h-full items-center justify-center
+        rounded-2xl border border-white/10
+        bg-white/[0.045] backdrop-blur-sm
+        p-6 md:p-8
+        shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]
+        transition-colors duration-200
+        hover:bg-white/[0.075]
+      "
                         >
-                            {/* акцент при ховере */}
-                            <span
-                                className="pointer-events-none absolute inset-x-0 -top-16 h-32 opacity-0 blur-md transition-opacity duration-300
-                     bg-gradient-to-b from-violet-300/25 to-transparent"
-                                aria-hidden
-                            />
-
                             <div className="flex flex-col items-center text-center">
                                 <span
                                     className="
-              mb-4 grid place-items-center size-12 md:size-14 rounded-xl
-              text-white ring-1 ring-white/20 shadow-lg
-              bg-gradient-to-br from-violet-600 to-indigo-500
-            "
+            mb-4 grid place-items-center size-12 md:size-14 rounded-xl
+            text-white ring-1 ring-white/20 shadow-lg
+            bg-gradient-to-br from-violet-600 to-indigo-500
+          "
                                 >
                                     <Icon className="size-6 md:size-7" strokeWidth={2.2} />
                                 </span>
-
                                 <div className="text-white/90 text-lg md:text-xl leading-snug">
                                     {text}
                                 </div>
