@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion, easeOut } from 'framer-motion';
 import {
   Search,
@@ -32,7 +33,7 @@ function NodeImg({
     try {
       el.setAttributeNS(null, 'href', href);
       el.setAttributeNS(XLINK_NS, 'href', href);
-    } catch { }
+    } catch {}
   }, [href]);
 
   return (
@@ -112,14 +113,6 @@ export default function ProductsOverviewFlowSVG() {
     viewport: { once: true, margin: '-80px' },
   });
 
-  const pop = (delay = 0) => ({
-    initial: { opacity: 0, y: 16, scale: 0.98 },
-    whileInView: { opacity: 1, y: 0, scale: 1 },
-    transition: { duration: 0.5, ease: easeOut, delay },
-    viewport: { once: true, margin: '-80px' },
-    whileHover: { y: -2 },
-  });
-
   // ===== измеряем ширину заголовков, чтобы центрировать "иконка+текст" =====
   const titleRefs = React.useRef<Record<string, SVGTextElement | null>>({});
   const [titleW, setTitleW] = React.useState<Record<string, number>>({});
@@ -128,12 +121,12 @@ export default function ProductsOverviewFlowSVG() {
     titleRefs.current[key] = el;
   };
 
+  // не зависит от order → без предупреждения хуков
   React.useLayoutEffect(() => {
     const widths: Record<string, number> = {};
-    for (const key of order) {
-      const el = titleRefs.current[key];
+    Object.entries(titleRefs.current).forEach(([key, el]) => {
       if (el) widths[key] = el.getBBox().width;
-    }
+    });
     setTitleW(widths);
   }, []);
 
@@ -190,11 +183,14 @@ export default function ProductsOverviewFlowSVG() {
     React.useLayoutEffect(() => {
       measure();
       const ro = new ResizeObserver(measure);
+      const onResize = () => measure();
+
       if (wrapRef.current) ro.observe(wrapRef.current);
-      window.addEventListener('resize', measure, { passive: true });
+      window.addEventListener('resize', onResize, { passive: true });
+
       return () => {
         ro.disconnect();
-        window.removeEventListener('resize', measure);
+        window.removeEventListener('resize', onResize);
       };
     }, [measure]);
 
@@ -220,10 +216,7 @@ export default function ProductsOverviewFlowSVG() {
       const drop = Math.min(56, dist * 0.22);
 
       const sideSign = side === 'left' ? -1 : 1;
-      const c1 = {
-        x: start.x + sideSign * Math.min(40, spread * 0.18),
-        y: start.y + drop,
-      };
+      const c1 = { x: start.x + sideSign * Math.min(40, spread * 0.18), y: start.y + drop };
 
       const theta = Math.atan2(dy, dx);
       const c2 = {
@@ -273,6 +266,8 @@ export default function ProductsOverviewFlowSVG() {
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
+      const wh = center ? 200 : 160;
+
       return (
         <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
@@ -280,11 +275,11 @@ export default function ProductsOverviewFlowSVG() {
               ref={anchorRef}
               className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/40 border bg-white`}
             >
-              <img
+              <Image
                 src={n.img}
                 alt=""
-                width={center ? 200 : 160}
-                height={center ? 200 : 160}
+                width={wh}
+                height={wh}
                 className="h-full w-full object-cover"
                 loading="lazy"
               />
@@ -342,7 +337,7 @@ export default function ProductsOverviewFlowSVG() {
               markerUnits="userSpaceOnUse"
               markerWidth="10"
               markerHeight="10"
-              refX="5"
+              refX="9.8"   /* слегка «утопить» маркер */
               refY="5"
               orient="auto"
             >
