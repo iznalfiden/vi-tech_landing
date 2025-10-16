@@ -15,7 +15,6 @@ import {
   Users,
 } from 'lucide-react';
 
-// ===== картинка в круге через clipPath (без mask) =====
 function NodeImg({
   href, x, y, size, clipId, bleed = 1.25,
 }: {
@@ -41,11 +40,6 @@ function NodeImg({
       preserveAspectRatio="xMidYMid slice"
       clipPath={`url(#${clipId})`}
       style={{
-        mixBlendMode: 'normal',
-        filter: 'none',
-        opacity: 1,
-        imageRendering: 'auto',
-        // анти-мерцание при скролле
         transform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
         willChange: 'transform',
@@ -126,7 +120,7 @@ export default function MainPageProductsOverviewFlow({
     viewport: { once: true, margin: '-80px' },
   });
 
-  // ===== MOBILE (стрелки от Learn more к кругам) c анимацией =====
+  // ===== MOBILE =====
   function MobileStackBranched() {
     const wrapRef = React.useRef<HTMLDivElement | null>(null);
     type DivRef = React.MutableRefObject<HTMLDivElement | null>;
@@ -149,6 +143,18 @@ export default function MainPageProductsOverviewFlow({
       return { x: r.left - root.left, y: r.top - root.top, w: r.width, h: r.height };
     };
 
+    // rAF-дебаунс
+    const rafId = React.useRef<number | null>(null);
+    const schedule = React.useCallback((fn: () => void) => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        rafId.current = null;
+        fn();
+      });
+    }, []);
+
+    const nearEq = (a: number, b: number) => Math.abs(a - b) < 0.5;
+
     const measure = React.useCallback(() => {
       const w = wrapRef.current;
       if (!w) return;
@@ -158,33 +164,65 @@ export default function MainPageProductsOverviewFlow({
       const gsiA = bbox(refGsiAnchor.current, wr);
       const resA = bbox(refResAnchor.current, wr);
       const impA = bbox(refImpAnchor.current, wr);
-
       const stdOutB = bbox(refStdOutBox.current, wr);
       const gsiOutB = bbox(refGsiOutBox.current, wr);
 
       const round = (n: number) => Math.round(n);
       const cx = (b: { x: number; w: number }) => round(b.x + b.w / 2);
 
-      setBox({ w: round(wr.width), h: round(wr.height) });
-      setPt({
-        stdIn: stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
-        gsiIn: gsiA ? { x: cx(gsiA), y: round(gsiA.y) - 2 } : { x: 0, y: 0 },
-        resIn: resA ? { x: cx(resA), y: round(resA.y) - 2 } : { x: 0, y: 0 },
-        impIn: impA ? { x: cx(impA), y: round(impA.y) - 2 } : { x: 0, y: 0 },
+      const nextBox = { w: round(wr.width), h: round(wr.height) };
+      setBox(prev => (prev.w !== nextBox.w || prev.h !== nextBox.h ? nextBox : prev));
+
+      const nextPt = {
+        stdIn:  stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
+        gsiIn:  gsiA ? { x: cx(gsiA), y: round(gsiA.y) - 2 } : { x: 0, y: 0 },
+        resIn:  resA ? { x: cx(resA), y: round(resA.y) - 2 } : { x: 0, y: 0 },
+        impIn:  impA ? { x: cx(impA), y: round(impA.y) - 2 } : { x: 0, y: 0 },
         stdOut: stdOutB ? { x: cx(stdOutB), y: round(stdOutB.y + stdOutB.h + 10) } : { x: 0, y: 0 },
         gsiOut: gsiOutB ? { x: cx(gsiOutB), y: round(gsiOutB.y + gsiOutB.h + 10) } : { x: 0, y: 0 },
+      };
+
+      setPt(prev => {
+        let same = true;
+        for (const k of Object.keys(nextPt) as Array<keyof typeof nextPt>) {
+          if (!prev[k] || !nearEq(prev[k].x, nextPt[k].x) || !nearEq(prev[k].y, nextPt[k].y)) {
+            same = false; break;
+          }
+        }
+        return same ? prev : nextPt;
       });
     }, []);
 
-    const onResize = React.useCallback(() => { measure(); }, [measure]);
-
-    React.useLayoutEffect(() => {
+    // первый замер + наблюдатели
+    React.useEffect(() => {
+      // сразу посчитать (без rAF), чтобы не было «пустого» кадра
       measure();
-      const ro = new ResizeObserver(measure);
+      // затем зафиксировать координаты на кадр браузера
+      schedule(measure);
+
+      const ro = new ResizeObserver(() => schedule(measure));
       if (wrapRef.current) ro.observe(wrapRef.current);
+
+      let prevW = window.innerWidth;
+      const onResize = () => {
+        const w = window.innerWidth;
+        if (Math.abs(w - prevW) >= 1) {
+          prevW = w;
+          schedule(measure);
+        }
+      };
       window.addEventListener('resize', onResize, { passive: true });
-      return () => { ro.disconnect(); window.removeEventListener('resize', onResize); };
-    }, [measure, onResize]);
+      window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
+
+      // fonts.ready без any
+      const fonts = (document as Document & { fonts?: { ready: Promise<void> } }).fonts;
+      fonts?.ready.then(() => schedule(measure));
+
+      return () => {
+        ro.disconnect();
+        window.removeEventListener('resize', onResize);
+      };
+    }, [measure, schedule]);
 
     // пути
     const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
@@ -217,15 +255,14 @@ export default function MainPageProductsOverviewFlow({
       return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
     };
 
-    // анимация прорисовки для мобильных линий
+    // анимация прорисовки (один раз)
     const drawMobile = (delay = 0) => ({
       initial: { pathLength: 0, opacity: 0 },
       whileInView: { pathLength: 1, opacity: 1 },
       transition: { duration: 0.8, ease: easeOut, delay },
-      viewport: { once: true, margin: '-20% 0px -10% 0px' },
+      viewport: { once: true, amount: 0.25 },
     });
 
-    // двойной штрих (glow) + motion.path
     const PathWithGlow: React.FC<{ d: string; withArrow?: boolean; delay?: number }> = ({ d, withArrow = true, delay = 0 }) => (
       <>
         <motion.path
@@ -266,11 +303,12 @@ export default function MainPageProductsOverviewFlow({
       const color = iconColorByKey[k];
       return (
         <motion.div
-          initial={{ opacity: 0, y: 12, scale: 0.985 }}
+          initial={false} // видим сразу, без мигания
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.45, ease: 'easeOut', delay }}
-          viewport={{ once: true, margin: '-40px' }}
+          viewport={{ once: true, amount: 0.35 }}
           className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}
+          style={{ willChange: 'transform, opacity' }}
         >
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
             <span
@@ -284,6 +322,8 @@ export default function MainPageProductsOverviewFlow({
                 height={center ? 200 : 160}
                 className="h-full w-full object-cover"
                 loading="lazy"
+                decoding="async"
+                onLoad={() => schedule(measure)}
               />
             </span>
             <div className="pt-1">
@@ -302,6 +342,7 @@ export default function MainPageProductsOverviewFlow({
     };
 
     return (
+      // ⬇️ убрал contain: он вызывает reflow/пересчёт клиппинга и «миг»
       <div ref={wrapRef} className="relative">
         {/* 1. StandardiziT (центр) */}
         <div className="min-h-[176px] flex items-center justify-center">
@@ -331,6 +372,7 @@ export default function MainPageProductsOverviewFlow({
           viewBox={`0 0 ${Math.max(box.w, 1)} ${Math.max(box.h, 1)}`}
           preserveAspectRatio="none"
           shapeRendering="geometricPrecision"
+          style={{ transform: 'translateZ(0)', willChange: 'transform' }}
         >
           <defs>
             <marker
@@ -389,7 +431,7 @@ export default function MainPageProductsOverviewFlow({
         <MobileStackBranched />
       </div>
 
-      {/* ===== DESKTOP ===== */}
+      {/* ===== DESKTOP (как было) ===== */}
       <div className="relative hidden md:block w-full md:aspect-[1200/620]">
         <motion.svg
           viewBox={`0 0 ${vb.w} ${vb.h}`}
@@ -397,12 +439,7 @@ export default function MainPageProductsOverviewFlow({
           aria-labelledby="flowTitle"
           className="absolute inset-0 h-full w-full block"
           preserveAspectRatio="xMidYMid meet"
-          style={{
-            overflow: 'visible',
-            pointerEvents: 'none',
-            transform: 'translateZ(0)',
-            willChange: 'transform',
-          }}
+          style={{ overflow: 'visible', pointerEvents: 'none', transform: 'translateZ(0)', willChange: 'transform' }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.4, ease: easeOut }}
@@ -432,19 +469,17 @@ export default function MainPageProductsOverviewFlow({
             ))}
           </defs>
 
-          {/* линии */}
           <motion.path d={pathStdToGsi} fill="none" stroke={stroke} strokeWidth={2.5} strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" markerEnd="url(#arrow)" {...draw(0.05)} />
           <motion.path d={pathGsiToRes} fill="none" stroke={stroke} strokeWidth={2.5} strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" markerEnd="url(#arrow)" {...draw(0.15)} />
           <motion.path d={pathGsiToImp} fill="none" stroke={stroke} strokeWidth={2.5} strokeLinecap="butt" strokeLinejoin="round" vectorEffect="non-scaling-stroke" markerEnd="url(#arrow)" {...draw(0.2)} />
 
-          {/* узлы */}
           {order.map((key, i) => {
             const n = nodes[key];
             return (
               <motion.g
                 key={key}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0, scale: 0.98 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.5, ease: easeOut, delay: 0.1 + i * 0.08 }}
               >
