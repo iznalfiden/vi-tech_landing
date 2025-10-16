@@ -202,7 +202,7 @@ export default function LandingAnimated() {
       {/* PRODUCTS LIST + IMAGE */}
       <section
         id="products"
-        className="relative isolate overflow-hidden py-12 bg-[#0e0a24] scroll-mt-[88px] md:scroll-mt-[100px]"
+        className="relative isolate overflow-hidden pt-1 pb-12 bg-[#0e0a24] scroll-mt-[88px] md:scroll-mt-[100px]"
       >
         <MainPageProductsOverviewFlow embed overline="Product flow overview" />
       </section>
