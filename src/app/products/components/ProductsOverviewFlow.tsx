@@ -46,11 +46,7 @@ function NodeImg({
       height={size}
       preserveAspectRatio="xMidYMid slice"
       clipPath={`url(#${clipId})`}
-      style={{
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden',
-        imageRendering: 'auto',
-      }}
+      style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
     />
   );
 }
@@ -118,14 +114,12 @@ export default function ProductsOverviewFlowSVG() {
     viewport: { once: true, margin: '-80px' },
   });
 
-  // измеряем ширину заголовков, чтобы центрировать "иконка+текст"
+  // центрирование «иконка + текст»
   const titleRefs = React.useRef<Record<string, SVGTextElement | null>>({});
   const [titleW, setTitleW] = React.useState<Record<string, number>>({});
-
   const setTitleRef = (key: keyof typeof nodes) => (el: SVGTextElement | null) => {
     titleRefs.current[key] = el;
   };
-
   React.useLayoutEffect(() => {
     const widths: Record<string, number> = {};
     Object.entries(titleRefs.current).forEach(([key, el]) => {
@@ -134,12 +128,11 @@ export default function ProductsOverviewFlowSVG() {
     setTitleW(widths);
   }, []);
 
-  // ========== MOBILE with arrows ==========
+  // ===== MOBILE =====
   function MobileStackBranched() {
     const wrapRef = React.useRef<HTMLDivElement | null>(null);
     type DivRef = React.MutableRefObject<HTMLDivElement | null>;
 
-    // anchors (circle avatars) + "Learn more"
     const refStdAnchor = React.useRef<HTMLDivElement | null>(null);
     const refGsiAnchor = React.useRef<HTMLDivElement | null>(null);
     const refResAnchor = React.useRef<HTMLDivElement | null>(null);
@@ -157,7 +150,7 @@ export default function ProductsOverviewFlowSVG() {
       return { x: r.left - root.left, y: r.top - root.top, w: r.width, h: r.height };
     };
 
-    // === rAF-троттлинг + фильтрация «дышащей» высоты
+    // rAF-троттлинг и фильтр по ШИРИНЕ (игнорим высоту — «дыхание» адресной строки)
     const rafId = React.useRef<number | null>(null);
     const schedule = React.useCallback((fn: () => void) => {
       if (rafId.current) cancelAnimationFrame(rafId.current);
@@ -166,7 +159,6 @@ export default function ProductsOverviewFlowSVG() {
         fn();
       });
     }, []);
-
     const nearEq = (a: number, b: number) => Math.abs(a - b) < 0.5;
 
     const measure = React.useCallback(() => {
@@ -200,9 +192,7 @@ export default function ProductsOverviewFlowSVG() {
       setPt(prev => {
         let same = true;
         for (const k of Object.keys(nextPt) as Array<keyof typeof nextPt>) {
-          if (!prev[k] || !nearEq(prev[k].x, nextPt[k].x) || !nearEq(prev[k].y, nextPt[k].y)) {
-            same = false; break;
-          }
+          if (!prev[k] || !nearEq(prev[k].x, nextPt[k].x) || !nearEq(prev[k].y, nextPt[k].y)) { same = false; break; }
         }
         return same ? prev : nextPt;
       });
@@ -211,18 +201,18 @@ export default function ProductsOverviewFlowSVG() {
     React.useEffect(() => {
       schedule(measure);
 
-      // Следим за изменением ШИРИНЫ контейнера (высоту игнорим, чтобы не дергать стейт при прокрутке)
-      const prevW = { val: 0 };
+      // Следим ТОЛЬКО за шириной контейнера
+      let prevW = 0;
       const ro = new ResizeObserver((entries) => {
         const w = entries[0]?.contentRect.width ?? 0;
-        if (Math.abs(w - prevW.val) >= 1) {
-          prevW.val = w;
+        if (Math.abs(w - prevW) >= 1) {
+          prevW = w;
           schedule(measure);
         }
       });
       if (wrapRef.current) ro.observe(wrapRef.current);
 
-      // Реакция только на изменение ширины окна
+      // И только за шириной окна
       let lastW = window.innerWidth;
       const onResize = () => {
         const w = window.innerWidth;
@@ -234,7 +224,6 @@ export default function ProductsOverviewFlowSVG() {
       window.addEventListener('resize', onResize, { passive: true });
       window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
 
-      // после загрузки шрифтов
       if ('fonts' in document) {
         // @ts-ignore
         (document as any).fonts.ready.then(() => schedule(measure));
@@ -246,7 +235,7 @@ export default function ProductsOverviewFlowSVG() {
       };
     }, [measure, schedule]);
 
-    // path builders
+    // --- пути + анимация ---
     const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
       `M ${Math.round(to.x)} ${Math.round(from.y)} V ${Math.round(to.y)}`;
 
@@ -257,30 +246,32 @@ export default function ProductsOverviewFlowSVG() {
     ) => {
       const stem = 12;
       const start = { x: s.x, y: s.y + stem };
-
       const dx = e.x - start.x;
       const dy = e.y - start.y;
       const dist = Math.hypot(dx, dy) || 1;
-
       const spread = Math.max(Math.abs(dx) * 0.55, 110);
       const pull = Math.min(240, dist * 0.48);
       const drop = Math.min(56, dist * 0.22);
-
       const sideSign = side === 'left' ? -1 : 1;
       const c1 = { x: start.x + sideSign * Math.min(40, spread * 0.18), y: start.y + drop };
-
       const theta = Math.atan2(dy, dx);
       const c2 = {
         x: e.x - Math.cos(theta) * pull + sideSign * Math.min(80, spread * 0.35),
         y: e.y - Math.sin(theta) * pull + Math.min(40, dist * 0.08),
       };
-
       return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
     };
 
-    const PathWithGlow: React.FC<{ d: string; withArrow?: boolean }> = ({ d, withArrow = true }) => (
+    const drawMobile = (delay = 0) => ({
+      initial: { pathLength: 0, opacity: 0 },
+      whileInView: { pathLength: 1, opacity: 1 },
+      transition: { duration: 0.8, ease: easeOut, delay },
+      viewport: { once: true, amount: 0.3 },
+    });
+
+    const PathWithGlow: React.FC<{ d: string; withArrow?: boolean; delay?: number }> = ({ d, withArrow = true, delay = 0 }) => (
       <>
-        <path
+        <motion.path
           d={d}
           stroke="rgba(18,11,43,0.14)"
           strokeWidth="5"
@@ -288,8 +279,9 @@ export default function ProductsOverviewFlowSVG() {
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
           fill="none"
+          {...drawMobile(delay)}
         />
-        <path
+        <motion.path
           d={d}
           stroke="#120b2b"
           strokeWidth="2.25"
@@ -298,6 +290,7 @@ export default function ProductsOverviewFlowSVG() {
           vectorEffect="non-scaling-stroke"
           fill="none"
           {...(withArrow ? { markerEnd: 'url(#mobArrow)' } : {})}
+          {...drawMobile(delay + 0.05)}
         />
       </>
     );
@@ -307,21 +300,27 @@ export default function ProductsOverviewFlowSVG() {
       anchorRef,
       learnMoreRef,
       center = false,
+      delay = 0,
     }: {
       k: 'std' | 'gsi' | 'res' | 'imp';
       anchorRef?: DivRef;
       learnMoreRef?: DivRef;
       center?: boolean;
+      delay?: number;
     }) => {
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
-
-      // точный размер круга (соответствует tailwind size-20 / size-16)
-      const px = center ? 80 : 64;
+      const px = center ? 80 : 64; // равен size-20 / size-16
 
       return (
-        <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
+        <motion.div
+          initial={{ opacity: 0, y: 12, scale: 0.985 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, ease: easeOut, delay }}
+          viewport={{ once: true, amount: 0.35 }}
+          className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}
+        >
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
             <span
               ref={anchorRef}
@@ -333,10 +332,11 @@ export default function ProductsOverviewFlowSVG() {
                 alt=""
                 width={px}
                 height={px}
-                sizes={`${px}px`}               // фиксируем srcset, чтобы не прыгал при «дыхании»
+                sizes={`${px}px`}             // фикс srcset, чтобы не «плавал» размер
+                priority={k === 'std' || k === 'gsi'} // первые две — без lazy
                 className="h-full w-full object-cover"
-                priority={k === 'std' || k === 'gsi'} // первые две — сразу, без ленивой подгрузки
-                style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
+                style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
+                draggable={false}
               />
             </span>
             <div className="pt-1">
@@ -350,29 +350,27 @@ export default function ProductsOverviewFlowSVG() {
               </div>
             </div>
           </a>
-        </div>
+        </motion.div>
       );
     };
 
     return (
-      <div ref={wrapRef} className="relative" style={{ contain: 'layout paint size' }}>
-        {/* 1. StandardiziT (центр) */}
+      <div ref={wrapRef} className="relative" style={{ contain: 'layout paint', minHeight: 1,  }}>
+        {/* 1. */}
         <div className="min-h-[176px] flex items-center justify-center">
-          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center />
+          <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center delay={0.02} />
         </div>
-
-        {/* 2. GoSeeiT (центр) */}
+        {/* 2. */}
         <div className="min-h-[188px] flex items-center justify-center">
-          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center />
+          <Card k="gsi" anchorRef={refGsiAnchor} learnMoreRef={refGsiOutBox} center delay={0.06} />
         </div>
-
-        {/* 3. Разветвление: два столбца */}
+        {/* 3. разветвление */}
         <div className="grid grid-cols-2 gap-7 pt-8">
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="res" anchorRef={refResAnchor} />
+            <Card k="res" anchorRef={refResAnchor} delay={0.1} />
           </div>
           <div className="min-h-[176px] flex items-center justify-center">
-            <Card k="imp" anchorRef={refImpAnchor} />
+            <Card k="imp" anchorRef={refImpAnchor} delay={0.12} />
           </div>
         </div>
 
@@ -384,33 +382,22 @@ export default function ProductsOverviewFlowSVG() {
           viewBox={`0 0 ${Math.max(box.w, 1)} ${Math.max(box.h, 1)}`}
           preserveAspectRatio="none"
           shapeRendering="geometricPrecision"
+          style={{ transform: 'translateZ(0)' }}
         >
           <defs>
-            <marker
-              id="mobArrow"
-              viewBox="0 0 10 10"
-              markerUnits="userSpaceOnUse"
-              markerWidth="10"
-              markerHeight="10"
-              refX="9.8"
-              refY="5"
-              orient="auto"
-            >
+            <marker id="mobArrow" viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9.8" refY="5" orient="auto">
               <path d="M0,0 L10,5 L0,10 Z" fill="#120b2b" />
             </marker>
           </defs>
 
-          {/* std → gsi */}
           {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
-            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} />
+            <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} delay={0.12} />
           )}
-
-          {/* gsi → res / imp */}
           {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} />
+            <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} delay={0.18} />
           )}
           {pt.gsiOut && pt.impIn && pt.gsiOut.x !== 0 && pt.impIn.x !== 0 && (
-            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} />
+            <PathWithGlow d={curveOut(pt.gsiOut, pt.impIn, 'right')} delay={0.22} />
           )}
         </svg>
       </div>
@@ -422,12 +409,12 @@ export default function ProductsOverviewFlowSVG() {
       <div className="pointer-events-none absolute -z-10 inset-0 bg-[radial-gradient(1200px_600px_at_95%_-120px,rgba(99,102,241,0.18),transparent_60%),radial-gradient(900px_500px_at_-120px_120%,rgba(37,99,235,0.14),transparent_60%)]" />
 
       <div className="rounded-3xl border bg-white/80 backdrop-blur shadow-sm">
-        {/* ====== MOBILE (со стрелками) ====== */}
+        {/* MOBILE */}
         <div className="md:hidden p-4 sm:p-6">
           <MobileStackBranched />
         </div>
 
-        {/* ====== DESKTOP SVG ====== */}
+        {/* DESKTOP */}
         <div className="relative hidden md:block w-full md:aspect-[1200/620]">
           <motion.svg
             viewBox={`0 0 ${vb.w} ${vb.h}`}
@@ -458,8 +445,9 @@ export default function ProductsOverviewFlowSVG() {
                 <path d={`M0,0 L${arrowSize},${arrowSize / 2} L0,${arrowSize} Z`} fill={stroke} />
               </marker>
 
+              {/* КЛЮЧЕВОЕ: фикс клипа */}
               {order.map((key) => (
-                <clipPath key={`clip-${key}`} id={`clip-${key}`}>
+                <clipPath key={`clip-${key}`} id={`clip-${key}`} clipPathUnits="userSpaceOnUse">
                   <circle cx={nodes[key].cx} cy={nodes[key].cy} r={r} />
                 </clipPath>
               ))}
@@ -502,29 +490,9 @@ export default function ProductsOverviewFlowSVG() {
                   <a href={n.href} target="_self">
                     <rect x={n.cx - 180} y={n.cy + r + 6} width={360} height={90} fill="transparent" />
                     <Icon x={iconX} y={iconY} width={iconSize} height={iconSize} color={iconColorByKey[key]} strokeWidth={2} aria-hidden />
-                    <text
-                      ref={setTitleRef(key)}
-                      x={titleX}
-                      y={titleY}
-                      textAnchor="start"
-                      fontWeight={800}
-                      fontSize="28"
-                      fill="#120b2b"
-                    >
-                      {n.title}
-                    </text>
-                    <text x={n.cx} y={subY} textAnchor="middle" fontSize="16" fill="#120b2bB3">
-                      {n.sub}
-                    </text>
-                    <text
-                      x={n.cx}
-                      y={linkY}
-                      textAnchor="middle"
-                      fontSize="14"
-                      fontWeight={700}
-                      fill="#120b2b"
-                      style={{ letterSpacing: 1.2, textTransform: 'uppercase' }}
-                    >
+                    <text ref={setTitleRef(key)} x={titleX} y={titleY} textAnchor="start" fontWeight={800} fontSize="28" fill="#120b2b">{n.title}</text>
+                    <text x={n.cx} y={subY} textAnchor="middle" fontSize="16" fill="#120b2bB3">{n.sub}</text>
+                    <text x={n.cx} y={linkY} textAnchor="middle" fontSize="14" fontWeight={700} fill="#120b2b" style={{ letterSpacing: 1.2, textTransform: 'uppercase' }}>
                       LEARN MORE
                     </text>
                   </a>
