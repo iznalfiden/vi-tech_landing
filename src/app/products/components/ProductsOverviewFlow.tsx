@@ -46,6 +46,11 @@ function NodeImg({
       height={size}
       preserveAspectRatio="xMidYMid slice"
       clipPath={`url(#${clipId})`}
+      style={{
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        imageRendering: 'auto',
+      }}
     />
   );
 }
@@ -113,7 +118,7 @@ export default function ProductsOverviewFlowSVG() {
     viewport: { once: true, margin: '-80px' },
   });
 
-  // ===== измеряем ширину заголовков, чтобы центрировать "иконка+текст" =====
+  // измеряем ширину заголовков, чтобы центрировать "иконка+текст"
   const titleRefs = React.useRef<Record<string, SVGTextElement | null>>({});
   const [titleW, setTitleW] = React.useState<Record<string, number>>({});
 
@@ -121,7 +126,6 @@ export default function ProductsOverviewFlowSVG() {
     titleRefs.current[key] = el;
   };
 
-  // не зависит от order → без предупреждения хуков
   React.useLayoutEffect(() => {
     const widths: Record<string, number> = {};
     Object.entries(titleRefs.current).forEach(([key, el]) => {
@@ -153,6 +157,18 @@ export default function ProductsOverviewFlowSVG() {
       return { x: r.left - root.left, y: r.top - root.top, w: r.width, h: r.height };
     };
 
+    // === rAF-троттлинг + фильтрация «дышащей» высоты
+    const rafId = React.useRef<number | null>(null);
+    const schedule = React.useCallback((fn: () => void) => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        rafId.current = null;
+        fn();
+      });
+    }, []);
+
+    const nearEq = (a: number, b: number) => Math.abs(a - b) < 0.5;
+
     const measure = React.useCallback(() => {
       const w = wrapRef.current;
       if (!w) return;
@@ -169,36 +185,71 @@ export default function ProductsOverviewFlowSVG() {
       const round = (n: number) => Math.round(n);
       const cx = (b: { x: number; w: number }) => round(b.x + b.w / 2);
 
-      setBox({ w: round(wr.width), h: round(wr.height) });
-      setPt({
-        stdIn: stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
-        gsiIn: gsiA ? { x: cx(gsiA), y: round(gsiA.y) - 2 } : { x: 0, y: 0 },
-        resIn: resA ? { x: cx(resA), y: round(resA.y) - 2 } : { x: 0, y: 0 },
-        impIn: impA ? { x: cx(impA), y: round(impA.y) - 2 } : { x: 0, y: 0 },
+      const nextBox = { w: round(wr.width), h: round(wr.height) };
+      setBox(prev => (prev.w !== nextBox.w || prev.h !== nextBox.h ? nextBox : prev));
+
+      const nextPt = {
+        stdIn:  stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
+        gsiIn:  gsiA ? { x: cx(gsiA), y: round(gsiA.y) - 2 } : { x: 0, y: 0 },
+        resIn:  resA ? { x: cx(resA), y: round(resA.y) - 2 } : { x: 0, y: 0 },
+        impIn:  impA ? { x: cx(impA), y: round(impA.y) - 2 } : { x: 0, y: 0 },
         stdOut: stdOutB ? { x: cx(stdOutB), y: round(stdOutB.y + stdOutB.h + 10) } : { x: 0, y: 0 },
         gsiOut: gsiOutB ? { x: cx(gsiOutB), y: round(gsiOutB.y + gsiOutB.h + 10) } : { x: 0, y: 0 },
+      };
+
+      setPt(prev => {
+        let same = true;
+        for (const k of Object.keys(nextPt) as Array<keyof typeof nextPt>) {
+          if (!prev[k] || !nearEq(prev[k].x, nextPt[k].x) || !nearEq(prev[k].y, nextPt[k].y)) {
+            same = false; break;
+          }
+        }
+        return same ? prev : nextPt;
       });
     }, []);
 
-    React.useLayoutEffect(() => {
-      measure();
-      const ro = new ResizeObserver(measure);
-      const onResize = () => measure();
+    React.useEffect(() => {
+      schedule(measure);
 
+      // Следим за изменением ШИРИНЫ контейнера (высоту игнорим, чтобы не дергать стейт при прокрутке)
+      const prevW = { val: 0 };
+      const ro = new ResizeObserver((entries) => {
+        const w = entries[0]?.contentRect.width ?? 0;
+        if (Math.abs(w - prevW.val) >= 1) {
+          prevW.val = w;
+          schedule(measure);
+        }
+      });
       if (wrapRef.current) ro.observe(wrapRef.current);
+
+      // Реакция только на изменение ширины окна
+      let lastW = window.innerWidth;
+      const onResize = () => {
+        const w = window.innerWidth;
+        if (Math.abs(w - lastW) >= 1) {
+          lastW = w;
+          schedule(measure);
+        }
+      };
       window.addEventListener('resize', onResize, { passive: true });
+      window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
+
+      // после загрузки шрифтов
+      if ('fonts' in document) {
+        // @ts-ignore
+        (document as any).fonts.ready.then(() => schedule(measure));
+      }
 
       return () => {
         ro.disconnect();
         window.removeEventListener('resize', onResize);
       };
-    }, [measure]);
+    }, [measure, schedule]);
 
     // path builders
     const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
       `M ${Math.round(to.x)} ${Math.round(from.y)} V ${Math.round(to.y)}`;
 
-    // smooth cubic curve (soft split & landing)
     const curveOut = (
       s: { x: number; y: number },
       e: { x: number; y: number },
@@ -227,7 +278,6 @@ export default function ProductsOverviewFlowSVG() {
       return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
     };
 
-    // double-stroke for subtle glow; linecaps 'butt' to avoid dot under arrow
     const PathWithGlow: React.FC<{ d: string; withArrow?: boolean }> = ({ d, withArrow = true }) => (
       <>
         <path
@@ -266,7 +316,9 @@ export default function ProductsOverviewFlowSVG() {
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
-      const wh = center ? 200 : 160;
+
+      // точный размер круга (соответствует tailwind size-20 / size-16)
+      const px = center ? 80 : 64;
 
       return (
         <div className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}>
@@ -274,14 +326,17 @@ export default function ProductsOverviewFlowSVG() {
             <span
               ref={anchorRef}
               className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/40 border bg-white`}
+              style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
             >
               <Image
                 src={n.img}
                 alt=""
-                width={wh}
-                height={wh}
+                width={px}
+                height={px}
+                sizes={`${px}px`}               // фиксируем srcset, чтобы не прыгал при «дыхании»
                 className="h-full w-full object-cover"
-                loading="lazy"
+                priority={k === 'std' || k === 'gsi'} // первые две — сразу, без ленивой подгрузки
+                style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
               />
             </span>
             <div className="pt-1">
@@ -300,7 +355,7 @@ export default function ProductsOverviewFlowSVG() {
     };
 
     return (
-      <div ref={wrapRef} className="relative">
+      <div ref={wrapRef} className="relative" style={{ contain: 'layout paint size' }}>
         {/* 1. StandardiziT (центр) */}
         <div className="min-h-[176px] flex items-center justify-center">
           <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center />
@@ -337,7 +392,7 @@ export default function ProductsOverviewFlowSVG() {
               markerUnits="userSpaceOnUse"
               markerWidth="10"
               markerHeight="10"
-              refX="9.8"   /* слегка «утопить» маркер */
+              refX="9.8"
               refY="5"
               orient="auto"
             >
@@ -345,12 +400,12 @@ export default function ProductsOverviewFlowSVG() {
             </marker>
           </defs>
 
-          {/* std → gsi (строго вертикально) */}
+          {/* std → gsi */}
           {pt.stdOut && pt.gsiIn && pt.stdOut.x !== 0 && pt.gsiIn.x !== 0 && (
             <PathWithGlow d={vLineTo(pt.stdOut, pt.gsiIn)} />
           )}
 
-          {/* gsi → res / imp (симметричные плавные дуги) */}
+          {/* gsi → res / imp */}
           {pt.gsiOut && pt.resIn && pt.gsiOut.x !== 0 && pt.resIn.x !== 0 && (
             <PathWithGlow d={curveOut(pt.gsiOut, pt.resIn, 'left')} />
           )}
