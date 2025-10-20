@@ -35,7 +35,6 @@ function NodeImg({
   return (
     <image
       ref={ref}
-      // дублируем сразу, чтобы не ждать эффекта
       href={href}
       xlinkHref={href}
       x={x - bleed}
@@ -135,11 +134,11 @@ export default function MainPageProductsOverviewFlow({
     const refStdOutBox = React.useRef<HTMLDivElement | null>(null);
     const refGsiOutBox = React.useRef<HTMLDivElement | null>(null);
 
-    // ✅ только ширина в state, высота — «заморожена» в ref
+    // только ширина в state, высота — в ref
     const [boxW, setBoxW] = React.useState(0);
     const boxHRef = React.useRef(0);
 
-    // 🔒 фиксируем высоту один раз, чтобы убрать подпрыгивания при догрузе
+    // ★ grow-only lock: контейнер может расти, но не сжиматься
     const [lockedH, setLockedH] = React.useState<number | null>(null);
 
     const [pt, setPt] = React.useState<Record<string, { x: number; y: number }>>({});
@@ -184,11 +183,11 @@ export default function MainPageProductsOverviewFlow({
       const nextH = round(wr.height);
 
       setBoxW(prev => (Math.abs(prev - nextW) >= WIDTH_EPS ? nextW : prev)); // только ширина
-      boxHRef.current = nextH; // высота — в ref, без setState
+      boxHRef.current = nextH;
 
-      // зафиксируем minHeight один раз
-      if (lockedH == null && nextH > 0) {
-        setLockedH(nextH);
+      // ★ фиксируем максимальную высоту (только рост)
+      if (nextH > 0) {
+        setLockedH(prev => (prev == null ? nextH : Math.max(prev, nextH)));
       }
 
       const nextPt = {
@@ -207,7 +206,7 @@ export default function MainPageProductsOverviewFlow({
         }
         return same ? prev : nextPt;
       });
-    }, [lockedH]);
+    }, []);
 
     // первый замер + наблюдатели
     React.useEffect(() => {
@@ -235,7 +234,13 @@ export default function MainPageProductsOverviewFlow({
         }
       };
       window.addEventListener('resize', onResize, { passive: true });
-      window.addEventListener('orientationchange', () => schedule(measure), { passive: true });
+
+      // ★ при смене ориентации — сбрасываем lock и переизмеряем
+      const onOrient = () => {
+        setLockedH(null);
+        schedule(measure);
+      };
+      window.addEventListener('orientationchange', onOrient, { passive: true });
 
       // fonts.ready
       if (document.fonts?.ready) document.fonts.ready.then(() => schedule(measure));
@@ -246,6 +251,7 @@ export default function MainPageProductsOverviewFlow({
       return () => {
         ro.disconnect();
         window.removeEventListener('resize', onResize);
+        window.removeEventListener('orientationchange', onOrient);
       };
     }, [measure, schedule]);
 
@@ -280,7 +286,6 @@ export default function MainPageProductsOverviewFlow({
       return `M ${start.x} ${start.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${e.x} ${e.y}`;
     };
 
-    // анимация прорисовки (один раз)
     const drawMobile = (delay = 0) => ({
       initial: { pathLength: 0, opacity: 0 },
       whileInView: { pathLength: 1, opacity: 1 },
@@ -326,15 +331,13 @@ export default function MainPageProductsOverviewFlow({
       const n = nodes[k];
       const Icon = iconByKey[k];
       const color = iconColorByKey[k];
-
-      const px = center ? 80 : 64; // совпадает с size-20/size-16
-
+      const px = center ? 80 : 64;
       const eager = k === 'std' || k === 'gsi';
 
       return (
         <motion.div
           initial={false}
-          whileInView={{ opacity: 1, scale: 1 }} // убрали y, чтобы не влиять на поток
+          whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.45, ease: 'easeOut', delay }}
           viewport={{ once: true, amount: 0.35 }}
           className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8 no-anchor`}
@@ -380,6 +383,7 @@ export default function MainPageProductsOverviewFlow({
         <div
           ref={wrapRef}
           className="relative no-anchor"
+          // ★ minHeight — максимальная увиденная высота; плюс изоляция лэйаута
           style={{ minHeight: lockedH ?? undefined, contain: 'layout paint' }}
         >
           {/* 1. StandardiziT (центр) */}
@@ -447,14 +451,14 @@ export default function MainPageProductsOverviewFlow({
     'radial-gradient(1000px_560px_at_-120px_120%,rgba(37,99,235,0.16),transparent_65%)]';
   const gradientMaskStyle: React.CSSProperties = {
     WebkitMaskImage: 'linear-gradient(to right, transparent 0, white 8%, white 92%, transparent 100%)',
-    maskImage: 'linear-gradient(to right, transparent 0, white 8%, white 92%, transparent 100%)',
+    maskImage: 'linear-gradient(to right, transparent 0, white 8%, transparent 100%)',
   };
 
   const content = (
     <div className={`mx-auto max-w-7xl px-4 ${embed ? className : ''}`}>
       {overline && (
         <div className="mb-8 md:mb-10 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[16px] font-semibold tracking-wider uppercase text-white/80">
+          <span className="inline-flex mt-8 items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-[16px] font-semibold tracking-wider uppercase text-white/80">
             {overline}
           </span>
         </div>
@@ -601,7 +605,6 @@ export default function MainPageProductsOverviewFlow({
 
   if (embed) return (
     <>
-      {/* глобально отключаем anchoring для прокладок */}
       <style jsx global>{`
         .overflow-anchor-none, .overflow-anchor-none * { overflow-anchor: none !important; }
       `}</style>
@@ -611,7 +614,6 @@ export default function MainPageProductsOverviewFlow({
 
   return (
     <section className="relative isolate overflow-hidden bg-[#0e0a24] py-24 md:py-36">
-      {/* глобально отключаем anchoring (прокладка) */}
       <style jsx global>{`
         .overflow-anchor-none, .overflow-anchor-none * { overflow-anchor: none !important; }
       `}</style>
