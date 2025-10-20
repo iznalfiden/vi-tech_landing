@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -10,7 +9,6 @@ import {
   Search,
   Lightbulb,
   Settings,
-  ChevronRight,
   ChartCandlestick,
 } from 'lucide-react';
 import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
@@ -50,13 +48,7 @@ function scrollSectionToCenter(id: string, e?: React.MouseEvent) {
 const scrollToProducts = (e: React.MouseEvent) => scrollSectionToCenter('products', e);
 
 export default function LandingAnimated() {
-  const products = [
-    { name: 'GoSeeiT', desc: 'Promotes ’Go Look & See’ Approach', href: '/products/goseeit', gradient: 'bg-emerald-500', Icon: Search },
-    { name: 'StandardiziT', desc: 'Work Standards', href: '/products/standardizit', gradient: 'bg-fuchsia-600', Icon: ChartCandlestick },
-    { name: 'ImproviT', desc: 'Structured Idea Generation & Implementation', href: '/products/improvit', gradient: 'from-amber-500 to-orange-500', Icon: Lightbulb },
-    { name: 'ResolvIT', desc: 'Drives & Simplifies Standardised Problem Solving (AI Powered)', href: '/products/resolvit', gradient: 'from-violet-600 to-purple-600', Icon: Settings },
-  ];
-
+  
   const partners: { name: string; src: string }[] = [
     { name: 'Alstom', src: '/Alstom_logo.png' },
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
