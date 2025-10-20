@@ -11,7 +11,7 @@ import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 
 
 export default function LandingAnimated() {
-  
+
   const partners: { name: string; src: string }[] = [
     { name: 'Alstom', src: '/Alstom_logo.png' },
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
