@@ -6,46 +6,9 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
-  Search,
-  Lightbulb,
-  Settings,
-  ChartCandlestick,
 } from 'lucide-react';
 import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 
-// ⬇️ импорт секции с интерактивным flow (иконки + цвета уже внутри)
-
-// Универсальная функция: прокрутить так, чтобы центр секции попал в центр окна
-function scrollSectionToCenter(id: string, e?: React.MouseEvent) {
-  e?.preventDefault();
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  const header = document.querySelector<HTMLElement>('header');
-  const headerH = header?.offsetHeight ?? 0; // 0, если хедер не фиксированный
-
-  const rect = el.getBoundingClientRect();
-  const targetAbsTop = rect.top + window.scrollY;
-
-  // Центр секции по документу
-  const targetCenter = targetAbsTop + rect.height / 2;
-
-  // Центр видимой области контента (ниже фикс-хедера)
-  const visibleCenter = headerH + (window.innerHeight - headerH) / 2;
-
-  // Куда прокрутить документ
-  let top = targetCenter - visibleCenter;
-
-  // Защита от уходов за пределы
-  const maxTop = document.documentElement.scrollHeight - window.innerHeight;
-  if (top < 0) top = 0;
-  if (top > maxTop) top = maxTop;
-
-  window.scrollTo({ top, behavior: 'smooth' });
-}
-
-// Твой обработчик-коротыш
-const scrollToProducts = (e: React.MouseEvent) => scrollSectionToCenter('products', e);
 
 export default function LandingAnimated() {
   
