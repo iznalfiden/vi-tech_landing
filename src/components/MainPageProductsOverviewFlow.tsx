@@ -139,6 +139,9 @@ export default function MainPageProductsOverviewFlow({
     const [boxW, setBoxW] = React.useState(0);
     const boxHRef = React.useRef(0);
 
+    // 🔒 фиксируем высоту один раз, чтобы убрать подпрыгивания при догрузе
+    const [lockedH, setLockedH] = React.useState<number | null>(null);
+
     const [pt, setPt] = React.useState<Record<string, { x: number; y: number }>>({});
 
     const bbox = (el: HTMLElement | null, root: DOMRect) => {
@@ -159,6 +162,9 @@ export default function MainPageProductsOverviewFlow({
 
     const nearEq = (a: number, b: number) => Math.abs(a - b) < 0.5;
 
+    // игнорируем микроресайзы адресной строки
+    const WIDTH_EPS = 2;
+
     const measure = React.useCallback(() => {
       const w = wrapRef.current;
       if (!w) return;
@@ -177,8 +183,13 @@ export default function MainPageProductsOverviewFlow({
       const nextW = round(wr.width);
       const nextH = round(wr.height);
 
-      setBoxW(prev => (Math.abs(prev - nextW) >= 1 ? nextW : prev)); // только ширина
+      setBoxW(prev => (Math.abs(prev - nextW) >= WIDTH_EPS ? nextW : prev)); // только ширина
       boxHRef.current = nextH; // высота — в ref, без setState
+
+      // зафиксируем minHeight один раз
+      if (lockedH == null && nextH > 0) {
+        setLockedH(nextH);
+      }
 
       const nextPt = {
         stdIn:  stdA ? { x: cx(stdA), y: round(stdA.y) - 2 } : { x: 0, y: 0 },
@@ -196,7 +207,7 @@ export default function MainPageProductsOverviewFlow({
         }
         return same ? prev : nextPt;
       });
-    }, []);
+    }, [lockedH]);
 
     // первый замер + наблюдатели
     React.useEffect(() => {
@@ -207,7 +218,7 @@ export default function MainPageProductsOverviewFlow({
       let lastW = 0;
       const ro = new ResizeObserver((entries) => {
         const w = Math.round(entries[0]?.contentRect.width ?? 0);
-        if (Math.abs(w - lastW) >= 1) {
+        if (Math.abs(w - lastW) >= WIDTH_EPS) {
           lastW = w;
           schedule(measure);
         }
@@ -218,7 +229,7 @@ export default function MainPageProductsOverviewFlow({
       let prevWinW = window.innerWidth;
       const onResize = () => {
         const w = window.innerWidth;
-        if (Math.abs(w - prevWinW) >= 1) {
+        if (Math.abs(w - prevWinW) >= WIDTH_EPS) {
           prevWinW = w;
           schedule(measure);
         }
@@ -323,10 +334,10 @@ export default function MainPageProductsOverviewFlow({
       return (
         <motion.div
           initial={false}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          whileInView={{ opacity: 1, scale: 1 }} // убрали y, чтобы не влиять на поток
           transition={{ duration: 0.45, ease: 'easeOut', delay }}
           viewport={{ once: true, amount: 0.35 }}
-          className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8`}
+          className={`relative mx-auto ${center ? 'max-w-[560px]' : 'max-w-[320px]'} pt-6 pb-8 no-anchor`}
           style={{ willChange: 'transform, opacity' }}
         >
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
@@ -366,7 +377,11 @@ export default function MainPageProductsOverviewFlow({
         {/* отключаем scroll anchoring локально */}
         <style jsx>{`.no-anchor { overflow-anchor: none; }`}</style>
 
-        <div ref={wrapRef} className="relative no-anchor">
+        <div
+          ref={wrapRef}
+          className="relative no-anchor"
+          style={{ minHeight: lockedH ?? undefined, contain: 'layout paint' }}
+        >
           {/* 1. StandardiziT (центр) */}
           <div className="min-h-[176px] flex items-center justify-center">
             <Card k="std" anchorRef={refStdAnchor} learnMoreRef={refStdOutBox} center delay={0.02} />
@@ -584,10 +599,23 @@ export default function MainPageProductsOverviewFlow({
     </div>
   );
 
-  if (embed) return content;
+  if (embed) return (
+    <>
+      {/* глобально отключаем anchoring для прокладок */}
+      <style jsx global>{`
+        .overflow-anchor-none, .overflow-anchor-none * { overflow-anchor: none !important; }
+      `}</style>
+      {content}
+    </>
+  );
 
   return (
     <section className="relative isolate overflow-hidden bg-[#0e0a24] py-24 md:py-36">
+      {/* глобально отключаем anchoring (прокладка) */}
+      <style jsx global>{`
+        .overflow-anchor-none, .overflow-anchor-none * { overflow-anchor: none !important; }
+      `}</style>
+      <div aria-hidden className="overflow-anchor-none" style={{ height: 1 }} />
       <div className={gradientOverscanClass} style={gradientMaskStyle} />
       {content}
     </section>
