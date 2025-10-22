@@ -163,38 +163,57 @@ export default function LandingAnimated() {
       </section>
 
       {/* PARTNERS */}
-      <section className="mx-auto max-w-7xl px-4 my-20">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
-          <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
-            We are currently working with trusted partners across a wide range of industries,
-            to help build efficient and rewarding processes through embedding Vi-Tech tools
-          </p>
-        </motion.div>
+{/* PARTNERS */}
+<section className="mx-auto max-w-7xl px-4 my-20">
+  <motion.div
+    initial={{ opacity: 0, y: 16 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-80px' }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
+    className="text-center"
+  >
+    <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
+    <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
+      We are currently working with trusted partners across a wide range of industries,
+      to help build efficient and rewarding processes through embedding Vi-Tech tools
+    </p>
+  </motion.div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
-          {partners.map((p, i) => (
-            <motion.div
-              key={p.name}
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
-              className="flex h-28 w-[260px] items-center justify-center rounded-2xl border bg-white/70 p-6 backdrop-blur hover:shadow-sm transition"
-            >
-              <div className="relative h-14 w-44 sm:h-16 sm:w-52">
-                <Image src={p.src} alt={p.name} fill sizes="200px" className="object-contain" />
-              </div>
-            </motion.div>
-          ))}
+  <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+    {partners.map((p, i) => (
+      <motion.div
+        key={p.name}
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25, margin: '-60px' }} // стабильнее на мобиле
+        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
+        className={[
+          "flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6",
+          // убираем blur на мобильных — это частая причина мерцания в Safari
+          "bg-white/90 sm:bg-white/70 sm:backdrop-blur",
+          "hover:shadow-sm transition",
+          // форсим отдельный слой для стабильной отрисовки
+          "transform-gpu will-change-transform will-change-opacity [backface-visibility:hidden]"
+        ].join(" ")}
+      >
+        <div className="relative h-14 w-44 sm:h-16 sm:w-52">
+          <Image
+            src={p.src}
+            alt={p.name}
+            fill
+            sizes="176px"
+            // грузим логотипы без ленивки, чтобы не мигали при появлении
+            loading="eager"
+            priority={i < 6} // у тебя 3 — можно и всем, но так тише для Lighthouse
+            decoding="async"
+            draggable={false}
+            className="object-contain select-none"
+          />
         </div>
-      </section>
+      </motion.div>
+    ))}
+  </div>
+</section>
 
       {/* VALUE PROPS */}
       <section className="relative isolate overflow-hidden bg-[#0e0a24] py-16 md:py-24">
