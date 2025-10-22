@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Comfortaa } from "next/font/google";
 import "./globals.css";
-
+import { Analytics } from '@vercel/analytics/next';
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -43,6 +43,7 @@ export default function RootLayout({
         <div className="flex min-h-dvh flex-col">
           <Header />
           <main className="flex-1">{children}</main>
+          <Analytics />
           <Footer />
         </div>
       </body>
