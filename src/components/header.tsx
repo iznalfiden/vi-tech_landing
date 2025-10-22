@@ -146,7 +146,7 @@ export default function Header() {
                                 <OverviewCard {...overview} />
 
                                 {/* Сетка 2×2 остальных тулзов */}
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 gap-3">
                                     {productList.map((p) => (
                                         <ProductCard key={p.name} {...p} />
                                     ))}
@@ -230,7 +230,7 @@ export default function Header() {
                             <Link href="/about" className="block rounded-xl px-3 py-2 hover:bg-accent" onClick={() => setOpenSheet(false)}>
                                 About
                             </Link>
-                            <Link href="/login" className="block rounded-xl px-3 py-2 hover:bg-accent" onClick={() => setOpenSheet(false)}>
+                            <Link href="https://vi-front.vercel.app/login" className="block rounded-xl px-3 py-2 hover:bg-accent" onClick={() => setOpenSheet(false)}>
                                 Login
                             </Link>
 
