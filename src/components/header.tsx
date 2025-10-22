@@ -156,7 +156,7 @@ export default function Header() {
                     </DropdownMenu>
 
                     <NavLink href="/about" activePath={pathname}>About</NavLink>
-                    <NavLink href="https://vi-front.vercel.app/login" activePath={pathname}>Login</NavLink>
+                    <NavLink href="https://demonstration.vi-tech.io/login" activePath={pathname}>Login</NavLink>
 
                     <Separator orientation="vertical" className="mx-1 h-6" />
 
@@ -230,7 +230,7 @@ export default function Header() {
                             <Link href="/about" className="block rounded-xl px-3 py-2 hover:bg-accent" onClick={() => setOpenSheet(false)}>
                                 About
                             </Link>
-                            <Link href="https://vi-front.vercel.app/login" className="block rounded-xl px-3 py-2 hover:bg-accent" onClick={() => setOpenSheet(false)}>
+                            <Link href="https://demonstration.vi-tech.io/login" className="block rounded-xl px-3 py-2 hover:bg-accent" onClick={() => setOpenSheet(false)}>
                                 Login
                             </Link>
 
