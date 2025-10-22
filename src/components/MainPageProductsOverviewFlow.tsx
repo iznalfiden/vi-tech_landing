@@ -14,6 +14,7 @@ import {
   RefreshCw,
   Users,
 } from 'lucide-react';
+import Image from "next/image";
 
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
@@ -346,19 +347,18 @@ export default function MainPageProductsOverviewFlow({
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
             <span
               ref={anchorRef}
-              className={`grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}
-            >
-              <img
-                src={n.img}
-                alt=""
-                width={px}
-                height={px}
-                className="h-full w-full object-cover"
-                loading={eager ? 'eager' : 'lazy'}
-                decoding="async"
-                onLoad={() => schedule(measure)}
-                style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
-              />
+              className={`relative grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}            >
+               <Image
+            src={n.img}
+            alt=""              // декоративное изображение — текст есть ниже
+            aria-hidden        // чтобы не дублировать для скринридеров
+            fill
+            sizes={`${px}px`} 
+            priority={eager}   // первые 1–2 — без ленивки
+            draggable={false}
+            onLoad={() => schedule(measure)}
+            className="object-cover select-none will-change-transform [backface-visibility:hidden]"
+          />
             </span>
             <div className="pt-1">
               <div className={`flex items-center justify-center gap-2 font-extrabold text-white ${center ? 'text-lg' : 'text-[17px]'}`}>
