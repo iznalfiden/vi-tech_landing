@@ -106,53 +106,67 @@ export default function LandingAnimated() {
       </section>
 
       {/* PARTNERS */}
-      <section className="mx-auto max-w-7xl px-4 my-20">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
-          <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
-            We are currently working with trusted partners across a wide range of industries,
-            to help build efficient and rewarding processes through embedding Vi-Tech tools
-          </p>
-        </motion.div>
+{/* PARTNERS */}
+<section className="mx-auto max-w-7xl px-4 my-20">
+  <motion.div
+    initial={{ opacity: 0, y: 16 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-80px' }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
+    className="text-center"
+  >
+    <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
+    <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
+      We are currently working with trusted partners across a wide range of industries,
+      to help build efficient and rewarding processes through embedding Vi-Tech tools
+    </p>
+  </motion.div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
-          {partners.map((p, i) => (
-            <motion.div
-              key={p.name}
-              initial={{ opacity: 0, y: 8 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25, margin: '-60px' }}
-              transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
-              className={[
-                'flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6',
-                'bg-white/90 sm:bg-white/70 sm:backdrop-blur',
-                'hover:shadow-sm transition',
-                'transform-gpu will-change-transform will-change-opacity [backface-visibility:hidden]',
-              ].join(' ')}
-            >
-              <div className="relative h-14 w-44 sm:h-16 sm:w-52">
-                <Image
-                  src={p.src}
-                  alt={p.name}
-                  fill
-                  sizes="176px"
-                  loading="eager"
-                  priority={i < 6}
-                  decoding="async"
-                  draggable={false}
-                  className="object-contain select-none"
-                />
-              </div>
-            </motion.div>
-          ))}
+  <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+    {partners.map((p, i) => (
+      <motion.div
+        key={p.name}
+        // ❗ только fade, без translateY — стабильнее на iOS
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.25, margin: '-60px' }}
+        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
+        // изоляция отрисовки и аккуратная компоновка слоёв
+        style={{ transform: 'translateZ(0)' }}
+        className={[
+          "flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6",
+          // ❗ на мобилке фон сплошной (без прозрачности/blur)
+          "bg-white",
+          // blur + полупрозрачность только >= sm
+          "sm:bg-white/70 sm:backdrop-blur",
+          "hover:shadow-sm transition",
+          // изолируем пейнт, и не держим агрессивный will-change
+          "[contain:paint] [backface-visibility:hidden]"
+        ].join(" ")}
+      >
+        <div
+          className="relative h-14 w-44 sm:h-16 sm:w-52"
+          // отдельный слой для контейнера картинки
+          style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
+        >
+          <Image
+            src={p.src}
+            alt={p.name}
+            fill
+            sizes="176px"
+            // грузим заранее — мерцаний меньше
+            loading="eager"
+            priority
+            // не форсим async-декод — iOS может мигать
+            // decoding="auto" по умолчанию
+            draggable={false}
+            className="object-contain select-none transform-gpu [transform:translateZ(0)] [backface-visibility:hidden]"
+          />
         </div>
-      </section>
+      </motion.div>
+    ))}
+  </div>
+</section>
 
       {/* VALUE PROPS */}
       <section className="relative isolate overflow-hidden bg-[#0e0a24] py-16 md:py-24">
