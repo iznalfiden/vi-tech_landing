@@ -4,14 +4,10 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import {
-  ArrowRight,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 
-
 export default function LandingAnimated() {
-
   const partners: { name: string; src: string }[] = [
     { name: 'Alstom', src: '/Alstom_logo.png' },
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
@@ -37,12 +33,20 @@ export default function LandingAnimated() {
     <main>
       {/* HERO */}
       <section
-        className="
-          relative isolate overflow-hidden
-          min-h-[calc(100dvh-80px)] md:min-h-[calc(100svh-80px)]
-          after:content-[''] after:absolute after:inset-x-0 after:bottom-0
-          after:h-10 sm:after:h-12 after:bg-white
-        "
+        className={[
+          // ★ убираем 100dvh; сначала даём фолбэк 100vh...
+          'relative isolate overflow-hidden',
+          'min-h-[calc(100vh-80px)]',
+          // ★ ...а если браузер поддерживает svh — используем стабильную высоту
+          'supports-[height:100svh]:min-h-[calc(100svh-80px)]',
+          // ★ на всех брейкпоинтах пусть будет svh (чтобы не прыгало и на md)
+          'sm:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
+          'md:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
+          // ★ гасим scroll anchoring локально, изолируем лэйаут, гасим резиновый overscroll
+          '[overflow-anchor:none] [contain:layout_paint] [overscroll-behavior:contain]',
+          // нижняя белая подложка
+          "after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-10 sm:after:h-12 after:bg-white",
+        ].join(' ')}
       >
         <motion.div
           initial={{ opacity: 0 }}
@@ -92,69 +96,8 @@ export default function LandingAnimated() {
           </motion.div>
         </div>
       </section>
-      {/* OLD PRODUCTS LIST + IMAGE */}
-      {/* <section
-        id="products"
-        className="relative isolate overflow-hidden py-24 md:py-36 lg:py-40 bg-[#0e0a24] scroll-mt-[88px] md:scroll-mt-[100px]"
-      >
-        <div className={backdropClass} />
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="grid gap-10 md:grid-cols-2 items-start">
-            <div>
-              <ul className="mt-2 md:mt-4 divide-y divide-white/10">
-                {products.map((p, i) => (
-                  <motion.li
-                    key={p.name}
-                    initial={{ opacity: 0, y: 8 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.45, ease: 'easeOut', delay: 0.05 * i }}
-                    className="min-h-[88px] md:min-h-[96px] flex items-center"
-                  >
-                    <Link href={p.href} className="group flex w-full items-center justify-between gap-6">
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={`grid place-items-center size-14 md:size-16 rounded-2xl shrink-0 bg-gradient-to-br ${p.gradient} text-white shadow-md`}
-                          aria-hidden="true"
-                        >
-                          <p.Icon className="size-6 md:size-8" strokeWidth={2} />
-                        </span>
-                        <div className="leading-snug">
-                          <div className="text-xl md:text-2xl font-semibold text-white">{p.name}</div>
-                          <div className="text-white/75 text-sm md:text-base">{p.desc}</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-white/70 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 16 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="relative rounded-2xl overflow-hidden min-h-[260px] md:min-h-[380px]"
-            >
-              <Image
-                src="/main_page_1.svg"
-                alt="Vi-Tech product suite"
-                fill
-                sizes="(min-width: 1024px) 48vw, 100vw"
-                className="object-contain"
-              />
-            </motion.div>
-          </div>
-
-          <div className="mt-16 md:mt-24 border-t border-white/10 pt-10 md:pt-14">
-            <MainPageProductsOverviewFlow embed overline="Product flow overview" />
-          </div>
-        </div>
-      </section> */}
-
-      {/* PRODUCTS LIST + IMAGE */}
+      {/* PRODUCTS */}
       <section
         id="products"
         className="relative isolate overflow-hidden pt-1 pb-12 bg-[#0e0a24] scroll-mt-[88px] md:scroll-mt-[100px]"
@@ -163,57 +106,53 @@ export default function LandingAnimated() {
       </section>
 
       {/* PARTNERS */}
-{/* PARTNERS */}
-<section className="mx-auto max-w-7xl px-4 my-20">
-  <motion.div
-    initial={{ opacity: 0, y: 16 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-80px' }}
-    transition={{ duration: 0.6, ease: 'easeOut' }}
-    className="text-center"
-  >
-    <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
-    <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
-      We are currently working with trusted partners across a wide range of industries,
-      to help build efficient and rewarding processes through embedding Vi-Tech tools
-    </p>
-  </motion.div>
+      <section className="mx-auto max-w-7xl px-4 my-20">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-center"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
+          <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
+            We are currently working with trusted partners across a wide range of industries,
+            to help build efficient and rewarding processes through embedding Vi-Tech tools
+          </p>
+        </motion.div>
 
-  <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
-    {partners.map((p, i) => (
-      <motion.div
-        key={p.name}
-        initial={{ opacity: 0, y: 8 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.25, margin: '-60px' }} // стабильнее на мобиле
-        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
-        className={[
-          "flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6",
-          // убираем blur на мобильных — это частая причина мерцания в Safari
-          "bg-white/90 sm:bg-white/70 sm:backdrop-blur",
-          "hover:shadow-sm transition",
-          // форсим отдельный слой для стабильной отрисовки
-          "transform-gpu will-change-transform will-change-opacity [backface-visibility:hidden]"
-        ].join(" ")}
-      >
-        <div className="relative h-14 w-44 sm:h-16 sm:w-52">
-          <Image
-            src={p.src}
-            alt={p.name}
-            fill
-            sizes="176px"
-            // грузим логотипы без ленивки, чтобы не мигали при появлении
-            loading="eager"
-            priority={i < 6} // у тебя 3 — можно и всем, но так тише для Lighthouse
-            decoding="async"
-            draggable={false}
-            className="object-contain select-none"
-          />
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+          {partners.map((p, i) => (
+            <motion.div
+              key={p.name}
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25, margin: '-60px' }}
+              transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
+              className={[
+                'flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6',
+                'bg-white/90 sm:bg-white/70 sm:backdrop-blur',
+                'hover:shadow-sm transition',
+                'transform-gpu will-change-transform will-change-opacity [backface-visibility:hidden]',
+              ].join(' ')}
+            >
+              <div className="relative h-14 w-44 sm:h-16 sm:w-52">
+                <Image
+                  src={p.src}
+                  alt={p.name}
+                  fill
+                  sizes="176px"
+                  loading="eager"
+                  priority={i < 6}
+                  decoding="async"
+                  draggable={false}
+                  className="object-contain select-none"
+                />
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </motion.div>
-    ))}
-  </div>
-</section>
+      </section>
 
       {/* VALUE PROPS */}
       <section className="relative isolate overflow-hidden bg-[#0e0a24] py-16 md:py-24">
@@ -236,6 +175,7 @@ export default function LandingAnimated() {
               Healthcare, FMCG, Transactional, Mining, Oil &amp; Gas.
             </p>
           </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
