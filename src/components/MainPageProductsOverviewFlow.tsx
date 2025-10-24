@@ -13,6 +13,7 @@ import {
   Globe,
   RefreshCw,
   Users,
+  Sparkles,
 } from 'lucide-react';
 import Image from "next/image";
 
@@ -50,6 +51,32 @@ function NodeImg({
 }
 
 type Props = { embed?: boolean; overline?: string; className?: string };
+
+
+function renderSub(sub: string, size: 'sm' | 'md' = 'sm') {
+  // ищем "(AI Powered)" (скобки можно и без них)
+  const m = sub.match(/\(?\s*(AI\s*Powered)\s*\)?/i);
+  if (!m || m.index == null) return sub;
+
+  const before = sub.slice(0, m.index).trimEnd();
+  const after  = sub.slice(m.index + m[0].length).trimStart();
+
+  const badge =
+    size === 'md'
+      ? 'ml-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-fuchsia-600/80 via-violet-600/80 to-indigo-600/80 px-2.5 py-[2px] text-[11px] font-bold uppercase tracking-wide text-white ring-1 ring-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]'
+      : 'ml-2 inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-fuchsia-600/80 via-violet-600/80 to-indigo-600/80 px-2 py-[1px] text-[10px] font-bold uppercase tracking-wide text-white ring-1 ring-white/20';
+
+  return (
+    <>
+      {before}
+      <span className={badge}>
+        <Sparkles className="size-3" aria-hidden />
+        AI Powered
+      </span>
+      {after ? ' ' + after : null}
+    </>
+  );
+}
 
 export default function MainPageProductsOverviewFlow({
   embed = false,
@@ -365,7 +392,7 @@ export default function MainPageProductsOverviewFlow({
                 <Icon className="size-5" color={color} aria-hidden />
                 {n.title}
               </div>
-              <div className={`${center ? 'text-sm' : 'text-[13px]'} text-white/80`}>{n.sub}</div>
+              <div className={`${center ? 'text-sm' : 'text-[13px]'} text-white/80`}>{renderSub(n.sub, center ? 'md' : 'sm')}</div>
               <div ref={learnMoreRef} className="mt-2 inline-flex text-xs font-semibold tracking-wider uppercase text-white/90">
                 Learn more
               </div>
@@ -548,7 +575,7 @@ export default function MainPageProductsOverviewFlow({
                 <Icon className="size-5" color={color} strokeWidth={2} aria-hidden />
                 <span className="font-extrabold text-[28px] leading-none text-white">{n.title}</span>
               </div>
-              <div className="mt-2 text-[16px] leading-none text-white/80">{n.sub}</div>
+              <div className="mt-2 text-[16px] leading-none text-white/80">{renderSub(n.sub, 'md')}</div>
               <div className="mt-4 text-[14px] font-bold tracking-[0.06em] uppercase text-white">LEARN MORE</div>
             </motion.a>
           );
