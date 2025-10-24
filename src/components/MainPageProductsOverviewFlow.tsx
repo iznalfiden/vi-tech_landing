@@ -99,7 +99,7 @@ export default function MainPageProductsOverviewFlow({
   const nodes = {
     std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards', href: '/products/standardizit', img: '/standardizit.svg' },
     gsi: { cx: 520, cy: 260, title: 'GoSeeiT', sub: 'Promotes "Go Look & See"', href: '/products/goseeit', img: '/goseeit.svg' },
-    res: { cx: 900, cy: resY, title: 'ResolviT', sub: 'Standardised Problem Solving (AI Powered)', href: '/products/resolvit', img: '/resolvit.svg' },
+    res: { cx: 900, cy: resY, title: 'ResolviT', sub: 'Problem Solving (AI Powered)', href: '/products/resolvit', img: '/resolvit.svg' },
     imp: { cx: 900, cy: impY, title: 'ImproviT', sub: 'Idea Generation & Implementation', href: '/products/improvit', img: '/improvit.svg' },
   } as const;
 
