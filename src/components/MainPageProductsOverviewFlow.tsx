@@ -52,9 +52,7 @@ function NodeImg({
 
 type Props = { embed?: boolean; overline?: string; className?: string };
 
-
 function renderSub(sub: string, size: 'sm' | 'md' = 'sm') {
-  // ищем "(AI Powered)" (скобки можно и без них)
   const m = sub.match(/\(?\s*(AI\s*Powered)\s*\)?/i);
   if (!m || m.index == null) return sub;
 
@@ -166,8 +164,10 @@ export default function MainPageProductsOverviewFlow({
     const [boxW, setBoxW] = React.useState(0);
     const boxHRef = React.useRef(0);
 
-    // ★ grow-only lock: контейнер может расти, но не сжиматься
+    // ★ grow-only lock + freeze
     const [lockedH, setLockedH] = React.useState<number | null>(null);
+    const [frozen, setFrozen] = React.useState(false);
+    const settleTimer = React.useRef<number | null>(null);
 
     const [pt, setPt] = React.useState<Record<string, { x: number; y: number }>>({});
 
@@ -213,9 +213,13 @@ export default function MainPageProductsOverviewFlow({
       setBoxW(prev => (Math.abs(prev - nextW) >= WIDTH_EPS ? nextW : prev)); // только ширина
       boxHRef.current = nextH;
 
-      // ★ фиксируем максимальную высоту (только рост)
-      if (nextH > 0) {
+      // ★ фиксируем максимальную высоту (только рост), фриз по «затиханию»
+      if (!frozen && nextH > 0) {
         setLockedH(prev => (prev == null ? nextH : Math.max(prev, nextH)));
+        if (settleTimer.current) clearTimeout(settleTimer.current);
+        settleTimer.current = window.setTimeout(() => {
+          setFrozen(true);
+        }, 350);
       }
 
       const nextPt = {
@@ -234,18 +238,18 @@ export default function MainPageProductsOverviewFlow({
         }
         return same ? prev : nextPt;
       });
-    }, []);
+    }, [frozen]);
 
     // первый замер + наблюдатели
     React.useEffect(() => {
       measure();
-      schedule(measure);
+      if (!frozen) schedule(measure);
 
       // реагируем ТОЛЬКО на изменение ширины контейнера
       let lastW = 0;
       const ro = new ResizeObserver((entries) => {
         const w = Math.round(entries[0]?.contentRect.width ?? 0);
-        if (Math.abs(w - lastW) >= WIDTH_EPS) {
+        if (!frozen && Math.abs(w - lastW) >= WIDTH_EPS) {
           lastW = w;
           schedule(measure);
         }
@@ -256,32 +260,38 @@ export default function MainPageProductsOverviewFlow({
       let prevWinW = window.innerWidth;
       const onResize = () => {
         const w = window.innerWidth;
-        if (Math.abs(w - prevWinW) >= WIDTH_EPS) {
+        if (!frozen && Math.abs(w - prevWinW) >= WIDTH_EPS) {
           prevWinW = w;
           schedule(measure);
         }
       };
       window.addEventListener('resize', onResize, { passive: true });
 
-      // ★ при смене ориентации — сбрасываем lock и переизмеряем
+      // ★ при смене ориентации — сбрасываем lock/freeze и переизмеряем
       const onOrient = () => {
+        setFrozen(false);
         setLockedH(null);
         schedule(measure);
       };
       window.addEventListener('orientationchange', onOrient, { passive: true });
 
       // fonts.ready
-      if (document.fonts?.ready) document.fonts.ready.then(() => schedule(measure));
+      if (document.fonts?.ready) document.fonts.ready.then(() => {
+        if (!frozen) schedule(measure);
+      });
 
       // после полной загрузки
-      window.addEventListener('load', () => schedule(measure), { once: true });
+      const onLoadOnce = () => { if (!frozen) schedule(measure); };
+      window.addEventListener('load', onLoadOnce, { once: true });
 
       return () => {
         ro.disconnect();
         window.removeEventListener('resize', onResize);
         window.removeEventListener('orientationchange', onOrient);
+        if (settleTimer.current) clearTimeout(settleTimer.current);
+        if (rafId.current) cancelAnimationFrame(rafId.current);
       };
-    }, [measure, schedule]);
+    }, [measure, schedule, frozen]);
 
     // пути
     const vLineTo = (from: { x: number; y: number }, to: { x: number; y: number }) =>
@@ -374,18 +384,19 @@ export default function MainPageProductsOverviewFlow({
           <a href={n.href} className="flex flex-col items-center text-center gap-3">
             <span
               ref={anchorRef}
-              className={`relative grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}            >
-               <Image
-            src={n.img}
-            alt=""              // декоративное изображение — текст есть ниже
-            aria-hidden        // чтобы не дублировать для скринридеров
-            fill
-            sizes={`${px}px`} 
-            priority={eager}   // первые 1–2 — без ленивки
-            draggable={false}
-            onLoad={() => schedule(measure)}
-            className="object-cover select-none will-change-transform [backface-visibility:hidden]"
-          />
+              className={`relative grid place-items-center ${center ? 'size-20' : 'size-16'} rounded-full overflow-hidden ring-4 ring-white/10`}
+            >
+              <Image
+                src={n.img}
+                alt=""
+                aria-hidden
+                fill
+                sizes={`${px}px`}
+                priority={eager}
+                draggable={false}
+                onLoad={() => { if (!frozen) schedule(measure); }}
+                className="object-cover select-none will-change-transform [backface-visibility:hidden]"
+              />
             </span>
             <div className="pt-1">
               <div className={`flex items-center justify-center gap-2 font-extrabold text-white ${center ? 'text-lg' : 'text-[17px]'}`}>
@@ -404,14 +415,18 @@ export default function MainPageProductsOverviewFlow({
 
     return (
       <>
-        {/* отключаем scroll anchoring локально */}
+        {/* локально убираем scroll anchoring */}
         <style jsx>{`.no-anchor { overflow-anchor: none; }`}</style>
 
         <div
           ref={wrapRef}
           className="relative no-anchor"
-          // ★ minHeight — максимальная увиденная высота; плюс изоляция лэйаута
-          style={{ minHeight: lockedH ?? undefined, contain: 'layout paint' }}
+          // до фриза растём по minHeight, после — фиксируем height; плюс containment и гашение инерции
+          style={{
+            ...(frozen ? { height: lockedH ?? undefined } : { minHeight: lockedH ?? undefined }),
+            contain: 'layout paint',
+            overscrollBehavior: 'contain',
+          }}
         >
           {/* 1. StandardiziT (центр) */}
           <div className="min-h-[176px] flex items-center justify-center">
@@ -634,6 +649,7 @@ export default function MainPageProductsOverviewFlow({
     <>
       <style jsx global>{`
         .overflow-anchor-none, .overflow-anchor-none * { overflow-anchor: none !important; }
+        @media (max-width: 768px) { body { overflow-anchor: none !important; } }
       `}</style>
       {content}
     </>
@@ -643,6 +659,7 @@ export default function MainPageProductsOverviewFlow({
     <section className="relative isolate overflow-hidden bg-[#0e0a24] py-24 md:py-36">
       <style jsx global>{`
         .overflow-anchor-none, .overflow-anchor-none * { overflow-anchor: none !important; }
+        @media (max-width: 768px) { body { overflow-anchor: none !important; } }
       `}</style>
       <div aria-hidden className="overflow-anchor-none" style={{ height: 1 }} />
       <div className={gradientOverscanClass} style={gradientMaskStyle} />
