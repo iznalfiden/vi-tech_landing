@@ -14,6 +14,16 @@ export default function LandingAnimated() {
     { name: 'TIMET', src: '/timet _logo.png' },
   ];
 
+  // детект iOS/WebKit → отключим motion у логотипов
+  const [disableMotion, setDisableMotion] = React.useState(false);
+  React.useEffect(() => {
+    const ua = navigator.userAgent || '';
+    const iOS =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (/\bMac OS X\b/.test(ua) && 'ontouchend' in document);
+    setDisableMotion(iOS);
+  }, []);
+
   const backdropClass =
     'hidden sm:block pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 ' +
     'bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]';
@@ -29,22 +39,66 @@ export default function LandingAnimated() {
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
+  // — карточка логотипа без Next/Image fill (минимум перерисовок)
+  const LogoCard: React.FC<{ p: { name: string; src: string }; i: number }> = ({ p, i }) => {
+    const card = (
+      <div
+        className={[
+          'flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6',
+          'bg-white border-neutral-200', // сплошной фон и непрозрачная граница
+          'transition-shadow',
+          'isolate',                      // новый stacking context
+          '[contain:layout_paint]',       // изоляция перерисовки
+          'transform-gpu [transform:translateZ(0)] [backface-visibility:hidden]',
+        ].join(' ')}
+        style={{ WebkitTransform: 'translateZ(0)', WebkitBackfaceVisibility: 'hidden' }}
+      >
+        <img
+          src={p.src}
+          alt={p.name}
+          width={180}   // ~ w-52
+          height={64}   // ~ h-16
+          loading="eager"
+          decoding="sync"
+          draggable={false}
+          className="select-none block"
+          style={{
+            objectFit: 'contain',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
+        />
+      </div>
+    );
+
+    if (disableMotion) return card;
+
+    // только fade (без translateY), чтобы не дёргать композитинг
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.25, margin: '-60px' }}
+        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
+      >
+        {card}
+      </motion.div>
+    );
+  };
+
   return (
     <main>
       {/* HERO */}
       <section
         className={[
-          // ★ убираем 100dvh; сначала даём фолбэк 100vh...
           'relative isolate overflow-hidden',
           'min-h-[calc(100vh-80px)]',
-          // ★ ...а если браузер поддерживает svh — используем стабильную высоту
           'supports-[height:100svh]:min-h-[calc(100svh-80px)]',
-          // ★ на всех брейкпоинтах пусть будет svh (чтобы не прыгало и на md)
           'sm:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
           'md:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
-          // ★ гасим scroll anchoring локально, изолируем лэйаут, гасим резиновый overscroll
           '[overflow-anchor:none] [contain:layout_paint] [overscroll-behavior:contain]',
-          // нижняя белая подложка
           "after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-10 sm:after:h-12 after:bg-white",
         ].join(' ')}
       >
@@ -106,67 +160,33 @@ export default function LandingAnimated() {
       </section>
 
       {/* PARTNERS */}
-{/* PARTNERS */}
-<section className="mx-auto max-w-7xl px-4 my-20">
-  <motion.div
-    initial={{ opacity: 0, y: 16 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-80px' }}
-    transition={{ duration: 0.6, ease: 'easeOut' }}
-    className="text-center"
-  >
-    <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
-    <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
-      We are currently working with trusted partners across a wide range of industries,
-      to help build efficient and rewarding processes through embedding Vi-Tech tools
-    </p>
-  </motion.div>
-
-  <div className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
-    {partners.map((p, i) => (
-      <motion.div
-        key={p.name}
-        // ❗ только fade, без translateY — стабильнее на iOS
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.25, margin: '-60px' }}
-        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
-        // изоляция отрисовки и аккуратная компоновка слоёв
+      <section
+        className="mx-auto max-w-7xl px-4 my-20 isolate"
         style={{ transform: 'translateZ(0)' }}
-        className={[
-          "flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6",
-          // ❗ на мобилке фон сплошной (без прозрачности/blur)
-          "bg-white",
-          // blur + полупрозрачность только >= sm
-          "sm:bg-white/70 sm:backdrop-blur",
-          "hover:shadow-sm transition",
-          // изолируем пейнт, и не держим агрессивный will-change
-          "[contain:paint] [backface-visibility:hidden]"
-        ].join(" ")}
       >
-        <div
-          className="relative h-14 w-44 sm:h-16 sm:w-52"
-          // отдельный слой для контейнера картинки
-          style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-center"
         >
-          <Image
-            src={p.src}
-            alt={p.name}
-            fill
-            sizes="176px"
-            // грузим заранее — мерцаний меньше
-            loading="eager"
-            priority
-            // не форсим async-декод — iOS может мигать
-            // decoding="auto" по умолчанию
-            draggable={false}
-            className="object-contain select-none transform-gpu [transform:translateZ(0)] [backface-visibility:hidden]"
-          />
+          <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
+          <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
+            We are currently working with trusted partners across a wide range of industries,
+            to help build efficient and rewarding processes through embedding Vi-Tech tools
+          </p>
+        </motion.div>
+
+        <div
+          className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8 isolate"
+          style={{ contain: 'layout paint', transform: 'translateZ(0)' }}
+        >
+          {partners.map((p, i) => (
+            <LogoCard key={p.name} p={p} i={i} />
+          ))}
         </div>
-      </motion.div>
-    ))}
-  </div>
-</section>
+      </section>
 
       {/* VALUE PROPS */}
       <section className="relative isolate overflow-hidden bg-[#0e0a24] py-16 md:py-24">
