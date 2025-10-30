@@ -2,7 +2,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { FM } from "@/components/motion";
 import { Lightbulb, Settings, ShieldCheck, Wrench, ArrowRight } from "lucide-react";
 
@@ -162,30 +161,6 @@ export default function AboutPage() {
             {/* декоративные пятна */}
             <div className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-violet-500/30 blur-3xl" />
             <div className="pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-indigo-900/40 blur-3xl" />
-
-            <div className="relative mx-auto max-w-3xl text-center">
-              <FM as="h3" className="text-3xl md:text-4xl font-bold">
-                Get in touch
-              </FM>
-              <FM
-                as="p"
-                delay={0.05}
-                className="mt-3 text-white/90 text-lg"
-              >
-                Get in touch for more information around our products and to understand more about how they can work for you.
-                One of our team members will discuss everything with you.
-              </FM>
-
-              <FM as="div" delay={0.12} className="mt-6">
-                <Button
-                  asChild
-                  size="lg"
-                  className="rounded-full bg-white text-gray-900 hover:bg-white/90"
-                >
-                  <Link href="/contact" aria-label="Contact us">CONTACT US</Link>
-                </Button>
-              </FM>
-            </div>
           </FM>
         </div>
       </section>
