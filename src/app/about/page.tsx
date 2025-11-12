@@ -138,15 +138,6 @@ export default function AboutPage() {
             participated and the findings were compelling. They prove that ResolvIT is not only the
             perfect fit for the market, but more importantly, there is an overwhelming need for it.
           </FM>
-          <FM as="div" delay={0.12} className="mt-6">
-            <Link
-              href="/research"
-              className="inline-flex items-center gap-2 font-semibold tracking-wide underline-offset-4 hover:underline"
-              aria-label="Read our story"
-            >
-              READ OUR STORY <ArrowRight className="h-4 w-4" />
-            </Link>
-          </FM>
         </div>
       </section>
 
