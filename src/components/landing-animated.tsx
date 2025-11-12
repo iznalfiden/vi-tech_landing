@@ -10,6 +10,7 @@ import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 export default function LandingAnimated() {
   const partners: { name: string; src: string }[] = [
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
+    {name: "Breen Capital", src: "/breen-logo-new-strapline-01.svg"},
     { name: 'Alstom', src: '/Alstom_logo.png' },
     { name: 'TIMET', src: '/timet _logo.png' },
   ];
