@@ -46,7 +46,7 @@ export default function Footer() {
             />
           </motion.div>
 
-          {/* название + email */}
+          {/* название + email + адрес */}
           <div className="text-left md:text-right">
             <div className="text-lg md:text-xl font-semibold">
               Virtuous Improvement Technologies
@@ -57,6 +57,12 @@ export default function Footer() {
             >
               hello@vi-tech.io
             </Link>
+
+            <p className="mt-2 max-w-xs text-sm text-white/80 md:ml-auto">
+              Harvest Hill House<br />
+              Harvest Hill Lane, Allesley<br />
+              Coventry, England, CV5 9DD
+            </p>
           </div>
         </div>
 
