@@ -92,7 +92,8 @@ export default function LandingAnimated() {
   return (
     <main>
       {/* HERO */}
-      <section
+            {/* HERO */}
+            <section
         className={[
           'relative isolate overflow-hidden',
           'min-h-[calc(100vh-80px)]',
@@ -112,43 +113,106 @@ export default function LandingAnimated() {
         />
         <div className={backdropClass} />
 
-        <div className="mx-auto max-w-7xl px-4 pt-28 md:pt-40 pb-20 md:pb-28">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.05 }}
-            className="text-black font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
-          >
-            <span className="block sm:inline">Simple,</span>{' '}
-            <span className="block sm:inline">standardised,</span>{' '}
-            <span className="block sm:inline">sustainable.</span>
-          </motion.h1>
+        <div className="mx-auto max-w-7xl px-4 pt-24 md:pt-32 pb-16 md:pb-24">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)] items-center">
+            {/* Левая часть: слоган + CTA */}
+            <div>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.08 }}
+                className="mt-4 text-black font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
+              >
+                <span className="block sm:inline">Simple,</span>{' '}
+                <span className="block sm:inline">standardised,</span>{' '}
+                <span className="block sm:inline">sustainable.</span>
+              </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
-            className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
-          >
-            The possibilities for efficiency improvement in every facet of the business and its operations are endless.
-          </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut', delay: 0.16 }}
+                className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
+              >
+                The possibilities for efficiency improvement in every facet of the business and its
+                operations are endless. Vi-Tech brings structure, visibility and AI assistance into your
+                daily workflow.
+              </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: 'easeOut', delay: 0.25 }}
-            className="mt-6 sm:mt-8"
-          >
-            <Button
-              size="lg"
-              onClick={scrollToProducts}
-              className="rounded-full cursor-pointer bg-white text-black hover:bg-white/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, ease: 'easeOut', delay: 0.24 }}
+                className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-4"
+              >
+                <Button
+                  size="lg"
+                  onClick={scrollToProducts}
+                  className="rounded-full cursor-pointer bg-black text-white hover:bg-black/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <a
+                    href="#products"
+                    onClick={scrollToProducts}
+                    className="inline-flex items-center gap-2 tracking-wide"
+                  >
+                    EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
+                  </a>
+                </Button>
+              </motion.div>
+            </div>
+
+            {/* Правая часть: карточка про AI-инструменты */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.18 }}
+              className="relative"
             >
-              <a href="#products" onClick={scrollToProducts} className="inline-flex items-center gap-2 tracking-wide">
-                EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
-          </motion.div>
+              <div className="relative overflow-hidden rounded-3xl border border-black/5 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.10)] backdrop-blur">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_600px_at_0%_0%,rgba(37,99,235,0.16),transparent_55%),radial-gradient(600px_600px_at_100%_100%,rgba(147,51,234,0.22),transparent_55%)]" />
+
+                <div className="relative p-6 sm:p-8 space-y-5">
+                  <p className="inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-black/70">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.25)]" />
+                    AI-integrated tools
+                  </p>
+
+                  <h2 className="text-xl sm:text-2xl font-bold text-black">
+                    Let AI do the heavy lifting in your projects
+                  </h2>
+
+                  <p className="text-sm sm:text-base text-black/75">
+                    Vi-Tech’s AI layer sits on top of your standard work, audits, ideas and problem
+                    solving — helping your team focus on decisions, not admin.
+                  </p>
+
+                  <ul className="space-y-2 text-sm text-black/80">
+                    <li>• Generate draft standardised work instructions from text and video.</li>
+                    <li>• Suggest step timings and highlight bottlenecks in your process.</li>
+                    <li>• Auto-link issues, ideas and audits back to the right step or option.</li>
+                    <li>• Surface insights across all your projects without building reports by hand.</li>
+                  </ul>
+
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2 text-xs text-black/70">
+                    <div className="rounded-2xl bg-white/80 px-3 py-3 border border-black/5">
+                      <div className="font-semibold">For your project work</div>
+                      <div className="mt-1 text-[11px] leading-relaxed">
+                        AI copilots help prepare SWCs, Yamazumi views and control plans so you can
+                        move your project from idea to implementation faster.
+                      </div>
+                    </div>
+                    <div className="rounded-2xl bg-white/60 px-3 py-3 border border-black/5">
+                      <div className="font-semibold">Inside your tools</div>
+                      <div className="mt-1 text-[11px] leading-relaxed">
+                        No extra apps: AI is embedded directly inside Vi-Tech modules your team already
+                        uses every day.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
