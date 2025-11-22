@@ -10,7 +10,7 @@ import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 export default function LandingAnimated() {
   const partners: { name: string; src: string }[] = [
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
-    {name: "Breen Capital", src: "/breen-logo-new-strapline-01.svg"},
+    { name: "Breen Capital", src: "/breen-logo-new-strapline-01.svg" },
     { name: 'Alstom', src: '/Alstom_logo.png' },
     { name: 'TIMET', src: '/timet _logo.png' },
   ];
@@ -92,8 +92,8 @@ export default function LandingAnimated() {
   return (
     <main>
       {/* HERO */}
-            {/* HERO */}
-            <section
+      {/* HERO */}
+      <section
         className={[
           'relative isolate overflow-hidden',
           'min-h-[calc(100vh-80px)]',
@@ -178,34 +178,28 @@ export default function LandingAnimated() {
                   </p>
 
                   <h2 className="text-xl sm:text-2xl font-bold text-black">
-                    Let AI do the heavy lifting in your projects
+                    Let AI support your audits, standard work and problem solving
                   </h2>
 
                   <p className="text-sm sm:text-base text-black/75">
-                    Vi-Tech’s AI layer sits on top of your standard work, audits, ideas and problem
-                    solving — helping your team focus on decisions, not admin.
+                    Vi-Tech weaves AI into everyday improvement tasks – from documenting work and
+                    running audits to analysing problems – so your team spends less time on admin
+                    and more time on real change.
                   </p>
 
-                  <ul className="space-y-2 text-sm text-black/80">
-                    <li>• Generate draft standardised work instructions from text and video.</li>
-                    <li>• Suggest step timings and highlight bottlenecks in your process.</li>
-                    <li>• Auto-link issues, ideas and audits back to the right step or option.</li>
-                    <li>• Surface insights across all your projects without building reports by hand.</li>
-                  </ul>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-2 text-xs text-black/70">
                     <div className="rounded-2xl bg-white/80 px-3 py-3 border border-black/5">
-                      <div className="font-semibold">For your project work</div>
+                      <div className="font-semibold">For improvement leaders</div>
                       <div className="mt-1 text-[11px] leading-relaxed">
-                        AI copilots help prepare SWCs, Yamazumi views and control plans so you can
-                        move your project from idea to implementation faster.
+                        Build and roll out consistent ways of working faster, with AI helping you
+                        capture knowledge and share best practice across teams.
                       </div>
                     </div>
                     <div className="rounded-2xl bg-white/60 px-3 py-3 border border-black/5">
-                      <div className="font-semibold">Inside your tools</div>
+                      <div className="font-semibold">For frontline teams</div>
                       <div className="mt-1 text-[11px] leading-relaxed">
-                        No extra apps: AI is embedded directly inside Vi-Tech modules your team already
-                        uses every day.
+                        Simple, contextual AI prompts help people conduct solve problems, standardize processes and audits without complicating their daily lives.
                       </div>
                     </div>
                   </div>
