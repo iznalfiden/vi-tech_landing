@@ -97,10 +97,38 @@ export default function MainPageProductsOverviewFlow({
   const impY = 350 + branchExtra;
 
   const nodes = {
-    std: { cx: 180, cy: 260, title: 'StandardiziT', sub: 'Work Standards', href: '/products/standardizit', img: '/standardizit.svg' },
-    gsi: { cx: 520, cy: 260, title: 'GoSeeiT', sub: 'Promotes "Go Look & See"', href: '/products/goseeit', img: '/goseeit.svg' },
-    res: { cx: 900, cy: resY, title: 'ResolviT', sub: 'Problem Solving (AI Powered)', href: '/products/resolvit', img: '/resolvit.svg' },
-    imp: { cx: 900, cy: impY, title: 'ImproviT', sub: 'Idea Generation & Implementation', href: '/products/improvit', img: '/improvit.svg' },
+    std: {
+      cx: 180,
+      cy: 260,
+      title: 'StandardiziT',
+      sub: 'Work Standards (AI Powered)',
+      href: '/products/standardizit',
+      img: '/standardizit.svg',
+    },
+    gsi: {
+      cx: 520,
+      cy: 260,
+      title: 'GoSeeiT',
+      sub: 'Go Look & See Audits (AI Powered)',
+      href: '/products/goseeit',
+      img: '/goseeit.svg',
+    },
+    res: {
+      cx: 900,
+      cy: resY,
+      title: 'ResolviT',
+      sub: 'Problem Solving (AI Powered)',
+      href: '/products/resolvit',
+      img: '/resolvit.svg',
+    },
+    imp: {
+      cx: 900,
+      cy: impY,
+      title: 'ImproviT',
+      sub: 'Idea Generation & Implementation',
+      href: '/products/improvit',
+      img: '/improvit.svg',
+    },
   } as const;
 
   const iconByKey: Record<keyof typeof nodes, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -615,12 +643,24 @@ export default function MainPageProductsOverviewFlow({
 
         <div className="mt-10 md:mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
           {[
-            { Icon: Cog, text: 'Catalyst for improvement' },
-            { Icon: Users, text: 'Encourages collaborative problem solving' },
-            { Icon: BookOpen, text: 'Develop a shared knowledge base and gives every employee a voice' },
-            { Icon: RefreshCw, text: 'Engaged workforce identifying & eliminating waste' },
-            { Icon: Coins, text: 'Cost benefit decision making' },
-            { Icon: Globe, text: 'Connects remote teams & aligns workforces' },
+            { Icon: Cog, text: 'AI-powered catalyst for improvement' },
+            { Icon: Users, text: 'AI-supported collaborative problem solving' },
+            {
+              Icon: BookOpen,
+              text: 'AI-assisted shared knowledge base that gives every employee a voice',
+            },
+            {
+              Icon: RefreshCw,
+              text: 'Engaged workforce identifying & eliminating waste with AI insights',
+            },
+            {
+              Icon: Coins,
+              text: 'AI-informed cost benefit decision making',
+            },
+            {
+              Icon: Globe,
+              text: 'Connects remote teams & aligns workforces with shared AI tools',
+            },
           ].map(({ Icon, text }, i) => (
             <motion.div
               key={text}
