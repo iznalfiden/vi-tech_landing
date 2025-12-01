@@ -135,8 +135,7 @@ export default function LandingAnimated() {
                 className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
               >
                 The possibilities for efficiency improvement in every facet of the business and its
-                operations are endless. Vi-Tech brings structure, visibility and AI assistance into your
-                daily workflow.
+                operations are endless.
               </motion.p>
 
               <motion.div
