@@ -160,51 +160,7 @@ export default function LandingAnimated() {
               </motion.div>
             </div>
 
-            {/* Правая часть: карточка про AI-инструменты */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.18 }}
-              className="relative"
-            >
-              <div className="relative overflow-hidden rounded-3xl border border-black/5 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.10)] backdrop-blur">
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_600px_at_0%_0%,rgba(37,99,235,0.16),transparent_55%),radial-gradient(600px_600px_at_100%_100%,rgba(147,51,234,0.22),transparent_55%)]" />
-
-                <div className="relative p-6 sm:p-8 space-y-5">
-                  <p className="inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-black/70">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.25)]" />
-                    AI-integrated tools
-                  </p>
-
-                  <h2 className="text-xl sm:text-2xl font-bold text-black">
-                    Let AI support your audits, standard work and problem solving
-                  </h2>
-
-                  <p className="text-sm sm:text-base text-black/75">
-                    Vi-Tech weaves AI into everyday improvement tasks – from documenting work and
-                    running audits to analysing problems – so your team spends less time on admin
-                    and more time on real change.
-                  </p>
-
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2 text-xs text-black/70">
-                    <div className="rounded-2xl bg-white/80 px-3 py-3 border border-black/5">
-                      <div className="font-semibold">For improvement leaders</div>
-                      <div className="mt-1 text-[11px] leading-relaxed">
-                        Build and roll out consistent ways of working faster, with AI helping you
-                        capture knowledge and share best practice across teams.
-                      </div>
-                    </div>
-                    <div className="rounded-2xl bg-white/60 px-3 py-3 border border-black/5">
-                      <div className="font-semibold">For frontline teams</div>
-                      <div className="mt-1 text-[11px] leading-relaxed">
-                        Simple, contextual AI prompts help people conduct solve problems, standardize processes and audits without complicating their daily lives.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            
           </div>
         </div>
       </section>
