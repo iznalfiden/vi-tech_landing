@@ -159,7 +159,6 @@ export default function LandingAnimated() {
                 </Button>
               </motion.div>
             </div>
-            {/* Правая часть: карточка про AI-инструменты */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
