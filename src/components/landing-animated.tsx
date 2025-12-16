@@ -215,34 +215,7 @@ export default function LandingAnimated() {
         <MainPageProductsOverviewFlow embed overline="Product flow overview" />
       </section>
 
-      {/* PARTNERS */}
-      <section
-        className="mx-auto max-w-7xl px-4 my-20 isolate"
-        style={{ transform: 'translateZ(0)' }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold">Working with valued partners</h2>
-          <p className="mt-3 text-muted-foreground max-w-3xl mx-auto">
-            We are currently working with trusted partners across a wide range of industries,
-            to help build efficient and rewarding processes through embedding Vi-Tech tools
-          </p>
-        </motion.div>
 
-        <div
-          className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8 isolate"
-          style={{ contain: 'layout paint', transform: 'translateZ(0)' }}
-        >
-          {partners.map((p, i) => (
-            <LogoCard key={p.name} p={p} i={i} />
-          ))}
-        </div>
-      </section>
 
       {/* VALUE PROPS */}
       <section className="relative isolate overflow-hidden bg-[#0e0a24] py-16 md:py-24">
