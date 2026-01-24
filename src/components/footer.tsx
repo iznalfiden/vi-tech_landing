@@ -71,9 +71,9 @@ export default function Footer() {
           <Link href="/privacy" className="hover:text-white underline-offset-4 hover:underline">
             Privacy Policy
           </Link>
-          <Link href="/terms" className="hover:text-white underline-offset-4 hover:underline">
+          {/* <Link href="/terms" className="hover:text-white underline-offset-4 hover:underline">
             Terms &amp; Conditions
-          </Link>
+          </Link> */}
           <Link href="/gdpr" className="hover:text-white underline-offset-4 hover:underline">
             GDPR
           </Link>
