@@ -254,7 +254,7 @@ export default function FAQSection({
                         <AccordionItem
                           key={itemId}
                           value={itemId}
-                          className="border-b border-neutral-200 last:border-b-0"
+                          className="cursor-pointer border-b border-neutral-200 last:border-b-0"
                         >
                           <AccordionTrigger
                             onClick={() => handleToggleItem(itemId)}
