@@ -75,9 +75,9 @@ export default function FAQSection({
 
   const getAllItemIds = useCallback(() => {
     const ids: string[] = [];
-    filteredGroups.forEach((group, groupIndex) => {
+    filteredGroups.forEach((group) => {
       group.items.forEach((_, itemIndex) => {
-        ids.push(`${group.category}-${groupIndex}-${itemIndex}`);
+        ids.push(`${group.category}-${itemIndex}`);
       });
     });
     return ids;
