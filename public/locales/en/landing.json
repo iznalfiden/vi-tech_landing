@@ -1,6 +1,6 @@
 {
     "seo": { "title": "Reduce losses. Accelerate production.", "desc": "Lean/AI toolkit: takt time, Yamazumi, loss control." },
-    "nav": { "products": "Products", "about": "About", "login": "Login", "bookDemo": "Book a demo", "language": "Language" },
+    "nav": { "products": "Products", "about": "About", "login": "Login", "bookDemo": "Book a demo", "language": "Language", "faq": "FAQ" },
     "products": {
       "standardizit": "Work standards, SWC",
       "yamazumi": "Operations balancing",
@@ -19,5 +19,94 @@
       "loss": { "title": "Loss control", "desc": "Daily tracking of downtimes and losses." }
     },
     "cta": { "title": "Ready to see results?", "desc": "Leave a request — we will contact you and show a demo." },
-    "footer": { "rights": "All rights reserved." }
+    "footer": { "rights": "All rights reserved." },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": [
+        {
+          "question": "What is the Vi-Tech platform?",
+          "answer": "Vi-Tech is a digital operational excellence platform designed to help organisations standardise work, solve operational problems, manage continuous improvement and sustain operational discipline. The platform integrates several applications that support the full improvement lifecycle: observing operations, solving problems, implementing improvements and standardising successful processes."
+        },
+        {
+          "question": "What does operational excellence software do?",
+          "answer": "Operational excellence software helps organisations improve performance by standardising processes, identifying operational problems, managing improvement initiatives and sustaining best practices. Vi-Tech provides a complete operational excellence system that integrates auditing, problem solving, continuous improvement and digital standardised work."
+        },
+        {
+          "question": "How does Vi-Tech support continuous improvement?",
+          "answer": "Vi-Tech supports continuous improvement through its ImproviT application, which allows employees across the organisation to submit improvement ideas. These ideas are reviewed, implemented and tracked through the Plan-Do-Check-Act (PDCA) improvement cycle, ensuring that improvements deliver measurable operational benefits."
+        },
+        {
+          "question": "What is digital standardised work?",
+          "answer": "Digital standardised work is a structured way of documenting and managing how work should be performed. Vi-Tech's StandardiziT system captures work steps, key points and key point reasons to ensure that operational knowledge is preserved and shared across the workforce. It also includes tools for analysing work content, balancing workloads and identifying process waste."
+        },
+        {
+          "question": "How does Vi-Tech help eliminate process waste?",
+          "answer": "StandardiziT automatically categorises work elements into value-adding and non-value-adding activities. This enables organisations to identify waste within their processes and redesign workflows using Lean techniques such as Yamazumi workload balancing and operator motion analysis."
+        },
+        {
+          "question": "What is a Yamazumi board and how does Vi-Tech use it?",
+          "answer": "A Yamazumi board is a Lean manufacturing tool used to visualise and balance workloads across operators. The Vi-Tech StandardiziT system includes an interactive Yamazumi board that allows teams to rebalance tasks, simulate process improvements and automatically update standardised work documentation."
+        },
+        {
+          "question": "How does Vi-Tech support root cause analysis?",
+          "answer": "ResolviT provides structured root cause analysis tools such as Fishbone diagrams, Top Direct Cause identification, Standard vs Actual condition checks and 5 Why analysis. These tools guide teams through a disciplined problem-solving process to ensure that operational problems are permanently eliminated."
+        },
+        {
+          "question": "What is 8D problem solving software?",
+          "answer": "8D problem solving software supports the structured Eight Disciplines methodology used to investigate and resolve complex operational problems. ResolviT digitises the full 8D process, guiding teams through problem definition, containment, root cause analysis, corrective actions and verification of effectiveness."
+        },
+        {
+          "question": "How does Vi-Tech manage operational audits?",
+          "answer": "GoSeeiT allows organisations to design and conduct digital audits across a wide range of operational areas including quality, safety, maintenance and process compliance. The system supports layered auditing structures that verify operational discipline across different management levels."
+        },
+        {
+          "question": "What are layered process audits?",
+          "answer": "Layered process audits involve different organisational levels verifying process adherence at different frequencies. For example, team leaders may conduct daily checks while managers perform monthly confirmation audits. GoSeeiT supports this approach to ensure that operational standards are consistently followed."
+        },
+        {
+          "question": "Can Vi-Tech integrate audits with problem solving?",
+          "answer": "Yes. When an issue is identified during a GoSeeiT audit, the finding can be raised directly into ResolviT for structured problem solving or ImproviT for improvement implementation. This ensures that audit findings lead to meaningful operational action."
+        },
+        {
+          "question": "How does Vi-Tech support frontline leaders?",
+          "answer": "The platform includes daily operational management tools that allow frontline leaders to record production performance, operational disruptions, safety incidents and shift observations. This creates a digital record of operational activity that helps organisations analyse performance trends."
+        },
+        {
+          "question": "Does Vi-Tech support shift handovers?",
+          "answer": "Yes. Vi-Tech includes a structured shift handover system that allows outgoing shift leaders to communicate production results, unresolved issues and operational priorities to the incoming team. This helps prevent information loss between shifts and improves operational continuity."
+        },
+        {
+          "question": "What is takt time and how does Vi-Tech calculate it?",
+          "answer": "Takt time represents the rate at which products must be produced to meet customer demand. StandardiziT calculates both theoretical takt time and actual takt time by incorporating operational losses recorded within the system, ensuring that production lines are balanced against real operational conditions."
+        },
+        {
+          "question": "How does Vi-Tech support production sequencing?",
+          "answer": "For production environments with multiple products, StandardiziT includes a Heijunka production levelling tool. This helps production planners determine the optimal product sequence and buffer configuration to maintain stable workflow and minimise disruption."
+        },
+        {
+          "question": "What is a process versatility matrix?",
+          "answer": "A process versatility matrix shows which operators are capable of performing specific tasks and their level of competency. StandardiziT includes this functionality to help organisations manage workforce flexibility and identify training needs."
+        },
+        {
+          "question": "How does Vi-Tech manage improvement ideas?",
+          "answer": "ImproviT enables employees across the organisation to submit improvement ideas along with descriptions, supporting documentation and estimated implementation costs. Ideas are reviewed, assigned for implementation and tracked through the PDCA cycle to ensure that improvements deliver measurable results."
+        },
+        {
+          "question": "Why do many improvement suggestion schemes fail?",
+          "answer": "Many improvement suggestion schemes fail because ideas are collected but not implemented. ImproviT solves this by providing a structured workflow that ensures ideas are reviewed, assigned, implemented and measured, maintaining employee engagement in the improvement process."
+        },
+        {
+          "question": "How does Vi-Tech support organisational learning?",
+          "answer": "Every problem solved, audit conducted and improvement implemented becomes part of the organisation's digital knowledge base. This allows teams to learn from previous issues, reuse successful solutions and continuously strengthen operational performance."
+        },
+        {
+          "question": "What industries can use the Vi-Tech platform?",
+          "answer": "Vi-Tech is suitable for any industry that relies on operational processes, including manufacturing, logistics, construction, mining, aerospace, automotive and service operations."
+        },
+        {
+          "question": "What makes Vi-Tech different from traditional KPI dashboards?",
+          "answer": "Many operational systems focus primarily on monitoring performance through dashboards. Vi-Tech goes beyond monitoring by providing tools that allow organisations to standardise work, identify problems, implement improvements and sustain operational discipline."
+        }
+      ]
+    }
   }

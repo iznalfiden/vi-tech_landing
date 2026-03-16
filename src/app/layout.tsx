@@ -4,6 +4,7 @@ import "./globals.css";
 import { Analytics } from '@vercel/analytics/next';
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { I18nProvider } from "@/components/i18n-provider";
 
 export const metadata: Metadata = {
   title: "Vi-Tech",
@@ -39,13 +40,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.variable} ${comfortaa.variable} font-sans antialiased`}>
-        {/* Каркас, чтобы футер прилипал к низу даже при коротком контенте */}
-        <div className="flex min-h-dvh flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Analytics />
-          <Footer />
-        </div>
+        <I18nProvider>
+          {/* Каркас, чтобы футер прилипал к низу даже при коротком контенте */}
+          <div className="flex min-h-dvh flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Analytics />
+            <Footer />
+          </div>
+        </I18nProvider>
       </body>
     </html>
   );

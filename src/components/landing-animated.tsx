@@ -6,8 +6,12 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
+import FAQSection from './faq-section';
+import { useTranslation } from 'react-i18next';
 
 export default function LandingAnimated() {
+  const { t } = useTranslation('landing');
+  
   const partners: { name: string; src: string }[] = [
     { name: 'Allur', src: '/Allur_logo_red_(1).png' },
     { name: "Breen Capital", src: "/breen-logo-new-strapline-01.svg" },
@@ -100,8 +104,7 @@ export default function LandingAnimated() {
           'supports-[height:100svh]:min-h-[calc(100svh-80px)]',
           'sm:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
           'md:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
-          '[overflow-anchor:none] [contain:layout_paint] [overscroll-behavior:contain]',
-          "after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-10 sm:after:h-12 after:bg-white",
+          "after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-10 sm:after:h-12 after:bg-white after:pointer-events-none",
         ].join(' ')}
       >
         <motion.div
@@ -123,9 +126,7 @@ export default function LandingAnimated() {
                 transition={{ duration: 0.6, ease: 'easeOut', delay: 0.08 }}
                 className="mt-4 text-black font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
               >
-                <span className="block sm:inline">Simple,</span>{' '}
-                <span className="block sm:inline">standardised,</span>{' '}
-                <span className="block sm:inline">sustainable.</span>
+                <span className="block sm:inline">Operational Excellence Software for Problem Solving, Auditing and Standardised Work</span>{' '}
               </motion.h1>
 
               <motion.p
@@ -134,8 +135,7 @@ export default function LandingAnimated() {
                 transition={{ duration: 0.5, ease: 'easeOut', delay: 0.16 }}
                 className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
               >
-                The possibilities for efficiency improvement in every facet of the business and its
-                operations are endless.
+                Vi-Tech provides a complete digital platform for problem solving, process auditing, improvement management and standarised work - helping organizations eliminate recurring problems and continuously improve operational performance.
               </motion.p>
 
               <motion.div
@@ -288,6 +288,12 @@ export default function LandingAnimated() {
           </motion.div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <FAQSection 
+        title={t('faq.title')} 
+        items={t('faq.items', { returnObjects: true }) as { question: string; answer: string }[]} 
+      />
     </main>
   );
 }
