@@ -182,27 +182,27 @@ export default function LandingAnimated() {
                   </div>
 
                   {/* Partners Grid */}
-                  <div className="p-6">
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="p-8">
+                    <p className="text-sm text-neutral-500 mb-6 text-center">Trusted by industry leaders:</p>
+                    <div className="grid grid-cols-2 gap-5">
                       {partners.map((partner, i) => (
                         <motion.div
                           key={partner.name}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}
-                          className="flex items-center justify-center p-4 rounded-xl bg-neutral-50/80 border border-neutral-100 hover:bg-white hover:border-neutral-200 hover:shadow-sm transition-all"
+                          className="flex items-center justify-center p-6 rounded-xl bg-neutral-50/80 border border-neutral-100 hover:bg-white hover:border-neutral-200 hover:shadow-sm transition-all"
                         >
                           <img
                             src={partner.src}
                             alt={partner.name}
-                            className="h-6 w-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all"
+                            className="h-8 w-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all"
                           />
                         </motion.div>
                       ))}
                     </div>
                   </div>
 
-                  
                 </div>
               </div>
             </motion.div>
