@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Play, Sparkles, Zap, Shield, TrendingUp } from 'lucide-react';
 import MainPageProductsOverviewFlow from './MainPageProductsOverviewFlow';
 import FAQSection from './faq-section';
 import { useTranslation } from 'react-i18next';
@@ -19,20 +19,6 @@ export default function LandingAnimated() {
     { name: 'TIMET', src: '/timet _logo.png' },
   ];
 
-  // детект iOS/WebKit → отключим motion у логотипов
-  const [disableMotion, setDisableMotion] = React.useState(false);
-  React.useEffect(() => {
-    const ua = navigator.userAgent || '';
-    const iOS =
-      /iPad|iPhone|iPod/.test(ua) ||
-      (/\bMac OS X\b/.test(ua) && 'ontouchend' in document);
-    setDisableMotion(iOS);
-  }, []);
-
-  const backdropClass =
-    'hidden sm:block pointer-events-none absolute inset-y-0 right-0 -z-10 w-1/2 ' +
-    'bg-[radial-gradient(70%_70%_at_80%_50%,rgba(139,92,246,0.35),transparent_65%)]';
-
   const scrollToProducts = (e: React.MouseEvent) => {
     e.preventDefault();
     const target = document.getElementById('products');
@@ -44,162 +30,180 @@ export default function LandingAnimated() {
     window.scrollTo({ top, behavior: 'smooth' });
   };
 
-  // — карточка логотипа без Next/Image fill (минимум перерисовок)
-  const LogoCard: React.FC<{ p: { name: string; src: string }; i: number }> = ({ p, i }) => {
-    const card = (
-      <div
-        className={[
-          'flex h-28 w-[260px] items-center justify-center rounded-2xl border p-6',
-          'bg-white border-neutral-200', // сплошной фон и непрозрачная граница
-          'transition-shadow',
-          'isolate',                      // новый stacking context
-          '[contain:layout_paint]',       // изоляция перерисовки
-          'transform-gpu [transform:translateZ(0)] [backface-visibility:hidden]',
-        ].join(' ')}
-        style={{ WebkitTransform: 'translateZ(0)', WebkitBackfaceVisibility: 'hidden' }}
-      >
-        <img
-          src={p.src}
-          alt={p.name}
-          width={180}   // ~ w-52
-          height={64}   // ~ h-16
-          loading="eager"
-          decoding="sync"
-          draggable={false}
-          className="select-none block"
-          style={{
-            objectFit: 'contain',
-            transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-          }}
-        />
-      </div>
-    );
-
-    if (disableMotion) return card;
-
-    // только fade (без translateY), чтобы не дёргать композитинг
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.25, margin: '-60px' }}
-        transition={{ duration: 0.35, ease: 'easeOut', delay: 0.05 * i }}
-      >
-        {card}
-      </motion.div>
-    );
-  };
-
   return (
     <main>
-      {/* HERO */}
-      {/* HERO */}
+      {/* HERO - Enhanced */}
       <section
         className={[
           'relative isolate overflow-hidden',
           'min-h-[calc(100vh-80px)]',
           'supports-[height:100svh]:min-h-[calc(100svh-80px)]',
-          'sm:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
-          'md:supports-[height:100svh]:min-h-[calc(100svh-80px)]',
-          "after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-10 sm:after:h-12 after:bg-white after:pointer-events-none",
+          "after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-16 after:bg-gradient-to-t after:from-white after:to-transparent after:pointer-events-none",
         ].join(' ')}
       >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="hidden sm:block absolute inset-0 -z-10 bg-contain bg-no-repeat bg-right"
-          aria-hidden
-        />
-        <div className={backdropClass} />
+        {/* Animated Background */}
+        <div className="absolute inset-0 -z-20">
+          {/* Base gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50/30" />
+          
+          {/* Animated gradient orbs */}
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-violet-400/20 to-purple-600/10 blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1.2, 1, 1.2],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-1/2 -left-40 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-blue-400/20 to-cyan-600/10 blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-emerald-400/10 to-teal-600/10 blur-3xl"
+          />
+          
+          {/* Grid pattern overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.015]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23120E2F' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+        </div>
 
-        <div className="mx-auto max-w-7xl px-4 pt-24 md:pt-32 pb-16 md:pb-24">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2.4fr)] items-center">
-            {/* Левая часть: слоган + CTA */}
-            <div>
+        <div className="mx-auto max-w-7xl px-4 pt-20 md:pt-28 pb-12 md:pb-20">
+          <div className="grid gap-12 lg:gap-16 lg:grid-cols-[1.2fr_1fr] items-center">
+            {/* Left Column - Content */}
+            <div className="relative z-10">
+              
+
+              {/* Headline */}
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.08 }}
-                className="mt-4 text-black font-bold tracking-tight leading-[1.15] md:leading-[1.05] text-[clamp(28px,9vw,44px)] sm:text-6xl md:text-7xl"
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] font-bold tracking-tight leading-[1.1] text-[#120E2F]"
               >
-                <span className="block sm:inline">Operational Excellence Software for Problem Solving, Auditing and Standardised Work</span>{' '}
+                Operational Excellence{' '}
+                <span className="relative inline-block">
+                  <span className="relative z-10">Software</span>
+                  <motion.span
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                    className="absolute bottom-2 left-0 right-0 h-3 bg-gradient-to-r from-violet-400/40 to-purple-400/40 -z-0 origin-left"
+                  />
+                </span>{' '}
+                for Problem Solving & Standardised Work
               </motion.h1>
 
+              {/* Subheadline */}
               <motion.p
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: 'easeOut', delay: 0.16 }}
-                className="mt-4 sm:mt-6 max-w-2xl text-black text-base sm:text-lg md:text-xl drop-shadow"
+                transition={{ duration: 0.5, ease: 'easeOut', delay: 0.25 }}
+                className="mt-6 text-lg sm:text-xl text-neutral-600 max-w-2xl leading-relaxed"
               >
-                Vi-Tech provides a complete digital platform for problem solving, process auditing, improvement management and standarised work - helping organizations eliminate recurring problems and continuously improve operational performance.
+                Eliminate recurring problems, standardise best practices, and drive continuous improvement 
+                with Vi-Tech&apos;s integrated digital platform.
               </motion.p>
 
+              
+
+              {/* CTA Buttons */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, ease: 'easeOut', delay: 0.24 }}
-                className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-4"
+                transition={{ duration: 0.5, delay: 0.45 }}
+                className="mt-10 flex flex-col sm:flex-row gap-4"
               >
                 <Button
                   size="lg"
                   onClick={scrollToProducts}
-                  className="rounded-full cursor-pointer bg-black text-white hover:bg-black/90 border-0 shadow-md hover:shadow-lg transition-shadow"
+                  className="rounded-full bg-[#120E2F] text-white hover:bg-[#120E2F]/90 shadow-lg shadow-[#120E2F]/20 hover:shadow-xl hover:shadow-[#120E2F]/30 transition-all px-8 py-6 text-base"
                 >
-                  <a
-                    href="#products"
-                    onClick={scrollToProducts}
-                    className="inline-flex items-center gap-2 tracking-wide"
-                  >
-                    EXPLORE PRODUCTS <ArrowRight className="h-4 w-4" />
-                  </a>
+                  <span className="inline-flex items-center gap-2">
+                    Explore Products
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
                 </Button>
               </motion.div>
+
             </div>
+
+            {/* Right Column - Trust Card */}
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.18 }}
-              className="relative"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut', delay: 0.3 }}
+              className="relative hidden lg:block"
             >
-              <div className="relative overflow-hidden rounded-3xl border border-black/5 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.10)] backdrop-blur">
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(600px_600px_at_0%_0%,rgba(37,99,235,0.16),transparent_55%),radial-gradient(600px_600px_at_100%_100%,rgba(147,51,234,0.22),transparent_55%)]" />
-
-                <div className="relative p-6 sm:p-8 space-y-5">
-                  <p className="inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-black/70">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.25)]" />
-                    AI-integrated tools
-                  </p>
-
-                  <h2 className="text-xl sm:text-2xl font-bold text-black">
-                    Let AI support your audits, standard work and problem solving
-                  </h2>
-
-                  <p className="text-sm sm:text-base text-black/75">
-                    Vi-Tech weaves AI into everyday improvement tasks – from documenting work and
-                    running audits to analysing problems – so your team spends less time on admin
-                    and more time on real change.
-                  </p>
-
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2 text-xs text-black/70">
-                    <div className="rounded-2xl bg-white/80 px-3 py-3 border border-black/5">
-                      <div className="font-semibold">For improvement leaders</div>
-                      <div className="mt-1 text-[11px] leading-relaxed">
-                        Build and roll out consistent ways of working faster, with AI helping you
-                        capture knowledge and share best practice across teams.
+              <div className="relative">
+                {/* Background decorative cards */}
+                <div className="absolute -top-4 -right-4 w-full h-full rounded-3xl bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-200/50" />
+                
+                {/* Main content card */}
+                <div className="relative rounded-3xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl shadow-neutral-900/5 overflow-hidden">
+                  {/* Card Header */}
+                  <div className="relative h-28 bg-gradient-to-br from-[#120E2F] to-[#1a1650] p-6">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0di00aC0ydjRoLTR2MmgydjRoMnYtNGg0di0yaC00em0wLTMwVjBoLTJ2NGgtNHYyaDR2NGgyVjZoNFY0aC00ek02IDM0di00SDR2NEgwdjJoNHY0aDJ2LTRoNHYtMkg2ek02IDRWMHgydjRIMGgydjRoMlY2aDRWNEg2eiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+                    
+                    <div className="relative z-10">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/20">
+                        <Shield className="h-3.5 w-3.5 text-emerald-400" />
+                        <span className="text-xs font-medium text-white/90">Trusted Worldwide</span>
                       </div>
-                    </div>
-                    <div className="rounded-2xl bg-white/60 px-3 py-3 border border-black/5">
-                      <div className="font-semibold">For frontline teams</div>
-                      <div className="mt-1 text-[11px] leading-relaxed">
-                        Simple, contextual AI prompts help people conduct solve problems, standardize processes and audits without complicating their daily lives.
-                      </div>
+                      <h3 className="mt-3 text-xl font-bold text-white">
+                        Industry Leaders Choose Vi-Tech
+                      </h3>
                     </div>
                   </div>
+
+                  {/* Partners Grid */}
+                  <div className="p-6">
+                    <p className="text-sm text-neutral-500 mb-4">Powering operational excellence at:</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      {partners.map((partner, i) => (
+                        <motion.div
+                          key={partner.name}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}
+                          className="flex items-center justify-center p-4 rounded-xl bg-neutral-50/80 border border-neutral-100 hover:bg-white hover:border-neutral-200 hover:shadow-sm transition-all"
+                        >
+                          <img
+                            src={partner.src}
+                            alt={partner.name}
+                            className="h-6 w-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all"
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  
                 </div>
               </div>
             </motion.div>
@@ -292,7 +296,14 @@ export default function LandingAnimated() {
       {/* FAQ */}
       <FAQSection 
         title={t('faq.title')} 
-        items={t('faq.items', { returnObjects: true }) as { question: string; answer: string }[]} 
+        searchPlaceholder={t('faq.searchPlaceholder')}
+        searchResults={t('faq.searchResults')}
+        noResults={t('faq.noResults')}
+        clearSearch={t('faq.clearSearch')}
+        expandAll={t('faq.expandAll')}
+        collapseAll={t('faq.collapseAll')}
+        categories={t('faq.categories', { returnObjects: true }) as Record<string, string>}
+        groups={t('faq.groups', { returnObjects: true }) as Array<{ category: string; items: { question: string; answer: string }[] }>}
       />
     </main>
   );
