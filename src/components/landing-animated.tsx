@@ -183,7 +183,6 @@ export default function LandingAnimated() {
 
                   {/* Partners Grid */}
                   <div className="p-6">
-                    <p className="text-sm text-neutral-500 mb-4">Powering operational excellence at:</p>
                     <div className="grid grid-cols-2 gap-4">
                       {partners.map((partner, i) => (
                         <motion.div
