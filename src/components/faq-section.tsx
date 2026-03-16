@@ -258,7 +258,7 @@ export default function FAQSection({
                         >
                           <AccordionTrigger
                             onClick={() => handleToggleItem(itemId)}
-                            className="py-5 text-left hover:no-underline group"
+                            className="cursor-pointer py-5 text-left hover:no-underline group"
                           >
                             <span className="text-lg font-semibold text-[#120E2F] group-hover:text-[#120E2F]/80 transition-colors pr-4">
                               {item.question}

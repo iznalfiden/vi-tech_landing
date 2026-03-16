@@ -142,7 +142,7 @@ export default function LandingAnimated() {
                 <Button
                   size="lg"
                   onClick={scrollToProducts}
-                  className="rounded-full bg-[#120E2F] text-white hover:bg-[#120E2F]/90 shadow-lg shadow-[#120E2F]/20 hover:shadow-xl hover:shadow-[#120E2F]/30 transition-all px-8 py-6 text-base"
+                  className="cursor-pointer rounded-full bg-[#120E2F] text-white hover:bg-[#120E2F]/90 shadow-lg shadow-[#120E2F]/20 hover:shadow-xl hover:shadow-[#120E2F]/30 transition-all px-8 py-6 text-base"
                 >
                   <span className="inline-flex items-center gap-2">
                     Explore Products
