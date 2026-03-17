@@ -140,21 +140,6 @@ export default function AboutPage() {
           </FM>
         </div>
       </section>
-
-      {/* GET IN TOUCH CTA */}
-      <section className="py-12 md:py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-4">
-          <FM
-            as="div"
-            className="relative overflow-hidden rounded-3xl p-10 md:p-14 ring-1 ring-black/5
-                       text-white bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700"
-          >
-            {/* декоративные пятна */}
-            <div className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-violet-500/30 blur-3xl" />
-            <div className="pointer-events-none absolute -right-24 -bottom-24 h-[28rem] w-[28rem] rounded-full bg-indigo-900/40 blur-3xl" />
-          </FM>
-        </div>
-      </section>
     </div>
   );
 }
