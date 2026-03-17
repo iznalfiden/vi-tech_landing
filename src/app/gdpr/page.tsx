@@ -1,13 +1,13 @@
 // app/gdpr-compliance-statement/page.tsx
 import { PrintButton } from "@/components/PrintButton";
-import type { Metadata } from "next";
 import Link from "next/link";
+import { createMetadata } from "@/lib/og";
 
-export const metadata: Metadata = {
-  title: "GDPR Compliance Statement | Virtuous Improvement Technologies",
-  description:
-    "Our GDPR readiness: information audits, policies & procedures, SAR handling, security controls, employee obligations, and contacts.",
-};
+export const metadata = createMetadata({
+  title: "GDPR Compliance Statement",
+  description: "Our GDPR readiness: information audits, policies & procedures, SAR handling, security controls, employee obligations, and contacts.",
+  path: "/gdpr",
+});
 
 // По исходному документу: 04/09/2025 (дд/мм/гггг)
 const lastUpdated = "September 4, 2025";

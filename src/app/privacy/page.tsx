@@ -1,13 +1,13 @@
 // app/privacy-policy/page.tsx
 import { PrintButton } from "@/components/PrintButton";
-import type { Metadata } from "next";
 import Link from "next/link";
+import { createMetadata } from "@/lib/og";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | Virtuous Improvement Technologies",
-  description:
-    "Privacy Policy for Virtuous Improvement Technologies Ltd. Your rights, data use, cookies, retention, and contact details.",
-};
+export const metadata = createMetadata({
+  title: "Privacy Policy",
+  description: "Privacy Policy for Virtuous Improvement Technologies Ltd. Your rights, data use, cookies, retention, and contact details.",
+  path: "/privacy",
+});
 
 // По документу зафиксировано 04/09/2025 (день/месяц/год)
 const lastUpdated = "September 4, 2025";

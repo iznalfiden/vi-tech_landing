@@ -1,14 +1,15 @@
 // app/about/page.tsx
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { FM } from "@/components/motion";
-import { Lightbulb, Settings, ShieldCheck, Wrench, ArrowRight } from "lucide-react";
+import { Lightbulb, Settings, ShieldCheck, Wrench } from "lucide-react";
+import { createMetadata } from "@/lib/og";
 
-export const metadata: Metadata = {
-  title: "About – Vi-Tech",
-  description: "About Vi-Tech",
-};
+export const metadata: Metadata = createMetadata({
+  title: "About",
+  description: "Learn about Vi-Tech's mission and our suite of operational excellence products.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

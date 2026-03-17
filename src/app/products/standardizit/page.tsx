@@ -1,12 +1,12 @@
 // app/products/standardizit/page.tsx
-import type { Metadata } from 'next';
 import StandardiziTClient from './StandardiziTClient';
+import { createMetadata } from '@/lib/og';
 
-export const metadata: Metadata = {
-  title: 'StandardiziT — Process Standardization',
-  description:
-    'Создание, переводы и согласования стандартных процессов: шаги, WES-подшаги, медиа, документы, PPE/оборудование и approvals с контент-хешем.',
-};
+export const metadata = createMetadata({
+  title: 'StandardiziT – Process Standardization',
+  description: 'Create, translate and approve standardized processes: steps, sub-steps, media, documents, PPE/equipment and approvals with content hashing.',
+  path: '/products/standardizit',
+});
 
 export default function Page() {
   return <StandardiziTClient />;

@@ -1,13 +1,13 @@
 // app/copyright/page.tsx
 import { PrintButton } from "@/components/PrintButton";
-import type { Metadata } from "next";
 import Link from "next/link";
+import { createMetadata } from "@/lib/og";
 
-export const metadata: Metadata = {
-  title: "Copyright Policy | Virtuous Improvement Technologies",
-  description:
-    "Copyright Policy for Virtuous Improvement Technologies Ltd. Procedures for notices, counter-notices, and our designated agent.",
-};
+export const metadata = createMetadata({
+  title: "Copyright Policy",
+  description: "Copyright Policy for Virtuous Improvement Technologies Ltd. Procedures for notices, counter-notices, and our designated agent.",
+  path: "/copyright",
+});
 
 const lastUpdated = "March 22, 2023";
 

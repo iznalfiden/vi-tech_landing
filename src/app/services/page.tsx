@@ -2,11 +2,13 @@
 import type { Metadata } from "next";
 import { FM } from "@/components/motion";
 import { Briefcase, GraduationCap, FileText, ArrowRight, CheckCircle } from "lucide-react";
+import { createMetadata } from "@/lib/og";
 
-export const metadata: Metadata = {
-  title: "Services – Vi-Tech",
+export const metadata: Metadata = createMetadata({
+  title: "Services",
   description: "Vi-Tech professional services: Operational Excellence Consultancy, Lean Training & Capability Development, Technical Process Documentation",
-};
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (

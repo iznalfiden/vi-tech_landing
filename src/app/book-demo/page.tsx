@@ -1,10 +1,11 @@
-import type { Metadata } from 'next';
 import BookDemoClient from './BookDemoClient';
+import { createMetadata } from '@/lib/og';
 
-export const metadata: Metadata = {
-  title: 'Book a demo',
-  description: 'Request a Vi-Tech demo: First name, Last name, Company, Email and Message.',
-};
+export const metadata = createMetadata({
+  title: 'Book a Demo',
+  description: 'Request a personalized demo of Vi-Tech operational excellence software. See how GoSeeiT, StandardiziT, ResolviT and ImproviT can transform your business.',
+  path: '/book-demo',
+});
 
 export default function Page() {
   return <BookDemoClient />;

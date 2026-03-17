@@ -1,12 +1,12 @@
 // app/products/resolvit/page.tsx
-import type { Metadata } from 'next';
 import ResolvITClient from './ResolvitClient';
+import { createMetadata } from '@/lib/og';
 
-export const metadata: Metadata = {
-  title: 'ResolvIT — structured problem solving & action tracking',
-  description:
-    'Intake from GoSeeiT, Yamazumi, and Takt Config; analyze root cause (A3/8D), run countermeasures, approvals, and update standards — in one flow.',
-};
+export const metadata = createMetadata({
+  title: 'ResolviT – Structured Problem Solving',
+  description: 'AI-powered standardized problem solving with A3/8D methodology. Intake from GoSeeiT, analyze root causes, run countermeasures and track actions in one flow.',
+  path: '/products/resolvit',
+});
 
 export default function Page() {
   return <ResolvITClient />;
