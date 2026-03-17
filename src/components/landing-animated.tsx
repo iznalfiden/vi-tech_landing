@@ -158,7 +158,7 @@ export default function LandingAnimated() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.3 }}
-              className="relative hidden lg:block"
+              className="relative"
             >
               <div className="relative">
                 {/* Background decorative cards */}
