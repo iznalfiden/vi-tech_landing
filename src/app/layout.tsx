@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { I18nProvider } from "@/components/i18n-provider";
+import { OrganizationJsonLd } from "@/components/json-ld";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://vi-tech.io';
 
@@ -68,9 +69,17 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr">
+      <head>
+        {/* Preconnect для ускорения загрузки */}
+        <link rel="preconnect" href="https://va.vercel-scripts.com" />
+        <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
+      </head>
       <body className={`${montserrat.variable} ${comfortaa.variable} font-sans antialiased`}>
         <I18nProvider>
+          {/* SEO: Organization Structured Data */}
+          <OrganizationJsonLd />
+          
           {/* Каркас, чтобы футер прилипал к низу даже при коротком контенте */}
           <div className="flex min-h-dvh flex-col">
             <Header />
