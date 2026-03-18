@@ -175,7 +175,7 @@ export default function LandingAnimated() {
                         <Shield className="h-3.5 w-3.5 text-emerald-400" />
                         <span className="text-xs font-medium text-white/90">Trusted Worldwide</span>
                       </div>
-                      <h3 className="mt-3 text-xl font-bold text-white">
+                      <h3 className="mt-3 text-lg md:text-xl font-bold text-white whitespace-nowrap">
                         Industry Leaders Choose Vi-Tech
                       </h3>
                     </div>
@@ -183,7 +183,6 @@ export default function LandingAnimated() {
 
                   {/* Partners Grid */}
                   <div className="p-8">
-                    <p className="text-sm text-neutral-500 mb-6 text-center">Trusted by industry leaders:</p>
                     <div className="grid grid-cols-2 gap-5">
                       {partners.map((partner, i) => (
                         <motion.div
