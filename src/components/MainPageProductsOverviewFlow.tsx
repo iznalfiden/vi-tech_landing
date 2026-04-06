@@ -643,23 +643,23 @@ export default function MainPageProductsOverviewFlow({
 
         <div className="mt-10 md:mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
           {[
-            { Icon: Cog, text: 'AI-powered catalyst for improvement' },
-            { Icon: Users, text: 'AI-supported collaborative problem solving' },
+            { Icon: Cog, text: 'Catalyst for improvement' },
+            { Icon: Users, text: 'Collaborative problem solving' },
             {
               Icon: BookOpen,
-              text: 'AI-assisted shared knowledge base that gives every employee a voice',
+              text: 'Shared knowledge base that gives every employee a voice',
             },
             {
               Icon: RefreshCw,
-              text: 'Engaged workforce identifying & eliminating waste with AI insights',
+              text: 'Engaged workforce identifying & eliminating waste',
             },
             {
               Icon: Coins,
-              text: 'AI-informed cost benefit decision making',
+              text: 'Cost benefit decision making',
             },
             {
               Icon: Globe,
-              text: 'Connects remote teams & aligns workforces with shared AI tools',
+              text: 'Connects remote teams & aligns workforces',
             },
           ].map(({ Icon, text }, i) => (
             <motion.div
